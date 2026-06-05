@@ -5,8 +5,28 @@
   <title>Prenota una Visita — Dott. Corrado Gizzi | Bologna e Faenza</title>
   <meta name="description" content="Prenota una visita oculistica con il Dott. Corrado Gizzi a Bologna o Faenza. Online, via telefono o email.">
   <link rel="stylesheet" href="css/style.css">
+  <!-- Calendly widget CSS -->
+  <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
 </head>
 <body>
+
+<!--
+  FORM NASCOSTO — necessario per Netlify Forms.
+  Netlify analizza l'HTML statico prima che JavaScript venga eseguito,
+  quindi questo form nascosto permette il rilevamento automatico.
+-->
+<form name="contatto" netlify netlify-honeypot="bot-field" hidden>
+  <input type="hidden" name="form-name" value="contatto">
+  <input name="bot-field">
+  <input name="sede">
+  <input name="nome">
+  <input name="cognome">
+  <input name="email">
+  <input name="telefono">
+  <input name="tipo">
+  <input name="disponibilita">
+  <textarea name="messaggio"></textarea>
+</form>
 
 <section class="page-hero">
   <div class="container">
@@ -26,41 +46,31 @@
         <h2 style="margin-bottom:1rem;">Scegli data e orario</h2>
         <p style="margin-bottom:2rem;">
           Seleziona la sede, il tipo di visita e l'orario direttamente nel calendario.
-          Riceverai una email di conferma automatica.
+          Riceverai una email di conferma automatica sincronizzata con Google Calendar.
         </p>
 
-        <!--
-        ══ CALENDLY — ISTRUZIONI PER ATTIVARE ══════════════════════
-        1. Crea account gratuito su https://calendly.com
-        2. Collega il tuo Google Calendar nelle impostazioni
-        3. Crea due "Event Types": "Visita Bologna" e "Visita Faenza"
-        4. Sostituisci TUO-USERNAME con il tuo username Calendly
-        5. Cancella il blocco PLACEHOLDER qui sotto
-        6. Decommenta il blocco qui sotto
+        <!-- Tab selezione sede -->
+        <div class="tab-btns" style="margin-bottom:1.5rem;">
+          <button class="tab-btn active" onclick="switchCal('bologna', this)">📍 Bologna</button>
+          <button class="tab-btn" onclick="switchCal('faenza', this)">📍 Faenza</button>
+        </div>
 
-        <div class="calendly-inline-widget"
-             data-url="https://calendly.com/TUO-USERNAME"
-             style="min-width:320px; height:700px;"></div>
-        <script type="text/javascript"
-                src="https://assets.calendly.com/assets/external/widget.js" async></script>
-        ════════════════════════════════════════════════════════════
-        -->
+        <!-- Calendly Bologna -->
+        <div id="cal-bologna">
+          <div class="calendly-inline-widget"
+               data-url="https://calendly.com/corradogizzi-info/30min"
+               style="min-width:320px; height:700px;"></div>
+        </div>
 
-        <!-- PLACEHOLDER — rimuovere quando Calendly è attivo -->
-        <div class="calendly-box">
-          <div class="calendly-placeholder">
-            <div style="font-size:3rem;">📅</div>
-            <h4>Calendario prenotazioni</h4>
-            <p>Il calendario online sarà attivo non appena configurato Calendly.<br>
-            Nel frattempo usa il modulo qui sotto o chiama la segreteria.</p>
-            <a href="#form-section" class="btn btn-primary" style="margin-top:.5rem;">
-              Vai al modulo di contatto
-            </a>
-          </div>
+        <!-- Calendly Faenza -->
+        <div id="cal-faenza" style="display:none;">
+          <div class="calendly-inline-widget"
+               data-url="https://calendly.com/corradogizzi/30min"
+               style="min-width:320px; height:700px;"></div>
         </div>
       </div>
 
-      <!-- SIDEBAR -->
+      <!-- SIDEBAR CONTATTI -->
       <div style="display:flex; flex-direction:column; gap:2rem;">
         <div class="contact-card reveal">
           <h3>Contatti diretti</h3>
@@ -68,7 +78,8 @@
             <div class="contact-method-icon">📍</div>
             <div>
               <div class="contact-method-label">Life Clinic Bologna</div>
-              <a href="tel:051242588" class="contact-method-val" style="display:block; color:var(--white);">051 242588</a>
+              <a href="tel:051242588" class="contact-method-val"
+                 style="display:block; color:var(--white);">051 242588</a>
               <div class="contact-method-sub">Via del Lavoro, 44 — Bologna</div>
             </div>
           </div>
@@ -76,8 +87,12 @@
             <div class="contact-method-icon">📍</div>
             <div>
               <div class="contact-method-label">Le Cicogne Faenza</div>
-              <a href="tel:054619106013" class="contact-method-val" style="display:block; color:var(--white);">0546 1910613</a>
-              <a href="tel:+393491908892" style="display:block; color:rgba(255,255,255,.7); font-size:.88rem; margin-top:.15rem;">349 1908892</a>
+              <a href="tel:054619106013" class="contact-method-val"
+                 style="display:block; color:var(--white);">0546 1910613</a>
+              <a href="tel:+393491908892"
+                 style="display:block; color:rgba(255,255,255,.7); font-size:.88rem; margin-top:.15rem;">
+                349 1908892
+              </a>
               <div class="contact-method-sub">Via Galilei, 2 — Faenza</div>
             </div>
           </div>
@@ -85,19 +100,33 @@
             <div class="contact-method-icon">✉️</div>
             <div>
               <div class="contact-method-label">Email</div>
-              <a href="mailto:info@corradogizzi.it" class="contact-method-val" style="display:block; color:var(--white);">info@corradogizzi.it</a>
+              <a href="mailto:info@corradogizzi.it" class="contact-method-val"
+                 style="display:block; color:var(--white);">info@corradogizzi.it</a>
               <div class="contact-method-sub">Risposta entro 24 ore lavorative</div>
             </div>
           </div>
         </div>
 
         <div style="background:var(--gold-pale); border-radius:8px; padding:2rem;">
-          <h4 style="font-size:.85rem; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem;">Prima della visita</h4>
+          <h4 style="font-size:.85rem; letter-spacing:.1em; text-transform:uppercase;
+              color:var(--gold); margin-bottom:1rem;">Prima della visita</h4>
           <ul style="padding-left:0;">
-            <li style="font-size:.9rem; color:var(--navy); margin-bottom:.6rem; list-style:none; display:flex; gap:.5rem;">✓ Porta esami e visite precedenti</li>
-            <li style="font-size:.9rem; color:var(--navy); margin-bottom:.6rem; list-style:none; display:flex; gap:.5rem;">✓ Elenca i farmaci che stai assumendo</li>
-            <li style="font-size:.9rem; color:var(--navy); margin-bottom:.6rem; list-style:none; display:flex; gap:.5rem;">✓ Se prevista dilatazione: porta un accompagnatore</li>
-            <li style="font-size:.9rem; color:var(--navy); margin-bottom:.6rem; list-style:none; display:flex; gap:.5rem;">✓ Arriva qualche minuto prima dell'orario</li>
+            <li style="font-size:.9rem; color:var(--navy); margin-bottom:.6rem;
+                list-style:none; display:flex; gap:.5rem;">
+              ✓ Porta esami e visite precedenti
+            </li>
+            <li style="font-size:.9rem; color:var(--navy); margin-bottom:.6rem;
+                list-style:none; display:flex; gap:.5rem;">
+              ✓ Elenca i farmaci che stai assumendo
+            </li>
+            <li style="font-size:.9rem; color:var(--navy); margin-bottom:.6rem;
+                list-style:none; display:flex; gap:.5rem;">
+              ✓ Se prevista dilatazione: porta un accompagnatore
+            </li>
+            <li style="font-size:.9rem; color:var(--navy); margin-bottom:.6rem;
+                list-style:none; display:flex; gap:.5rem;">
+              ✓ Arriva qualche minuto prima dell'orario
+            </li>
           </ul>
         </div>
       </div>
@@ -118,22 +147,30 @@
       </div>
 
       <div class="form-card reveal">
-        <!-- data-netlify="true" attiva invio automatico tramite Netlify Forms -->
-        <form id="contact-form" name="contatto" method="POST" data-netlify="true">
+        <form id="contact-form" name="contatto" method="POST"
+              data-netlify="true" netlify-honeypot="bot-field">
           <input type="hidden" name="form-name" value="contatto">
+          <p style="display:none;">
+            <label>Non compilare: <input name="bot-field"></label>
+          </p>
 
           <div style="margin-bottom:2rem;">
-            <div style="font-size:.75rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--navy); margin-bottom:.75rem;">Sede preferita</div>
+            <div style="font-size:.75rem; font-weight:700; letter-spacing:.1em;
+                text-transform:uppercase; color:var(--navy); margin-bottom:.75rem;">
+              Sede preferita
+            </div>
             <div class="sede-select-grid">
               <div>
-                <input type="radio" name="sede" id="sede-bo" value="Bologna" class="sede-radio" checked>
+                <input type="radio" name="sede" id="sede-bo"
+                       value="Bologna" class="sede-radio" checked>
                 <label for="sede-bo" class="sede-radio-label">
                   <h4>Bologna</h4>
                   <p>Life Clinic — Via del Lavoro 44</p>
                 </label>
               </div>
               <div>
-                <input type="radio" name="sede" id="sede-fa" value="Faenza" class="sede-radio">
+                <input type="radio" name="sede" id="sede-fa"
+                       value="Faenza" class="sede-radio">
                 <label for="sede-fa" class="sede-radio-label">
                   <h4>Faenza</h4>
                   <p>Le Cicogne — Via Galilei 2</p>
@@ -155,11 +192,13 @@
           <div class="form-row">
             <div class="form-group">
               <label for="email">Email *</label>
-              <input type="email" id="email" name="email" required placeholder="mario.rossi@email.it">
+              <input type="email" id="email" name="email" required
+                     placeholder="mario.rossi@email.it">
             </div>
             <div class="form-group">
               <label for="telefono">Telefono</label>
-              <input type="tel" id="telefono" name="telefono" placeholder="+39 333 000 0000">
+              <input type="tel" id="telefono" name="telefono"
+                     placeholder="+39 333 000 0000">
             </div>
           </div>
           <div class="form-group">
@@ -175,16 +214,23 @@
           </div>
           <div class="form-group">
             <label for="disponibilita">Preferenza orario / giorni</label>
-            <input type="text" id="disponibilita" name="disponibilita" placeholder="es. mattina, lunedì e mercoledì">
+            <input type="text" id="disponibilita" name="disponibilita"
+                   placeholder="es. mattina, lunedì e mercoledì">
           </div>
           <div class="form-group">
             <label for="messaggio">Messaggio / Note</label>
-            <textarea id="messaggio" name="messaggio" placeholder="Descrivi brevemente il motivo della visita o eventuali note per la segreteria..."></textarea>
+            <textarea id="messaggio" name="messaggio"
+              placeholder="Descrivi brevemente il motivo della visita..."></textarea>
           </div>
-          <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Invia richiesta</button>
+
+          <button type="submit" class="btn btn-primary"
+                  style="width:100%; justify-content:center;">
+            Invia richiesta
+          </button>
           <p class="privacy-note">
-            Inviando questo modulo accetti che i dati vengano trattati per rispondere alla tua richiesta,
-            nel rispetto del <a href="privacy.html" style="color:var(--gold);">GDPR e della Privacy Policy</a>.
+            Inviando questo modulo accetti che i dati vengano trattati per rispondere
+            alla tua richiesta, nel rispetto del
+            <a href="privacy.html" style="color:var(--gold);">GDPR e della Privacy Policy</a>.
             I dati non vengono ceduti a terzi.
           </p>
         </form>
@@ -196,16 +242,38 @@
 <!-- URGENZE -->
 <section class="section" style="background:var(--navy); padding:3rem 0;">
   <div class="container">
-    <div style="display:flex; align-items:center; gap:2rem; flex-wrap:wrap; justify-content:space-between;">
+    <div style="display:flex; align-items:center; gap:2rem;
+        flex-wrap:wrap; justify-content:space-between;">
       <div>
         <h3 style="color:var(--white); margin-bottom:.5rem;">⚠️ Urgenza oculistica?</h3>
-        <p style="color:rgba(255,255,255,.65);">In caso di dolore improvviso, calo visivo acuto, occhio rosso o trauma: non aspettare l'appuntamento.</p>
+        <p style="color:rgba(255,255,255,.65);">In caso di dolore improvviso, calo visivo
+        acuto, occhio rosso o trauma: non aspettare l'appuntamento.</p>
       </div>
-      <a href="tel:118" class="btn btn-white" style="white-space:nowrap;">Chiama il 118 o vai al Pronto Soccorso</a>
+      <a href="tel:118" class="btn btn-white" style="white-space:nowrap;">
+        Chiama il 118 o vai al Pronto Soccorso
+      </a>
     </div>
   </div>
 </section>
 
-<script src="js/layout.js"></script><script src="js/main.js"></script>
-<script>injectLayout('book');</script>
-</body></html>
+<!-- SCRIPTS — ordine importante: layout.js prima, main.js dopo, inline alla fine -->
+<script src="js/layout.js"></script>
+<script src="js/main.js"></script>
+<!-- Calendly widget JS — caricato dopo layout e main -->
+<script src="https://assets.calendly.com/assets/external/widget.js" async></script>
+<script>
+  // injectLayout deve essere chiamato dopo che layout.js è caricato
+  injectLayout('book');
+
+  // Switch tra i due calendari
+  function switchCal(sede, btn) {
+    document.getElementById('cal-bologna').style.display = 'none';
+    document.getElementById('cal-faenza').style.display  = 'none';
+    document.getElementById('cal-' + sede).style.display = 'block';
+    document.querySelectorAll('.tab-btns .tab-btn')
+      .forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+</script>
+</body>
+</html>
