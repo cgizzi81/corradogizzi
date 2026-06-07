@@ -1,5 +1,4 @@
 // main.js — solo italiano, no sistema i18n
-// Testi modificabili direttamente nei file HTML
 
 // ── Navbar scroll ──────────────────────────────────────────
 function initNavbar() {
@@ -27,17 +26,26 @@ function initReveal() {
   if (!els.length) return;
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
     });
   }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-  els.forEach((el, i) => { el.style.transitionDelay = (i % 4) * 0.08 + 's'; io.observe(el); });
+  els.forEach((el, i) => {
+    el.style.transitionDelay = (i % 4) * 0.08 + 's';
+    io.observe(el);
+  });
 }
 
 // ── Cookie banner ──────────────────────────────────────────
 function initCookies() {
   const banner = document.getElementById('cookie-banner');
   if (!banner) return;
-  if (localStorage.getItem('cookies-ok')) { banner.classList.add('hidden'); return; }
+  if (localStorage.getItem('cookies-ok')) {
+    banner.classList.add('hidden');
+    return;
+  }
   document.getElementById('cookie-accept')?.addEventListener('click', () => {
     localStorage.setItem('cookies-ok', '1');
     banner.classList.add('hidden');
@@ -54,24 +62,27 @@ function initAccordion() {
         i.classList.remove('open');
         i.querySelector('.accordion-btn').classList.remove('open');
       });
-      if (!isOpen) { item.classList.add('open'); btn.classList.add('open'); }
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.classList.add('open');
+      }
     });
   });
 }
 
-// ── Form di contatto ───────────────────────────────────────
+// ── Form di contatto — invio nativo a Netlify ─────────────
+// Non usiamo preventDefault: il browser invia il form
+// direttamente a Netlify che gestisce tutto lato server.
+// Mostriamo solo feedback visivo durante l'invio.
 function initContactForm() {
   const form = document.getElementById('contact-form');
   if (!form) return;
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
+  form.addEventListener('submit', () => {
     const btn = form.querySelector('[type=submit]');
-    const orig = btn.textContent;
-    btn.textContent = 'Invio in corso…';
-    btn.disabled = true;
-    await new Promise(r => setTimeout(r, 1000));
-    btn.textContent = '✓ Messaggio inviato!';
-    setTimeout(() => { btn.textContent = orig; btn.disabled = false; form.reset(); }, 3000);
+    if (btn) {
+      btn.textContent = 'Invio in corso…';
+      btn.disabled = true;
+    }
   });
 }
 
