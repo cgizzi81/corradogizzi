@@ -14,10 +14,21 @@ function initMobileMenu() {
   const toggle = document.getElementById('nav-toggle');
   const links  = document.getElementById('nav-links');
   if (!toggle || !links) return;
-  toggle.addEventListener('click', () => links.classList.toggle('open'));
+  const sync = () => {
+    const open = links.classList.contains('open');
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Chiudi il menu' : 'Apri il menu');
+  };
+  toggle.addEventListener('click', () => { links.classList.toggle('open'); sync(); });
   links.querySelectorAll('a').forEach(a =>
-    a.addEventListener('click', () => links.classList.remove('open'))
+    a.addEventListener('click', () => { links.classList.remove('open'); sync(); })
   );
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && links.classList.contains('open')) {
+      links.classList.remove('open'); sync(); toggle.focus();
+    }
+  });
+  sync();
 }
 
 // ── Scroll reveal ──────────────────────────────────────────
@@ -54,17 +65,28 @@ function initCookies() {
 
 // ── Accordion (FAQ) ────────────────────────────────────────
 function initAccordion() {
-  document.querySelectorAll('.accordion-btn').forEach(btn => {
+  const btns = document.querySelectorAll('.accordion-btn');
+  btns.forEach((btn, i) => {
+    const body = btn.closest('.accordion-item')?.querySelector('.accordion-body');
+    btn.setAttribute('type', 'button');
+    btn.setAttribute('aria-expanded', 'false');
+    if (body) {
+      if (!body.id) body.id = `accordion-body-${i + 1}`;
+      btn.setAttribute('aria-controls', body.id);
+    }
     btn.addEventListener('click', () => {
       const item = btn.closest('.accordion-item');
       const isOpen = item.classList.contains('open');
-      document.querySelectorAll('.accordion-item').forEach(i => {
-        i.classList.remove('open');
-        i.querySelector('.accordion-btn').classList.remove('open');
+      document.querySelectorAll('.accordion-item').forEach(el => {
+        el.classList.remove('open');
+        const b = el.querySelector('.accordion-btn');
+        b.classList.remove('open');
+        b.setAttribute('aria-expanded', 'false');
       });
       if (!isOpen) {
         item.classList.add('open');
         btn.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
       }
     });
   });

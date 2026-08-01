@@ -8,20 +8,22 @@ function getNavHTML(activePage) {
     { key: 'info', href: 'pazienti.html',   label: 'Info Pazienti' },
     { key: 'book', href: 'prenota.html',    label: 'Prenota' },
   ];
-  const links = pages.map(p =>
-    `<a href="${p.href}" class="${activePage === p.key ? 'nav-active' : ''}">${p.label}</a>`
-  ).join('');
+  const links = pages.map(p => {
+    const active = activePage === p.key;
+    return `<a href="${p.href}" class="${active ? 'nav-active' : ''}"${active ? ' aria-current="page"' : ''}>${p.label}</a>`;
+  }).join('');
   return `
-<nav id="navbar">
+<nav id="navbar" aria-label="Navigazione principale">
   <div class="nav-inner">
     <a href="index.html" class="nav-logo">
-      <img src="assets/logo-symbol.svg" alt="CG" class="nav-logo-symbol">
+      <img src="assets/logo-symbol.svg" alt="" width="40" height="40" class="nav-logo-symbol">
       <div class="nav-logo-text">
         <span class="name">Dott. Corrado Gizzi</span>
         <span class="title">Specialista in Oftalmologia</span>
       </div>
     </a>
-    <button class="nav-toggle" id="nav-toggle" aria-label="Menu">
+    <button class="nav-toggle" id="nav-toggle" aria-label="Apri il menu"
+            aria-expanded="false" aria-controls="nav-links">
       <span></span><span></span><span></span>
     </button>
     <div class="nav-links" id="nav-links">
@@ -38,7 +40,7 @@ function getFooterHTML() {
     <div class="footer-grid">
       <div>
         <div class="footer-brand">
-          <img src="assets/logo-symbol.svg" alt="CG" class="footer-logo-symbol">
+          <img src="assets/logo-symbol.svg" alt="" width="40" height="40" class="footer-logo-symbol">
           <div>
             <div class="footer-logo-name">Dott. Corrado Gizzi</div>
             <div class="footer-logo-title">Medico Chirurgo · Specialista in Oftalmologia</div>
@@ -61,14 +63,14 @@ function getFooterHTML() {
         <div class="footer-heading">Contatti</div>
         <div class="footer-links">
           <a href="mailto:info@corradogizzi.it">info@corradogizzi.it</a>
-          <a href="tel:051242588">LCB Bologna: 051 242588</a>
-          <a href="tel:054619106013">Le Cicogne Faenza: 0546 1910613</a>
+          <a href="tel:+39051242588">LCB Bologna: 051 242588</a>
+          <a href="tel:+3905461910613">Le Cicogne Faenza: 0546 1910613</a>
           <a href="prenota.html">Prenota online →</a>
         </div>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2025 Dott. Corrado Gizzi. Tutti i diritti riservati.</p>
+      <p>© <span id="footer-year">2026</span> Dott. Corrado Gizzi. Tutti i diritti riservati.</p>
       <a href="privacy.html">Privacy Policy</a>
     </div>
   </div>
@@ -87,4 +89,6 @@ function injectLayout(activePage) {
   const footDiv = document.createElement('div');
   footDiv.innerHTML = getFooterHTML();
   while (footDiv.firstChild) document.body.appendChild(footDiv.firstChild);
+  const year = document.getElementById('footer-year');
+  if (year) year.textContent = new Date().getFullYear();
 }

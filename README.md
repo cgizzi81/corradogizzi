@@ -13,7 +13,11 @@ corradogizzi/
 ├── pazienti.html       ← Info glaucoma, FAQ, brochure
 ├── prenota.html        ← Calendario prenotazioni + form contatto
 ├── privacy.html        ← Privacy Policy GDPR
+├── grazie.html         ← Conferma invio form (non indicizzata)
 ├── netlify.toml        ← Configurazione hosting Netlify
+├── robots.txt          ← Istruzioni per i motori di ricerca
+├── sitemap.xml         ← Elenco pagine indicizzabili — aggiornare a ogni pagina nuova
+├── CLAUDE.md           ← Convenzioni di progetto (SEO, accessibilità, schema)
 ├── css/
 │   └── style.css       ← Tutto il CSS (colori, font, layout)
 ├── js/
@@ -22,10 +26,7 @@ corradogizzi/
 └── assets/
     ├── logo-symbol.svg ← Logo grafico (senza testo)
     ├── logo.svg        ← Logo completo
-    ├── foto.jpg        ← Foto professionale
-    ├── brochure-glaucoma.pdf    ← DA AGGIUNGERE
-    ├── brochure-chirurgia.pdf   ← DA AGGIUNGERE
-    └── brochure-laser.pdf       ← DA AGGIUNGERE
+    └── foto.jpg        ← Foto professionale (in realtà un PNG di 1,8 MB: da ottimizzare)
 ```
 
 ---
@@ -50,7 +51,9 @@ Apri `ambulatori.html`, cerca "Su appuntamento", modifica la riga corrispondente
 
 **Cambiare un colore:**
 Apri `css/style.css`. Tutti i colori principali sono in cima al file nella sezione `:root`:
-- `--gold: #b8962e` → colore oro (accenti, bottoni)
+- `--gold: #b8962e` → oro del brand: linee, bordi, sfondi, testo su navy
+- `--gold-deep: #7f6720` → oro scuro, **solo per testo su sfondo chiaro** (l'oro
+  normale su crema è troppo poco contrastato per essere letto senza fatica)
 - `--navy: #0d1f3c` → colore blu scuro (sfondi, navbar)
 - `--cream: #faf8f3` → colore sfondo chiaro
 
@@ -69,68 +72,63 @@ Apri `js/layout.js`, trova l'array `pages` e aggiungi una riga seguendo il forma
 
 ## Aggiungere le brochure PDF
 
-1. Metti i PDF nella cartella `assets/` con questi nomi esatti:
-   - `brochure-glaucoma.pdf`
-   - `brochure-chirurgia.pdf`
-   - `brochure-laser.pdf`
-2. I link nella pagina "Info Pazienti" funzioneranno automaticamente
+In `pazienti.html` le tre guide sono attualmente elementi `<span class="brochure-btn
+brochure-btn--soon">`, cioè non cliccabili: i PDF non esistono ancora e lasciarli
+come link produceva tre errori 404 su una pagina indicizzata.
+
+Per pubblicarne una:
+
+1. Metti il PDF in `assets/`
+2. In `pazienti.html`, trasforma lo `<span>` corrispondente in
+   `<a href="assets/nome-file.pdf" class="brochure-btn" target="_blank" rel="noopener">`
+   (togliendo `brochure-btn--soon` e `aria-disabled`)
+3. Togli "· in preparazione" dall'etichetta
 
 ---
 
-## Attivare le prenotazioni online (Calendly)
+## Prenotazioni online (Calendly)
 
-1. Crea account gratuito su https://calendly.com
-2. Collega Google Calendar nelle impostazioni
-3. Crea due "Event Types": "Visita Bologna" e "Visita Faenza"
-4. Apri `prenota.html` con VSCode
-5. Cerca il commento `CALENDLY — ISTRUZIONI`
-6. Sostituisci `TUO-USERNAME` con il tuo username Calendly
-7. Decommenta il blocco widget (rimuovi `<!--` e `-->`)
-8. Cancella o commenta il blocco `PLACEHOLDER`
+Già configurato e attivo su `prenota.html`, con due widget distinti:
+
+- Bologna → `corradogizzi-info/30min`
+- Faenza → `corradogizzi/30min`
 
 ---
 
-## Pubblicare su Netlify (passo per passo)
+## Come va online il sito
 
-1. Vai su https://netlify.com e crea un account gratuito
-2. Clicca **Sites → Add new site → Deploy manually**
-3. Trascina l'intera cartella `corradogizzi` nella finestra del browser
-4. Il sito è online in 30 secondi con un URL temporaneo tipo `amazing-name.netlify.app`
+Il sito è già pubblicato: `corradogizzi.it` gira su **Netlify**, collegato al
+repository GitHub `cgizzi81/corradogizzi`.
 
-**Per collegare il dominio corradogizzi.it:**
+**Ogni push su `main` manda il sito in produzione in circa un minuto.** Non serve
+trascinare cartelle né fare deploy manuali.
 
-5. In Netlify: **Domain settings → Add custom domain** → scrivi `corradogizzi.it`
-6. Accedi al pannello Aruba, vai in **Gestione DNS** del dominio
-7. Cambia i nameserver con questi quattro:
-   ```
-   dns1.p04.nsone.net
-   dns2.p04.nsone.net
-   dns3.p04.nsone.net
-   dns4.p04.nsone.net
-   ```
-8. Attendi 24-48 ore per la propagazione — il sito sarà live con HTTPS automatico
+```
+git add -A
+git commit -m "descrizione della modifica"
+git push
+```
 
-**Per ricevere le email del form di contatto:**
-- In Netlify: **Site → Forms** → clicca sul form "contatto"
-- **Form notifications → Add notification → Email notification**
-- Inserisci `info@corradogizzi.it`
+### DNS — non toccare senza motivo
 
----
+I nameserver restano su **Aruba** (non sono stati trasferiti a Netlify): il dominio
+punta a Netlify con un record A e un CNAME `www`. Questa scelta è deliberata, perché
+spostare i nameserver interromperebbe le email `@corradogizzi.it`.
 
-## Condividere il sito in anteprima privata
+Le vecchie istruzioni che dicevano di sostituire i nameserver con quelli di Netlify
+non sono più valide.
 
-Dopo il deploy su Netlify, l'URL temporaneo (es. `amazing-name.netlify.app`) è
-già accessibile a chiunque tu lo invii ma non è indicizzato da Google.
-Condividilo liberamente con parenti e amici per raccogliere feedback
-prima di collegare il dominio definitivo.
+### Email del form di contatto
+
+In Netlify: **Site → Forms → contatto → Form notifications → Add notification →
+Email notification**, destinatario `info@corradogizzi.it`.
 
 ---
 
-## Aggiornare il sito dopo modifiche
+## Regole da rispettare quando si aggiunge una pagina
 
-Ogni volta che modifichi dei file e vuoi aggiornare il sito online:
-1. Vai su Netlify → il tuo sito → **Deploys**
-2. Clicca **Deploy manually** e trascina di nuovo la cartella aggiornata
+Sono descritte in `CLAUDE.md`, insieme alle convenzioni SEO e di accessibilità.
+In sintesi: dominio canonico senza `www`, meta tag completi, JSON-LD, una riga
+nella `sitemap.xml`, e i tre `<link>` dei font copiati nell'`<head>`.
 
-In alternativa, collega Netlify a un repository GitHub per aggiornamenti automatici
-ad ogni salvataggio (richiede conoscenza base di Git).
+---

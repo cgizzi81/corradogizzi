@@ -1,4 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&display=swap');
+/* I font Google sono caricati con <link rel="preconnect"> + <link rel="stylesheet">
+   nell'<head> di ogni pagina: un @import qui li scaricherebbe in serie dopo il CSS,
+   ritardando il primo rendering. Se aggiungi una pagina, ricopia quei tre <link>. */
 
 :root {
   --navy:       #0d1f3c;
@@ -7,11 +9,17 @@
   --gold:       #b8962e;
   --gold-light: #d4af50;
   --gold-pale:  #f5edcf;
+  /* Oro scuro: SOLO per testo su sfondo chiaro. L'oro del brand (#b8962e) su
+     crema dà 2,66:1, sotto il minimo WCAG di 4,5:1 — illeggibile per molti
+     pazienti anziani, che sono la maggioranza qui. Il #b8962e resta invariato
+     su tutti gli elementi decorativi e su sfondo navy, dove il contrasto è ampio. */
+  --gold-deep:  #7f6720;
   --cream:      #faf8f3;
   --white:      #ffffff;
   --gray-100:   #f4f4f2;
   --gray-300:   #d0cfc9;
   --gray-500:   #8a8880;
+  --gray-600:   #6f6d65;
   --gray-700:   #4a4946;
   --text:       #1e1c1a;
   --font-display:'Playfair Display',Georgia,serif;
@@ -39,8 +47,8 @@ h2{font-size:clamp(1.7rem,3.5vw,2.6rem);font-weight:600;}
 h3{font-size:clamp(1.2rem,2.5vw,1.6rem);font-weight:600;}
 h4{font-size:1.1rem;font-weight:600;}
 p{color:var(--gray-700);font-size:1.02rem;}
-.lead{font-family:var(--font-accent);font-size:clamp(1.1rem,2vw,1.35rem);color:var(--gray-500);font-weight:300;font-style:italic;}
-.section-label{font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:.75rem;}
+.lead{font-family:var(--font-accent);font-size:clamp(1.1rem,2vw,1.35rem);color:var(--gray-600);font-weight:300;font-style:italic;}
+.section-label{font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-deep);display:block;margin-bottom:.75rem;}
 .gold-line{width:48px;height:2px;background:var(--gold);margin:1.5rem 0;}
 
 /* ── Layout ── */
@@ -56,10 +64,12 @@ p{color:var(--gray-700);font-size:1.02rem;}
 
 /* ── Buttons ── */
 .btn{display:inline-flex;align-items:center;gap:.5rem;padding:.85rem 2rem;font-family:var(--font-body);font-size:.82rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:var(--radius);border:2px solid transparent;cursor:pointer;transition:all var(--transition);}
-.btn-primary{background:var(--gold);color:var(--white);border-color:var(--gold);}
-.btn-primary:hover{background:var(--gold-light);border-color:var(--gold-light);transform:translateY(-2px);box-shadow:0 8px 24px rgba(184,150,46,.35);}
-.btn-outline{background:transparent;color:var(--gold);border-color:var(--gold);}
-.btn-outline:hover{background:var(--gold);color:var(--white);transform:translateY(-2px);}
+/* Testo navy invece che bianco sull'oro: il bianco su #b8962e dà 2,82:1, il
+   navy 5,82:1. L'oro del bottone resta identico, cambia solo il testo sopra. */
+.btn-primary{background:var(--gold);color:var(--navy);border-color:var(--gold);}
+.btn-primary:hover{background:var(--gold-light);color:var(--navy);border-color:var(--gold-light);transform:translateY(-2px);box-shadow:0 8px 24px rgba(184,150,46,.35);}
+.btn-outline{background:transparent;color:var(--gold-deep);border-color:var(--gold);}
+.btn-outline:hover{background:var(--gold);color:var(--navy);transform:translateY(-2px);}
 .btn-white{background:transparent;color:var(--white);border-color:rgba(255,255,255,.5);}
 .btn-white:hover{background:var(--white);color:var(--navy);border-color:var(--white);}
 
@@ -174,6 +184,9 @@ p{color:var(--gray-700);font-size:1.02rem;}
 .info-card{background:var(--white);border-left:4px solid var(--gold);padding:2rem;border-radius:0 6px 6px 0;box-shadow:var(--shadow-sm);margin-bottom:1.5rem;}
 .brochure-btn{display:flex;align-items:center;gap:1rem;background:var(--navy);color:var(--white);padding:1.25rem 1.75rem;border-radius:6px;transition:all var(--transition);margin-bottom:1rem;}
 .brochure-btn:hover{background:var(--navy-light);transform:translateX(4px);}
+/* Guida non ancora pubblicata: nessun link, nessun hover, nessun 404. */
+.brochure-btn--soon{opacity:.55;cursor:default;}
+.brochure-btn--soon:hover{background:var(--navy);transform:none;}
 .brochure-btn-icon{font-size:1.5rem;color:var(--gold-light);}
 .brochure-btn-text .label{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-light);}
 .brochure-btn-text .title{font-size:.95rem;font-weight:700;margin-top:.1rem;}
@@ -288,4 +301,13 @@ footer p{color:rgba(255,255,255,.55);font-size:.9rem;}
 .tip-card h4{font-size:1rem;margin-bottom:.5rem;}
 .tip-card p{font-size:.9rem;}
 
-:focus-visible{outline:2px solid var(--gold);outline-offset:3px;}
+/* Contorno di focus da tastiera. WCAG 2.2 chiede almeno 3:1 rispetto allo sfondo
+   adiacente: l'oro del brand su crema si ferma a 2,66:1, quindi su chiaro si usa
+   --gold-deep e sui fondi navy si torna all'oro chiaro, che lì contrasta bene. */
+:focus-visible{outline:2px solid var(--gold-deep);outline-offset:3px;}
+.hero :focus-visible,
+.page-hero :focus-visible,
+.section--dark :focus-visible,
+#navbar :focus-visible,
+footer :focus-visible,
+#cookie-banner :focus-visible{outline-color:var(--gold-light);}
