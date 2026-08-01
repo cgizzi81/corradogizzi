@@ -336,3 +336,19 @@ footer p{color:rgba(255,255,255,.55);font-size:.9rem;}
 #navbar :focus-visible,
 footer :focus-visible,
 #cookie-banner :focus-visible{outline-color:var(--gold-light);}
+
+/* ── Blog: tipografia degli articoli generati da Eleventy ──
+   Il Markdown produce h2/h3/p/ul/blockquote senza classi, quindi lo stile si
+   applica per discendenza da .prose-blog. */
+.prose-blog{max-width:760px;}
+.prose-blog h2{font-size:clamp(1.4rem,3vw,1.85rem);margin:2.75rem 0 .5rem;}
+.prose-blog h2:first-child{margin-top:0;}
+.prose-blog h3{font-size:1.15rem;margin:2rem 0 .5rem;}
+.prose-blog p{margin-bottom:1.1rem;}
+.prose-blog ul,.prose-blog ol{padding-left:1.5rem;margin-bottom:1.25rem;}
+.prose-blog li{list-style:disc;margin-bottom:.45rem;color:var(--gray-700);}
+.prose-blog ol li{list-style:decimal;}
+.prose-blog a{color:var(--gold-deep);font-weight:700;}
+.prose-blog a:hover{text-decoration:underline;}
+.prose-blog strong{color:var(--navy);}
+.prose-blog blockquote{border-left:3px solid var(--gold);padding-left:1.25rem;margin:1.75rem 0;font-family:var(--font-accent);font-style:italic;font-size:1.1rem;color:var(--gray-700);}

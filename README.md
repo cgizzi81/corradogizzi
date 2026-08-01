@@ -16,6 +16,10 @@ corradogizzi/
 ├── grazie.html         ← Conferma invio form (non indicizzata)
 ├── chirurgia/          ← Sezione chirurgia: indice + una pagina per procedura
 ├── laser/              ← Sezione laser: indice + una pagina per trattamento
+├── _blog/              ← SORGENTI del blog (Markdown) — si modifica questo
+├── blog/               ← Blog generato dalla build — non si tocca
+├── package.json        ← Dipendenze della build del blog
+├── eleventy.config.js  ← Configurazione del generatore del blog
 ├── netlify.toml        ← Configurazione hosting Netlify
 ├── robots.txt          ← Istruzioni per i motori di ricerca
 ├── sitemap.xml         ← Elenco pagine indicizzabili — aggiornare a ogni pagina nuova
@@ -107,6 +111,43 @@ Già configurato e attivo su `prenota.html`, con due widget distinti:
 
 - Bologna → `corradogizzi-info/30min`
 - Faenza → `corradogizzi/30min`
+
+---
+
+## Scrivere un articolo del blog
+
+Il blog è l'unica parte del sito che passa da una build: tu scrivi in Markdown,
+Netlify lo trasforma in HTML. Il resto del sito resta HTML scritto a mano.
+
+1. Crea un file in `_blog/posts/`, per esempio `nome-articolo.md`
+2. In cima mettici questo blocco:
+
+```yaml
+---
+title: "Il titolo dell'articolo"
+descrizione: "Il sommario, 140-160 caratteri: finisce su Google e nell'indice"
+date: 2026-08-15
+bozza: true
+---
+```
+
+3. Sotto, scrivi il testo normalmente. `## Titolo` fa un sottotitolo,
+   `**parola**` mette in grassetto, una riga vuota separa i paragrafi
+4. `git add -A`, `git commit`, `git push` — l'articolo è online
+
+L'indirizzo dell'articolo viene dal nome del file: `nome-articolo.md`
+diventa `corradogizzi.it/blog/nome-articolo/`.
+
+### Le bozze
+
+**Finché c'è `bozza: true`, l'articolo non è indicizzato da Google** e mostra un
+banner che lo segnala. È comunque visibile al suo indirizzo, così puoi rileggerlo
+sul sito vero prima di pubblicarlo. Quando è pronto, togli quella riga e ripusha.
+
+### Per vedere l'anteprima sul tuo computer
+
+Serve una volta sola `npm install`, poi `npm run serve`. Non è indispensabile:
+puoi lavorare a bozze e rileggerle direttamente sul sito.
 
 ---
 

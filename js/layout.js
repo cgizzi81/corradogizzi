@@ -19,6 +19,7 @@ const NAV_PAGES = [
       { key: 'laser',           href: 'laser/index.html',                label: 'Trattamenti laser' },
     ],
   },
+  { key: 'blog', href: 'blog/index.html', label: 'Blog' },
   { key: 'book', href: 'prenota.html',    label: 'Prenota' },
 ];
 

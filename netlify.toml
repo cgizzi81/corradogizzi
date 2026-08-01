@@ -1,4 +1,9 @@
 [build]
+  # Eleventy genera solo /blog a partire da _blog/. Il resto del sito è HTML
+  # statico già presente nel repository e viene pubblicato così com'è.
+  # Se questa build fallisce Netlify non pubblica e lascia online il deploy
+  # precedente: un errore nel blog non può mandare giù il sito.
+  command = "npm run build"
   publish = "."
 
 [[redirects]]

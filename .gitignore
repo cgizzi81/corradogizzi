@@ -1,0 +1,9 @@
+# Dipendenze: le installa Netlify a ogni build
+node_modules/
+
+# Output di Eleventy: generato dalla build, non va versionato.
+# I sorgenti del blog stanno in _blog/
+blog/
+
+# Cache di Eleventy
+.cache/

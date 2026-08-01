@@ -37,6 +37,43 @@ menu a tendina (hover e focus da desktop, pulsante +/− da mobile).
 
 Nelle pagine in sottocartella ricordarsi il `../` anche su CSS, JS e immagini.
 
+## Il blog (Eleventy)
+
+Il blog è **l'unica parte del sito generata da una build**. Tutto il resto resta HTML
+scritto a mano.
+
+```
+_blog/                  sorgenti — si modifica questo
+  index.njk             indice del blog
+  _includes/base.njk    template dell'articolo (head, schema, avvertenza, CTA)
+  posts/*.md            un file Markdown per articolo
+  posts/posts.json      impostazioni comuni a tutti i post
+blog/                   output generato — in .gitignore, non si modifica
+```
+
+`npm run build` (cioè `eleventy`) rigenera `blog/`. Netlify lo esegue a ogni deploy:
+i sorgenti sono versionati, l'output no. Se la build fallisce Netlify **non pubblica**
+e lascia online il deploy precedente, quindi un errore nel blog non può mandare giù
+il sito.
+
+Front matter di un articolo:
+
+```yaml
+---
+title: "Titolo mostrato come H1 e usato come <title>"
+descrizione: "140-160 caratteri, diventa meta description, sommario e og:description"
+date: 2026-08-01
+bozza: true      # finché è true: noindex + banner "bozza", fuori da collections.posts
+---
+```
+
+Il `<title>` non porta il suffisso col nome del dottore: i titoli degli articoli sono
+già lunghi e lo sfonderebbero. Se serve un titolo diverso da quello in pagina, si usa
+`titoloSeo` nel front matter.
+
+**`bozza: true` è il default** (impostato in `posts/posts.json`): un articolo nasce non
+indicizzato e viene aperto a Google solo quando Corrado lo approva, togliendo il campo.
+
 ## Sezioni di contenuto clinico
 
 ```
