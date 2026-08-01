@@ -94,15 +94,40 @@ p{color:var(--gray-700);font-size:1.02rem;}
 .lang-btn{background:transparent;border:1px solid rgba(184,150,46,.45);color:var(--gold-light);padding:.28rem .7rem;border-radius:2px;font-size:.7rem;cursor:pointer;transition:all var(--transition);font-family:var(--font-body);font-weight:700;letter-spacing:.1em;}
 .lang-btn:hover{background:var(--gold);color:var(--white);border-color:var(--gold);}
 
+/* ── Menu a tendina (voce "Trattamenti") ──
+   Da desktop si apre al passaggio del mouse e al focus da tastiera; da mobile
+   il menu principale è già una lista verticale, quindi il sottomenu si apre
+   con il pulsante +/− gestito in main.js. */
+.nav-dropdown{position:relative;display:flex;align-items:center;}
+.nav-caret{font-size:.6em;margin-left:.35rem;display:inline-block;}
+.nav-sub-toggle{display:none;background:none;border:none;cursor:pointer;}
+.nav-submenu{display:none;position:absolute;top:100%;left:-1rem;min-width:250px;background:var(--navy);border:1px solid rgba(255,255,255,.12);border-radius:4px;padding:.5rem 0;box-shadow:0 12px 32px rgba(0,0,0,.3);margin-top:.75rem;}
+.nav-dropdown:hover .nav-submenu,
+.nav-dropdown:focus-within .nav-submenu{display:block;}
+.nav-submenu a{display:block;padding:.6rem 1.25rem;font-size:.72rem;letter-spacing:.08em;white-space:nowrap;}
+.nav-submenu a::after{display:none;}
+.nav-submenu a:hover{background:rgba(255,255,255,.06);color:var(--white);}
+
 .nav-toggle{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;}
 .nav-toggle span{display:block;width:24px;height:2px;background:var(--white);transition:all var(--transition);}
 
 @media(max-width:900px){
   .nav-toggle{display:flex;}
-  .nav-links{display:none;position:fixed;top:var(--nav-height);left:0;right:0;background:var(--navy);flex-direction:column;align-items:flex-start;gap:0;padding:1.5rem 2rem 2rem;border-top:1px solid rgba(255,255,255,.1);}
+  .nav-links{display:none;position:fixed;top:var(--nav-height);left:0;right:0;bottom:0;background:var(--navy);flex-direction:column;align-items:flex-start;gap:0;padding:1.5rem 2rem 2rem;border-top:1px solid rgba(255,255,255,.1);overflow-y:auto;}
   .nav-links.open{display:flex;}
   .nav-links a{padding:.75rem 0;font-size:.9rem;width:100%;border-bottom:1px solid rgba(255,255,255,.07);}
   .lang-btn{margin-top:.75rem;}
+
+  .nav-dropdown{display:block;width:100%;position:relative;}
+  .nav-caret{display:none;}
+  .nav-sub-toggle{display:block;position:absolute;top:0;right:0;width:44px;height:44px;color:rgba(255,255,255,.8);}
+  .nav-sub-toggle::before{content:'+';font-size:1.4rem;line-height:1;}
+  .nav-sub-toggle[aria-expanded="true"]::before{content:'−';}
+  .nav-submenu{display:none;position:static;min-width:0;background:none;border:none;box-shadow:none;margin:0;padding:0 0 .5rem 1rem;}
+  .nav-dropdown:hover .nav-submenu,
+  .nav-dropdown:focus-within .nav-submenu{display:none;}
+  .nav-submenu.open{display:block;}
+  .nav-submenu a{padding:.6rem 0;font-size:.82rem;}
 }
 
 /* ── Hero ── */

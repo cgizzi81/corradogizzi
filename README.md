@@ -14,6 +14,8 @@ corradogizzi/
 ├── prenota.html        ← Calendario prenotazioni + form contatto
 ├── privacy.html        ← Privacy Policy GDPR
 ├── grazie.html         ← Conferma invio form (non indicizzata)
+├── chirurgia/          ← Sezione chirurgia: indice + una pagina per procedura
+├── laser/              ← Sezione laser: indice + una pagina per trattamento
 ├── netlify.toml        ← Configurazione hosting Netlify
 ├── robots.txt          ← Istruzioni per i motori di ricerca
 ├── sitemap.xml         ← Elenco pagine indicizzabili — aggiornare a ogni pagina nuova
@@ -26,7 +28,8 @@ corradogizzi/
 └── assets/
     ├── logo-symbol.svg ← Logo grafico (senza testo)
     ├── logo.svg        ← Logo completo
-    └── foto.jpg        ← Foto professionale (in realtà un PNG di 1,8 MB: da ottimizzare)
+    ├── foto.jpg        ← Foto professionale (JPEG 1000×750, 53 KB)
+    └── foto.webp       ← Stessa foto in WebP (35 KB), servita via <picture>
 ```
 
 ---
@@ -58,15 +61,27 @@ Apri `css/style.css`. Tutti i colori principali sono in cima al file nella sezio
 - `--cream: #faf8f3` → colore sfondo chiaro
 
 **Aggiungere una voce al menu:**
-Apri `js/layout.js`, trova l'array `pages` e aggiungi una riga seguendo il formato esistente.
+Apri `js/layout.js`, trova l'array `NAV_PAGES` e aggiungi una riga seguendo il formato
+esistente. Se la voce ha un `children`, diventa automaticamente un menu a tendina.
+
+**Aggiungere una pagina in una sottocartella:**
+Copia l'intestazione di `chirurgia/trabeculectomia.html` e ricordati che tutti i
+percorsi vogliono il prefisso `../`, incluso l'ultimo script:
+`injectLayout('chiave-pagina', '../')`.
 
 ---
 
-## Aggiungere la foto (se si vuole cambiare)
+## Cambiare la foto
 
-1. Rinomina la nuova foto `foto.jpg`
-2. Copiala nella cartella `assets/`, sovrascrivendo quella esistente
-3. Il sito si aggiorna automaticamente — nessun altro file da toccare
+La foto viene servita in due formati tramite `<picture>`: WebP per i browser che lo
+supportano, JPEG come riserva. Non basta più sovrascrivere un file solo.
+
+L'originale era un PNG da 1,8 MB rinominato `.jpg` e mostrato a 400 px di larghezza:
+pesava 34 volte il necessario. Se cambi la foto, falla ridimensionare e convertire
+prima di caricarla — a 1000 px di lato lungo, qualità 82.
+
+Vanno aggiornati insieme `assets/foto.jpg`, `assets/foto.webp` e gli attributi
+`width`/`height` degli `<img>` in `index.html` e `biografia.html`.
 
 ---
 

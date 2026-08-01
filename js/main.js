@@ -29,6 +29,17 @@ function initMobileMenu() {
     }
   });
   sync();
+
+  // Sottomenu su mobile: da desktop si apre in hover/focus via CSS, qui serve
+  // solo il pulsante +/− quando il menu è la lista verticale a tutta pagina.
+  links.querySelectorAll('.nav-sub-toggle').forEach(btn => {
+    const submenu = btn.parentElement.querySelector('.nav-submenu');
+    if (!submenu) return;
+    btn.addEventListener('click', () => {
+      const open = submenu.classList.toggle('open');
+      btn.setAttribute('aria-expanded', String(open));
+    });
+  });
 }
 
 // ── Scroll reveal ──────────────────────────────────────────

@@ -24,8 +24,35 @@ Sito statico multi-pagina in HTML/CSS/JS vanilla. Nessuna build, nessuna dipende
 | Voci di menu e footer | `js/layout.js` |
 | Comportamenti (menu mobile, FAQ, form, reveal) | `js/main.js` |
 
-Nav e footer sono iniettati da `js/layout.js` via `injectLayout('<chiave-pagina>')`,
+Nav e footer sono iniettati da `js/layout.js` via `injectLayout('<chiave-pagina>', '<base>')`,
 chiamato in fondo al `<body>` di ogni pagina.
+
+- pagine in radice: `injectLayout('home')` — il secondo argomento si omette
+- pagine in sottocartella: `injectLayout('trabeculectomia', '../')`
+
+Il secondo argomento è il prefisso applicato a **tutti** i percorsi di nav e footer,
+così l'elenco delle voci di menu resta scritto una volta sola rispetto alla radice.
+Le voci di menu stanno nell'array `NAV_PAGES`; una voce con `children` diventa un
+menu a tendina (hover e focus da desktop, pulsante +/− da mobile).
+
+Nelle pagine in sottocartella ricordarsi il `../` anche su CSS, JS e immagini.
+
+## Sezioni di contenuto clinico
+
+```
+chirurgia/   → index (indice) + una pagina per procedura
+laser/       → index (indice) + una pagina per trattamento
+```
+
+Procedure previste: trabeculectomia, impianti drenanti, MIGS, MIBS.
+Laser previsti: SLT, iridotomia YAG, ciclofotocoagulazione a diodo.
+
+**Le pagine cliniche nascono con `<meta name="robots" content="noindex, follow">`
+e restano fuori dalla `sitemap.xml` finché Corrado non le ha revisionate.** Il
+contenuto medico non validato non deve essere indicizzato: la pagina è comunque
+raggiungibile al suo URL reale, così la revisione avviene sul sito vero.
+Alla validazione: togliere il `noindex`, togliere il commento «BOZZA DA REVISIONARE»
+e aggiungere la riga in `sitemap.xml`.
 
 ## Regole SEO — da rispettare su ogni pagina nuova
 
