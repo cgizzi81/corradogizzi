@@ -111,6 +111,23 @@ Ogni nuova pagina indicizzabile richiede:
 Le pagine non indicizzabili (es. `grazie.html`) vanno con
 `<meta name="robots" content="noindex, follow">`, fuori dalla sitemap e in `Disallow` nel `robots.txt`.
 
+### Orari: due punti da tenere allineati
+
+Gli orari degli ambulatori compaiono in **due posti che vanno aggiornati insieme**:
+
+1. le tabelle `.orari-table` in `ambulatori.html` (quello che legge il paziente)
+2. gli `openingHoursSpecification` nei nodi `Physician`, presenti **sia** in
+   `ambulatori.html` **sia** in `index.html` (quello che legge Google)
+
+Stato al 6 agosto 2026: **Faenza il lunedì 15:00–19:00, Bologna il mercoledì
+15:00–19:00.** Sono gli unici due mezzi giornate di attività libero-professionale.
+Fino a quella data il sito dichiarava giorni diversi e invertiti fra le due sedi
+(Bologna lun/mer/ven, Faenza mar/gio): un dato ereditato e mai verificato.
+
+Se gli orari cambiano vanno cambiati in tre punti, o Google mostrerà "Aperto ora"
+quando l'ambulatorio è chiuso. Quando ci sarà il Google Business Profile diventeranno
+quattro: anche la scheda GBP deve dire la stessa cosa.
+
 ### Identificatori dello schema — riusare, non duplicare
 
 Le entità hanno `@id` stabili e vanno referenziate, mai ridefinite per intero:
