@@ -90,6 +90,7 @@ function getFooterHTML(base) {
           <a href="${base}ambulatori.html">Ambulatori</a>
           <a href="${base}biografia.html">Biografia</a>
           <a href="${base}pazienti.html">Info Pazienti</a>
+          <a href="${base}glaucoma-bologna/">Glaucoma a Bologna</a>
           <a href="${base}chirurgia/index.html">Chirurgia del glaucoma</a>
           <a href="${base}laser/index.html">Trattamenti laser</a>
           <a href="${base}prenota.html">Prenota</a>

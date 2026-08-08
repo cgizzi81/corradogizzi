@@ -1,6 +1,6 @@
 # Lavori in corso — corradogizzi.it
 
-Aggiornato al **6 agosto 2026**.
+Aggiornato all'**8 agosto 2026**.
 
 Elenco dei punti aperti, diviso per chi deve muoversi. Le voci si spuntano
 man mano; quando una è chiusa si toglie da qui.
@@ -17,6 +17,8 @@ Si aprono ai motori solo dopo la validazione clinica.
 - [ ] `corradogizzi.it/chirurgia/`
 - [ ] `corradogizzi.it/laser/`
 - [ ] `corradogizzi.it/blog/glaucoma-ereditario/`
+- [ ] `corradogizzi.it/glaucoma-bologna/` ← revisione veloce: nessun contenuto clinico
+      nuovo, basta controllare che i fatti sulla sede siano giusti
 
 La trabeculectomia è il modello su cui verranno replicate le altre sei schede
 cliniche: correggerla adesso vale sei volte.
@@ -59,7 +61,8 @@ tutto il resto.
 
 - [ ] Sei schede cliniche: impianti drenanti, MIGS, MIBS, SLT, iridotomia YAG,
       ciclofotocoagulazione a diodo *(dopo la revisione della trabeculectomia)*
-- [ ] Tre landing geografiche: Bologna, Faenza, Emilia-Romagna
+- [ ] Landing geografiche: Bologna è scritta e in attesa di revisione; Faenza ed
+      Emilia-Romagna partono appena il formato è approvato
 - [ ] Altri articoli del blog
 - [ ] Integrazione delle illustrazioni nelle pagine e nei PDF
 - [ ] Player Bunny Stream nelle pagine pazienti
