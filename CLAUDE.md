@@ -111,6 +111,19 @@ Ogni nuova pagina indicizzabile richiede:
 Le pagine non indicizzabili (es. `grazie.html`) vanno con
 `<meta name="robots" content="noindex, follow">`, fuori dalla sitemap e in `Disallow` nel `robots.txt`.
 
+### Favicon
+
+Il logo è un occhio composto da linee sottilissime: rasterizzato a 16 px diventa una
+macchia grigia, a 32 px produce moiré. Le icone piccole usano quindi un **mark
+semplificato** (`assets/favicon.svg`: disco oro con l'apertura a mandorla in navy), che
+ne conserva la geometria ma sopravvive alle dimensioni minime; le icone grandi
+(apple-touch, 192, 512) usano invece il **logo reale** in oro su fondo navy, perché a
+quelle misure le linee si leggono.
+
+I `<link>` della favicon usano percorsi **assoluti dalla radice** (`/favicon.ico`), a
+differenza del resto del sito: così l'unico blocco vale identico anche per le pagine in
+sottocartella. Va copiato nell'`<head>` di ogni pagina nuova.
+
 ### Orari: due punti da tenere allineati
 
 Gli orari degli ambulatori compaiono in **due posti che vanno aggiornati insieme**:

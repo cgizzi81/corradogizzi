@@ -21,6 +21,8 @@ corradogizzi/
 ├── package.json        ← Dipendenze della build del blog
 ├── eleventy.config.js  ← Configurazione del generatore del blog
 ├── netlify.toml        ← Configurazione hosting Netlify
+├── favicon.ico         ← Icona del sito (16, 32 e 48 px)
+├── site.webmanifest    ← Nome e icone per l'aggiunta alla schermata home
 ├── robots.txt          ← Istruzioni per i motori di ricerca
 ├── sitemap.xml         ← Elenco pagine indicizzabili — aggiornare a ogni pagina nuova
 ├── CLAUDE.md           ← Convenzioni di progetto (SEO, accessibilità, schema)
@@ -33,7 +35,12 @@ corradogizzi/
     ├── logo-symbol.svg ← Logo grafico (senza testo)
     ├── logo.svg        ← Logo completo
     ├── foto.jpg        ← Foto professionale (JPEG 1000×750, 53 KB)
-    └── foto.webp       ← Stessa foto in WebP (35 KB), servita via <picture>
+    ├── foto.webp       ← Stessa foto in WebP (35 KB), servita via <picture>
+    ├── favicon.svg     ← Icona semplificata per le schede del browser
+    ├── favicon-96.png  ← Stessa icona in PNG
+    ├── apple-touch-icon.png ← Icona per iPhone/iPad (180px)
+    ├── icon-192.png    ← Icona per Android
+    └── icon-512.png    ← Icona ad alta risoluzione
 ```
 
 ---
