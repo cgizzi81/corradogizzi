@@ -17,8 +17,10 @@ Si aprono ai motori solo dopo la validazione clinica.
 - [ ] `corradogizzi.it/chirurgia/`
 - [ ] `corradogizzi.it/laser/`
 - [ ] `corradogizzi.it/blog/glaucoma-ereditario/`
-- [ ] `corradogizzi.it/glaucoma-bologna/` ← revisione veloce: nessun contenuto clinico
-      nuovo, basta controllare che i fatti sulla sede siano giusti
+- [x] `corradogizzi.it/glaucoma-bologna/` — approvata l'8 agosto, resta da togliere
+      il noindex e metterla in sitemap
+- [ ] `corradogizzi.it/glaucoma-faenza/` ← revisione veloce
+- [ ] `corradogizzi.it/glaucoma-emilia-romagna/` ← revisione veloce
 
 La trabeculectomia è il modello su cui verranno replicate le altre sei schede
 cliniche: correggerla adesso vale sei volte.
@@ -61,8 +63,9 @@ tutto il resto.
 
 - [ ] Sei schede cliniche: impianti drenanti, MIGS, MIBS, SLT, iridotomia YAG,
       ciclofotocoagulazione a diodo *(dopo la revisione della trabeculectomia)*
-- [ ] Landing geografiche: Bologna è scritta e in attesa di revisione; Faenza ed
-      Emilia-Romagna partono appena il formato è approvato
+- [x] Landing geografiche: tutte e tre scritte (Bologna approvata, Faenza ed
+      Emilia-Romagna in attesa di revisione)
+- [ ] Reintegrare le correzioni della trabeculectomia dal file Markdown
 - [ ] Altri articoli del blog
 - [ ] Integrazione delle illustrazioni nelle pagine e nei PDF
 - [ ] Player Bunny Stream nelle pagine pazienti
