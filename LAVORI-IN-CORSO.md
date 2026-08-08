@@ -13,17 +13,16 @@ man mano; quando una è chiusa si toglie da qui.
 Sono online ma **non indicizzate**: hanno `noindex`, quindi Google non le vede.
 Si aprono ai motori solo dopo la validazione clinica.
 
-- [ ] `corradogizzi.it/chirurgia/trabeculectomia.html` ← **priorità: sblocca sei pagine**
-- [ ] `corradogizzi.it/chirurgia/`
-- [ ] `corradogizzi.it/laser/`
+- [x] `corradogizzi.it/chirurgia/trabeculectomia.html` — **approvata e pubblicata** l'8 agosto
+- [x] `corradogizzi.it/glaucoma-bologna/` — approvata e pubblicata
+- [x] `corradogizzi.it/glaucoma-emilia-romagna/` — approvata e pubblicata
+- [ ] `corradogizzi.it/glaucoma-faenza/` ← riscritte due sezioni sul ruolo ospedaliero,
+      serve una conferma prima di pubblicare
+- [ ] `corradogizzi.it/chirurgia/` ← indice, revisione breve
+- [ ] `corradogizzi.it/laser/` ← indice, revisione breve
 - [ ] `corradogizzi.it/blog/glaucoma-ereditario/`
-- [x] `corradogizzi.it/glaucoma-bologna/` — approvata l'8 agosto, resta da togliere
-      il noindex e metterla in sitemap
-- [ ] `corradogizzi.it/glaucoma-faenza/` ← revisione veloce
-- [ ] `corradogizzi.it/glaucoma-emilia-romagna/` ← revisione veloce
 
-La trabeculectomia è il modello su cui verranno replicate le altre sei schede
-cliniche: correggerla adesso vale sei volte.
+La trabeculectomia è approvata: è il modello su cui replicare le altre sei schede.
 
 ### 2. Google Business Profile
 Due schede, una per città, nome proposto "Dr. Corrado Gizzi – Specialista in Glaucoma".
@@ -62,10 +61,9 @@ tutto il resto.
 ## 🟢 Tocca a Claude — appena sbloccato
 
 - [ ] Sei schede cliniche: impianti drenanti, MIGS, MIBS, SLT, iridotomia YAG,
-      ciclofotocoagulazione a diodo *(dopo la revisione della trabeculectomia)*
+      ciclofotocoagulazione a diodo — **sbloccate**, il modello è approvato
 - [x] Landing geografiche: tutte e tre scritte (Bologna approvata, Faenza ed
       Emilia-Romagna in attesa di revisione)
-- [ ] Reintegrare le correzioni della trabeculectomia dal file Markdown
 - [ ] Altri articoli del blog
 - [ ] Integrazione delle illustrazioni nelle pagine e nei PDF
 - [ ] Player Bunny Stream nelle pagine pazienti
