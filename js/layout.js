@@ -14,9 +14,8 @@ const NAV_PAGES = [
   {
     key: 'cura', href: 'chirurgia/index.html', label: 'Trattamenti',
     children: [
-      { key: 'chirurgia',       href: 'chirurgia/index.html',            label: 'Chirurgia del glaucoma' },
-      { key: 'trabeculectomia', href: 'chirurgia/trabeculectomia.html',  label: '— Trabeculectomia' },
-      { key: 'laser',           href: 'laser/index.html',                label: 'Trattamenti laser' },
+      { key: 'chirurgia', href: 'chirurgia/index.html', label: 'Chirurgia del glaucoma' },
+      { key: 'laser',     href: 'laser/index.html',     label: 'Trattamenti laser' },
     ],
   },
   { key: 'blog', href: 'blog/index.html', label: 'Blog' },

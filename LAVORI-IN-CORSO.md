@@ -16,11 +16,19 @@ Si aprono ai motori solo dopo la validazione clinica.
 - [x] `corradogizzi.it/chirurgia/trabeculectomia.html` — **approvata e pubblicata** l'8 agosto
 - [x] `corradogizzi.it/glaucoma-bologna/` — approvata e pubblicata
 - [x] `corradogizzi.it/glaucoma-emilia-romagna/` — approvata e pubblicata
-- [ ] `corradogizzi.it/glaucoma-faenza/` ← riscritte due sezioni sul ruolo ospedaliero,
-      serve una conferma prima di pubblicare
+- [x] `corradogizzi.it/glaucoma-faenza/` — approvata e pubblicata
 - [ ] `corradogizzi.it/chirurgia/` ← indice, revisione breve
+- [ ] `corradogizzi.it/chirurgia/impianti-drenanti.html`
+- [ ] `corradogizzi.it/chirurgia/migs.html`
+- [ ] `corradogizzi.it/chirurgia/mibs.html`
 - [ ] `corradogizzi.it/laser/` ← indice, revisione breve
+- [ ] `corradogizzi.it/laser/slt.html`
+- [ ] `corradogizzi.it/laser/iridotomia-yag.html`
+- [ ] `corradogizzi.it/laser/ciclofotocoagulazione.html`
 - [ ] `corradogizzi.it/blog/glaucoma-ereditario/`
+
+Le sei schede cliniche seguono la struttura della trabeculectomia, già approvata.
+Nessuna contiene percentuali di successo o dati numerici: se ne servono, vanno forniti.
 
 La trabeculectomia è approvata: è il modello su cui replicare le altre sei schede.
 
@@ -60,10 +68,8 @@ tutto il resto.
 
 ## 🟢 Tocca a Claude — appena sbloccato
 
-- [ ] Sei schede cliniche: impianti drenanti, MIGS, MIBS, SLT, iridotomia YAG,
-      ciclofotocoagulazione a diodo — **sbloccate**, il modello è approvato
-- [x] Landing geografiche: tutte e tre scritte (Bologna approvata, Faenza ed
-      Emilia-Romagna in attesa di revisione)
+- [x] Sei schede cliniche: scritte tutte, in attesa di revisione
+- [x] Landing geografiche: tutte e tre scritte, approvate e pubblicate
 - [ ] Altri articoli del blog
 - [ ] Integrazione delle illustrazioni nelle pagine e nei PDF
 - [ ] Player Bunny Stream nelle pagine pazienti
