@@ -111,6 +111,24 @@ Ogni nuova pagina indicizzabile richiede:
 Le pagine non indicizzabili (es. `grazie.html`) vanno con
 `<meta name="robots" content="noindex, follow">`, fuori dalla sitemap e in `Disallow` nel `robots.txt`.
 
+### Blocco autore (E-E-A-T)
+
+Ogni pagina di contenuto clinico porta in fondo, **prima della CTA finale**, un blocco
+`.autore` con foto, nome, credenziali e data di ultima revisione. Va scritto in **HTML
+statico**, non iniettato da JavaScript: è il segnale con cui Google distingue un
+contenuto medico firmato da uno anonimo, e deve esserci anche senza rendering.
+
+Nei dati strutturati gli corrispondono `reviewedBy` (già presente) e `lastReviewed`
+sul nodo `MedicalWebPage`. **Le due cose vanno aggiornate insieme**: se si rivede il
+testo di una pagina, si aggiorna la data sia nel blocco visibile sia in `lastReviewed`,
+altrimenti Google legge una data e il paziente ne vede un'altra.
+
+Il blocco usa lo stesso sfondo della sezione che lo precede, con `padding-top:0`, così
+si legge come continuazione del contenuto e non come una fascia a sé.
+
+Pagine che lo portano: `pazienti.html`, tutte quelle in `chirurgia/` e `laser/`, e ogni
+articolo del blog tramite `_blog/_includes/base.njk`.
+
 ### Favicon
 
 Il logo è un occhio composto da linee sottilissime: rasterizzato a 16 px diventa una

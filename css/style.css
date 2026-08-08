@@ -352,3 +352,28 @@ footer :focus-visible,
 .prose-blog a:hover{text-decoration:underline;}
 .prose-blog strong{color:var(--navy);}
 .prose-blog blockquote{border-left:3px solid var(--gold);padding-left:1.25rem;margin:1.75rem 0;font-family:var(--font-accent);font-style:italic;font-size:1.1rem;color:var(--gray-700);}
+
+/* ── Blocco autore (E-E-A-T) ──
+   Chi firma il contenuto clinico deve essere visibile al paziente, non solo
+   dichiarato nei dati strutturati. Va scritto in HTML statico, non iniettato
+   da JavaScript: è un segnale che deve esserci anche senza rendering. */
+.autore{display:flex;gap:1.5rem;align-items:flex-start;max-width:760px;padding:1.75rem;
+        background:var(--white);border:1px solid var(--gray-300);border-left:3px solid var(--gold);
+        border-radius:var(--radius);}
+.autore-foto{width:88px;height:88px;border-radius:50%;object-fit:cover;flex-shrink:0;}
+.autore-label{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
+              color:var(--gold-deep);font-weight:700;margin-bottom:.4rem;}
+.autore-nome{font-family:var(--font-display);font-size:1.15rem;font-weight:700;
+             color:var(--navy);margin-bottom:.15rem;}
+.autore-ruolo{font-size:.86rem;color:var(--gray-700);margin-bottom:.75rem;}
+.autore-cred{font-size:.84rem;color:var(--gray-700);margin-bottom:.35rem;padding-left:1.1rem;
+             position:relative;}
+.autore-cred::before{content:"—";position:absolute;left:0;color:var(--gold);}
+.autore-meta{margin-top:1rem;font-size:.78rem;color:var(--gray-600);
+             display:flex;gap:1.25rem;flex-wrap:wrap;align-items:center;}
+.autore-meta a{color:var(--gold-deep);font-weight:700;}
+.autore-meta a:hover{text-decoration:underline;}
+@media(max-width:600px){
+  .autore{flex-direction:column;gap:1rem;padding:1.25rem;}
+  .autore-foto{width:64px;height:64px;}
+}
