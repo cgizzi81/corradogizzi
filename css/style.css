@@ -358,8 +358,8 @@ footer :focus-visible,
    dichiarato nei dati strutturati. Va scritto in HTML statico, non iniettato
    da JavaScript: è un segnale che deve esserci anche senza rendering. */
 .autore{display:flex;gap:1.5rem;align-items:flex-start;max-width:760px;padding:1.75rem;
-        background:var(--white);border:1px solid var(--gray-300);border-left:3px solid var(--gold);
-        border-radius:var(--radius);}
+        background:var(--white);border:1px solid var(--gray-300);border-left:4px solid var(--gold);
+        border-radius:var(--radius);box-shadow:var(--shadow-sm);}
 .autore-foto{width:88px;height:88px;border-radius:50%;object-fit:cover;flex-shrink:0;}
 .autore-label{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
               color:var(--gold-deep);font-weight:700;margin-bottom:.4rem;}

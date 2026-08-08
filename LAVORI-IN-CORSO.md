@@ -66,6 +66,18 @@ tutto il resto.
 
 ---
 
+## 🟢 Prossimo task già concordato
+
+**Cinque nuove pagine informative**, per completare l'hub di contenuti:
+
+- [ ] **Campo visivo** — cos'è, come ci si prepara, perché mette ansia e perché non deve
+- [ ] **OCT** — cosa misura e perché conta il confronto nel tempo, non il singolo esame
+- [ ] **Colliri e corretta instillazione** — probabilmente la più utile di tutte:
+      l'aderenza alla terapia è il vero problema clinico del glaucoma
+- [ ] **Tipi di glaucoma** — angolo aperto, angolo chiuso, normotensivo, secondari;
+      oggi stanno compressi in un paragrafo di `pazienti.html`
+- [ ] **Ipertensione oculare** — quando la pressione è alta ma il glaucoma non c'è
+
 ## 🟢 Tocca a Claude — appena sbloccato
 
 - [x] Sei schede cliniche: scritte tutte, in attesa di revisione
