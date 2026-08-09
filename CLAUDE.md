@@ -24,18 +24,27 @@ Sito statico multi-pagina in HTML/CSS/JS vanilla. Nessuna build, nessuna dipende
 | Voci di menu e footer | `js/layout.js` |
 | Comportamenti (menu mobile, FAQ, form, reveal) | `js/main.js` |
 
-Nav e footer sono iniettati da `js/layout.js` via `injectLayout('<chiave-pagina>', '<base>')`,
-chiamato in fondo al `<body>` di ogni pagina.
+Nav e footer sono iniettati da `js/layout.js` via `injectLayout('<chiave-pagina>')`,
+chiamato in fondo al `<body>` di ogni pagina. Le voci stanno nell'array `NAV_PAGES`;
+una voce con `children` diventa un menu a tendina.
 
-- pagine in radice: `injectLayout('home')` — il secondo argomento si omette
-- pagine in sottocartella: `injectLayout('trabeculectomia', '../')`
+Il secondo argomento (`'../'`) non serve più ed è ignorato: resta accettato solo per
+non dover toccare le chiamate già scritte in fondo alle pagine.
 
-Il secondo argomento è il prefisso applicato a **tutti** i percorsi di nav e footer,
-così l'elenco delle voci di menu resta scritto una volta sola rispetto alla radice.
-Le voci di menu stanno nell'array `NAV_PAGES`; una voce con `children` diventa un
-menu a tendina (hover e focus da desktop, pulsante +/− da mobile).
+Nelle pagine in sottocartella ricordarsi il `../` su CSS, JS e immagini della pagina —
+nav e footer invece usano percorsi assoluti.
 
-Nelle pagine in sottocartella ricordarsi il `../` anche su CSS, JS e immagini.
+### I link interni vanno alla forma canonica
+
+Un link a `/chirurgia/index.html` fa scansionare a Google un duplicato di
+`/chirurgia/`, che poi scarta: è ciò che Search Console segnala come
+**«Pagina alternativa con tag canonical appropriato»**. Non è un errore grave — il
+canonical sta facendo il suo lavoro — ma è budget di scansione buttato.
+
+Quindi: **mai linkare `index.html`**. La home è `/`, le sezioni sono `/chirurgia/`,
+`/laser/`, `/blog/`, le landing sono `/glaucoma-bologna/` e così via. `netlify.toml`
+tiene comunque dei 301 da `/…/index.html` alla forma canonica, per gli URL che Google
+avesse già scoperto.
 
 ## Il blog (Eleventy)
 

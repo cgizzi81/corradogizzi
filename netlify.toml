@@ -12,6 +12,28 @@
   status = 301
   force  = true
 
+# Gli URL /…/index.html sono duplicati della forma canonica /…/ : Search Console
+# li segnalava come "Pagina alternativa con tag canonical appropriato". I link
+# interni ora puntano già alla forma giusta; questi 301 consolidano gli URL che
+# Google ha comunque scoperto e li tolgono dalla coda di scansione.
+[[redirects]]
+  from = "/index.html"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/:sezione/index.html"
+  to = "/:sezione/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/blog/:articolo/index.html"
+  to = "/blog/:articolo/"
+  status = 301
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]
