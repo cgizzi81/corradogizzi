@@ -7,3 +7,6 @@ blog/
 
 # Cache di Eleventy
 .cache/
+
+# Scritto dalla build solo sui deploy di anteprima, per tenerli fuori da Google
+_headers

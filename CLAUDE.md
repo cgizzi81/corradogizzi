@@ -100,6 +100,31 @@ raggiungibile al suo URL reale, così la revisione avviene sul sito vero.
 Alla validazione: togliere il `noindex`, togliere il commento «BOZZA DA REVISIONARE»
 e aggiungere la riga in `sitemap.xml`.
 
+## Il flusso di lavoro: ramo di revisione, poi produzione
+
+Netlify fattura a **crediti**: un deploy di produzione ne costa **15**, mentre i deploy
+di **branch e le anteprime non sono conteggiati**. Con un tetto di circa 300 crediti al
+mese, pubblicare a ogni correzione consumerebbe il budget in due settimane.
+
+Quindi:
+
+```
+ramo "revisione"  →  https://revisione--corrado-gizzi.netlify.app  →  gratis
+      ↓  solo a blocco approvato
+main              →  https://corradogizzi.it                       →  15 crediti
+```
+
+Le correzioni si accumulano su `revisione`, Corrado le rivede all'indirizzo del ramo, e
+si porta su `main` un blocco completo alla volta. Il sito Netlify si chiama
+`corrado-gizzi`.
+
+**I deploy di anteprima sono una copia integrale e scansionabile del sito su un secondo
+host.** Verificato il 12 agosto 2026: Netlify non aggiunge alcun `X-Robots-Tag` e serve
+il `robots.txt` di produzione. Per questo `tools/anteprime-noindex.mjs` gira prima di
+Eleventy e, quando la variabile `CONTEXT` di Netlify è diversa da `production`, scrive un
+`_headers` con `X-Robots-Tag: noindex` e un `robots.txt` con `Disallow: /`. In produzione
+e in locale non tocca niente. `_headers` è in `.gitignore`: lo genera la build.
+
 ## Regole SEO — da rispettare su ogni pagina nuova
 
 Il dominio canonico è **`https://corradogizzi.it`** senza `www`: `netlify.toml`
