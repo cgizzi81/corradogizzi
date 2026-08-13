@@ -102,6 +102,10 @@ p{color:var(--gray-700);font-size:1.02rem;}
 .nav-caret{font-size:.6em;margin-left:.35rem;display:inline-block;}
 .nav-sub-toggle{display:none;background:none;border:none;cursor:pointer;}
 .nav-submenu{display:none;position:absolute;top:100%;left:-1rem;min-width:250px;background:var(--navy);border:1px solid rgba(255,255,255,.12);border-radius:4px;padding:.5rem 0;box-shadow:0 12px 32px rgba(0,0,0,.3);margin-top:.75rem;}
+/* Lo stacco fra la voce e il pannello non appartiene a nessuno dei due: senza
+   questo ponte invisibile il puntatore lo attraversa, il dropdown perde l'hover
+   e il menu si chiude prima che si riesca a cliccare Chirurgia o Laser. */
+.nav-submenu::before{content:'';position:absolute;left:0;right:0;top:-.85rem;height:.85rem;}
 .nav-dropdown:hover .nav-submenu,
 .nav-dropdown:focus-within .nav-submenu{display:block;}
 .nav-submenu a{display:block;padding:.6rem 1.25rem;font-size:.72rem;letter-spacing:.08em;white-space:nowrap;}
@@ -124,9 +128,13 @@ p{color:var(--gray-700);font-size:1.02rem;}
   .nav-sub-toggle::before{content:'+';font-size:1.4rem;line-height:1;}
   .nav-sub-toggle[aria-expanded="true"]::before{content:'−';}
   .nav-submenu{display:none;position:static;min-width:0;background:none;border:none;box-shadow:none;margin:0;padding:0 0 .5rem 1rem;}
+  .nav-submenu::before{display:none;}
   .nav-dropdown:hover .nav-submenu,
   .nav-dropdown:focus-within .nav-submenu{display:none;}
-  .nav-submenu.open{display:block;}
+  /* Deve battere la riga qui sopra: dopo il tap il pulsante + resta col focus,
+     e senza il .nav-dropdown davanti (stessa specificità) il sottomenu aperto
+     verrebbe comunque nascosto da :focus-within. */
+  .nav-dropdown .nav-submenu.open{display:block;}
   .nav-submenu a{padding:.6rem 0;font-size:.82rem;}
 }
 
