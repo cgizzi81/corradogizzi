@@ -104,7 +104,7 @@ function getFooterHTML() {
         <div class="footer-links">
           <a href="mailto:info@corradogizzi.it">info@corradogizzi.it</a>
           <a href="tel:+39051242588">LCB Bologna: 051 242588</a>
-          <a href="tel:+3905461910613">Le Cicogne Faenza: 0546 1910613</a>
+          <a href="tel:+393491908892">Le Cicogne Faenza: 349 1908892</a>
           <a href="/prenota.html">Prenota online →</a>
         </div>
       </div>
