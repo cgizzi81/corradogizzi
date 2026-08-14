@@ -66,7 +66,9 @@ L'esame che conta davvero è **la valutazione del nervo ottico**, integrata da e
 strumentali che permettono di misurare oggettivamente lo spessore delle fibre nervose e
 di confrontarlo nel tempo. Si valuta inoltre l'angolo di deflusso, per distinguere le
 forme ad angolo aperto da quelle ad angolo chiuso, e lo spessore corneale, che influenza
-la lettura della pressione.
+la lettura della pressione. Nei casi sospetti, l'inquadramento può richiedere anche un
+esame del campo visivo, per verificare se il danno al nervo ottico si sia già tradotto
+in una perdita funzionale.
 
 L'obiettivo della prima visita, in una persona senza sintomi, non è solo dire "c'è" o
 "non c'è". È **stabilire un punto di partenza** — una fotografia dettagliata del nervo
