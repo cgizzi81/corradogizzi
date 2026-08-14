@@ -94,12 +94,19 @@ non ha `etichetta`, il badge semplicemente non compare.
 ## Sezioni di contenuto clinico
 
 ```
+diagnostica/ → index (indice) + una pagina per esame
 chirurgia/   → index (indice) + una pagina per procedura
 laser/       → index (indice) + una pagina per trattamento
 ```
 
+Esami previsti: OCT, campo visivo, pachimetria, gonioscopia.
 Procedure previste: trabeculectomia, impianti drenanti, MIGS, MIBS.
 Laser previsti: SLT, iridotomia YAG, ciclofotocoagulazione a diodo.
+
+Le tre sezioni stanno sotto la voce di menu **«Diagnosi e cure»** in `NAV_PAGES`. Le
+pagine di dettaglio hanno una chiave `injectLayout` propria (`mibs`, `slt`, …): vanno
+elencate nel campo `interne` della voce figlia, altrimenti il menu non segnala in quale
+sezione ci si trova.
 
 **Le pagine cliniche nascono con `<meta name="robots" content="noindex, follow">`
 e restano fuori dalla `sitemap.xml` finché Corrado non le ha revisionate.** Il

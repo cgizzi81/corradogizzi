@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Favicon. Percorsi assoluti dalla radice: valgono uguali per le pagine in
+       sottocartella, senza doverci anteporre ../ -->
+  <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <!-- Google mostra la favicon nei risultati solo se trova un quadrato di almeno
+       48px, preferibilmente multiplo di 48: senza queste due righe leggeva solo
+       il sizes="32x32" dichiarato sopra e scartava l'icona. -->
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png">
+  <link rel="icon" type="image/png" sizes="144x144" href="/assets/favicon-144.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#0d1f3c">
+  <title>Diagnostica del glaucoma: gli esami | Dott. Corrado Gizzi</title>
+  <meta name="description" content="OCT, campo visivo, pachimetria e gonioscopia: cosa misura ciascun esame nel glaucoma, come si svolge e perché il confronto nel tempo conta più del singolo valore.">
+  <!-- BOZZA DA REVISIONARE — rimuovere il noindex e aggiungere la pagina a
+       sitemap.xml solo dopo la validazione clinica di Corrado. -->
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="https://corradogizzi.it/diagnostica/">
+  <meta property="og:site_name" content="Dott. Corrado Gizzi">
+  <meta property="og:locale" content="it_IT">
+  <meta property="og:title" content="Diagnostica del glaucoma: gli esami | Dott. Corrado Gizzi">
+  <meta property="og:description" content="Gli esami per la diagnosi e il monitoraggio del glaucoma, spiegati al paziente.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://corradogizzi.it/diagnostica/">
+  <meta property="og:image" content="https://corradogizzi.it/assets/foto.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&display=swap">
+  <link rel="stylesheet" href="../css/style.css">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://corradogizzi.it/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Diagnostica del glaucoma",
+          "item": "https://corradogizzi.it/diagnostica/"
+        }
+      ]
+    },
+    {
+      "@type": "MedicalWebPage",
+      "lastReviewed": "2026-08-14",
+      "@id": "https://corradogizzi.it/diagnostica/#webpage",
+      "url": "https://corradogizzi.it/diagnostica/",
+      "name": "Diagnostica del glaucoma | Dott. Corrado Gizzi",
+      "inLanguage": "it-IT",
+      "isPartOf": {
+        "@id": "https://corradogizzi.it/#website"
+      },
+      "audience": {
+        "@type": "PeopleAudience",
+        "audienceType": "Pazienti"
+      },
+      "reviewedBy": {
+        "@id": "https://corradogizzi.it/#corrado-gizzi"
+      },
+      "significantLink": [
+        "https://corradogizzi.it/diagnostica/oct.html",
+        "https://corradogizzi.it/diagnostica/campo-visivo.html",
+        "https://corradogizzi.it/diagnostica/pachimetria.html",
+        "https://corradogizzi.it/diagnostica/gonioscopia.html"
+      ]
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://corradogizzi.it/diagnostica/#esami",
+      "name": "Esami per la diagnosi e il monitoraggio del glaucoma",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "OCT del nervo ottico",
+          "url": "https://corradogizzi.it/diagnostica/oct.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Campo visivo",
+          "url": "https://corradogizzi.it/diagnostica/campo-visivo.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Pachimetria corneale",
+          "url": "https://corradogizzi.it/diagnostica/pachimetria.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "Gonioscopia",
+          "url": "https://corradogizzi.it/diagnostica/gonioscopia.html"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+
+<section class="page-hero">
+  <div class="container">
+    <span class="section-label">Diagnostica del glaucoma</span>
+    <h1>Gli esami</h1>
+    <div class="gold-line"></div>
+    <p class="lead">Cosa si misura, perché, e perché una volta sola non basta</p>
+  </div>
+</section>
+
+<section class="section section--white">
+  <div class="container">
+    <div style="max-width:760px;">
+      <p style="font-size:1.05rem; margin-bottom:1rem;">
+        Diagnosticare un glaucoma non significa misurare la pressione dell'occhio. Quel dato
+        da solo è insufficiente: esistono glaucomi che progrediscono con valori apparentemente
+        normali, e persone con pressione elevata che non svilupperanno mai la malattia.
+      </p>
+      <p style="margin-bottom:1rem;">
+        Quello che serve è mettere insieme informazioni diverse — quanto tessuto nervoso è
+        rimasto, quanto si vede davvero, com'è fatto l'occhio — e soprattutto <strong>seguirle
+        nel tempo</strong>. Nel glaucoma la diagnosi non sta quasi mai in un singolo valore
+        fuori norma: sta in un cambiamento documentato fra un esame e il successivo.
+      </p>
+      <p style="margin-bottom:2rem;">
+        Per questo l'obiettivo della prima visita, in una persona senza sintomi, non è dire
+        "c'è" o "non c'è". È <strong>stabilire un punto di partenza</strong> a cui confrontare
+        tutti i controlli successivi.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="section section--cream">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">Gli esami</span>
+      <h2>Cosa misura ciascuno</h2>
+      <div class="gold-line"></div>
+    </div>
+    <div class="grid-2" style="gap:2rem; align-items:start;">
+      <a href="oct.html" class="info-card reveal" style="display:block;">
+        <h3>OCT del nervo ottico</h3>
+        <p style="font-size:.8rem; text-transform:uppercase; letter-spacing:.1em; color:var(--gold-deep); font-weight:700; margin-bottom:.75rem;">La struttura</p>
+        <p>Misura lo spessore delle fibre nervose con precisione di pochi micron. Dice quanto
+        tessuto è rimasto. È oggettivo, rapido e non tocca l'occhio, ma nelle fasi avanzate
+        perde sensibilità.</p>
+        <p style="margin-top:1rem; color:var(--gold-deep); font-weight:700; font-size:.85rem;">Leggi la scheda completa &rarr;</p>
+      </a>
+      <a href="campo-visivo.html" class="info-card reveal" style="display:block;">
+        <h3>Campo visivo</h3>
+        <p style="font-size:.8rem; text-transform:uppercase; letter-spacing:.1em; color:var(--gold-deep); font-weight:700; margin-bottom:.75rem;">La funzione</p>
+        <p>Misura quanto si vede in ogni punto dello spazio visivo. Dice a cosa serve, nella
+        vita reale, il tessuto rimasto. È soggettivo, quindi richiede ripetizioni per essere
+        affidabile.</p>
+        <p style="margin-top:1rem; color:var(--gold-deep); font-weight:700; font-size:.85rem;">Leggi la scheda completa &rarr;</p>
+      </a>
+      <a href="pachimetria.html" class="info-card reveal" style="display:block;">
+        <h3>Pachimetria corneale</h3>
+        <p style="font-size:.8rem; text-transform:uppercase; letter-spacing:.1em; color:var(--gold-deep); font-weight:700; margin-bottom:.75rem;">Il contesto</p>
+        <p>Misura lo spessore della cornea, attraverso cui la pressione viene stimata. Senza
+        questo dato il valore della pressione resta ambiguo. Si esegue una volta sola.</p>
+        <p style="margin-top:1rem; color:var(--gold-deep); font-weight:700; font-size:.85rem;">Leggi la scheda completa &rarr;</p>
+      </a>
+      <a href="gonioscopia.html" class="info-card reveal" style="display:block;">
+        <h3>Gonioscopia</h3>
+        <p style="font-size:.8rem; text-transform:uppercase; letter-spacing:.1em; color:var(--gold-deep); font-weight:700; margin-bottom:.75rem;">Il meccanismo</p>
+        <p>Permette di guardare l'angolo di deflusso, altrimenti invisibile. Stabilisce se il
+        glaucoma è ad angolo aperto o chiuso: da lì dipende quale trattamento è praticabile.</p>
+        <p style="margin-top:1rem; color:var(--gold-deep); font-weight:700; font-size:.85rem;">Leggi la scheda completa &rarr;</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="section section--white">
+  <div class="container">
+    <div style="max-width:760px;">
+      <div class="note-box" style="margin-top:0;">
+        A questi si affiancano sempre la <strong>misurazione della pressione oculare</strong> e
+        l'<strong>esame del nervo ottico</strong> alla lampada a fessura, che restano il cuore
+        della visita: gli esami strumentali servono a quantificare e a documentare nel tempo
+        ciò che l'occhio clinico individua.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--cream">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">Il percorso</span>
+      <h2>Come si svolge una visita</h2>
+      <div class="gold-line"></div>
+    </div>
+    <div class="tip-grid">
+      <div class="tip-card reveal">
+        <div class="tip-icon">📋</div>
+        <h4>Porta gli esami precedenti</h4>
+        <p>Anche vecchi, anche fatti altrove, anche se pensi siano superati. Nel glaucoma un
+        esame di cinque anni fa vale più di uno nuovo: è il termine di paragone.</p>
+      </div>
+      <div class="tip-card reveal">
+        <div class="tip-icon">⏱️</div>
+        <h4>Metti in conto il tempo</h4>
+        <p>Una prima visita completa è più lunga di una visita oculistica ordinaria, perché
+        comprende più esami strumentali oltre alla valutazione clinica.</p>
+      </div>
+      <div class="tip-card reveal">
+        <div class="tip-icon">🚗</div>
+        <h4>Valuta come tornare</h4>
+        <p>Se durante la visita viene dilatata la pupilla, la vista resta annebbiata per
+        alcune ore: in quel caso è preferibile non guidare.</p>
+      </div>
+      <div class="tip-card reveal">
+        <div class="tip-icon">🔁</div>
+        <h4>Aspettati di ripeterli</h4>
+        <p>Non è un accanimento burocratico: senza una serie di esami confrontabili non è
+        possibile sapere se la malattia è ferma o si sta muovendo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ AUTORE (E-E-A-T) ══ -->
+<section class="section section--cream" style="padding:3.5rem 0;">
+  <div class="container">
+    <div class="autore">
+      <picture>
+        <source srcset="../assets/ritratto.webp" type="image/webp">
+        <img src="../assets/ritratto.jpg" width="200" height="200" loading="lazy" decoding="async"
+             class="autore-foto" alt="Dott. Corrado Gizzi">
+      </picture>
+      <div>
+        <div class="autore-label">Scritto e revisionato da</div>
+        <div class="autore-nome">Dott. Corrado Gizzi</div>
+        <div class="autore-ruolo">Medico Chirurgo · Specialista in Oftalmologia</div>
+        <div class="autore-cred">Fellowship in Glaucoma, Moorfields Eye Hospital, Londra (2016&ndash;2019)</div>
+        <div class="autore-cred">Responsabile del Servizio di Glaucoma, Ospedale degli Infermi di Faenza</div>
+        <div class="autore-cred">Responsabile del Centro del Glaucoma, Ospedale Morgagni-Pierantoni di Forl&igrave;</div>
+        <div class="autore-cred">Oltre 20 pubblicazioni scientifiche internazionali</div>
+        <div class="autore-meta">
+          <span>Ultima revisione: <time datetime="2026-08-14">14 agosto 2026</time></span>
+          <a href="../biografia.html">Il percorso completo &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%); text-align:center;">
+  <div class="container reveal">
+    <span class="section-label" style="color:var(--gold-light);">Parliamone</span>
+    <h2 style="color:var(--white); margin-bottom:1rem;">Vuoi un inquadramento completo?</h2>
+    <p style="color:rgba(255,255,255,.65); max-width:560px; margin:0 auto 2.5rem;">
+      Una prima visita per il glaucoma serve a stabilire un punto di partenza chiaro, anche — e soprattutto — quando non ci sono sintomi.
+    </p>
+    <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+      <a href="../prenota.html" class="btn btn-primary">Prenota una visita</a>
+      <a href="/chirurgia/" class="btn btn-white">I trattamenti</a>
+    </div>
+  </div>
+</section>
+
+<script src="../js/layout.js"></script>
+<script src="../js/main.js"></script>
+<script>injectLayout('diagnostica', '../');</script>
+</body>
+</html>

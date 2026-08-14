@@ -14,10 +14,13 @@ const NAV_PAGES = [
   { key: 'bio',  href: '/biografia.html',  label: 'Biografia' },
   { key: 'info', href: '/pazienti.html',   label: 'Info Pazienti' },
   {
-    key: 'cura', href: '/chirurgia/', label: 'Trattamenti',
+    key: 'cura', href: '/diagnostica/', label: 'Diagnosi e cure',
     children: [
-      { key: 'chirurgia', href: '/chirurgia/', label: 'Chirurgia del glaucoma' },
-      { key: 'laser',     href: '/laser/',     label: 'Trattamenti laser' },
+      { key: 'diagnostica', href: '/diagnostica/', label: 'Diagnostica del glaucoma' },
+      { key: 'chirurgia',   href: '/chirurgia/',   label: 'Chirurgia del glaucoma',
+        interne: ['trabeculectomia', 'drenanti', 'migs', 'mibs'] },
+      { key: 'laser',       href: '/laser/',       label: 'Trattamenti laser',
+        interne: ['slt', 'yag', 'diodo'] },
     ],
   },
   { key: 'blog', href: '/blog/',        label: 'Blog' },
@@ -31,8 +34,11 @@ const NAV_PAGES = [
 ];
 
 function getNavHTML(activePage) {
+  // `interne` elenca le chiavi delle pagine di dettaglio di una sezione: senza,
+  // stando su mibs.html o slt.html il menu non segnalava dove ci si trova.
+  const appartiene = c => c.key === activePage || (c.interne || []).includes(activePage);
   const isActive = p =>
-    activePage === p.key || (p.children || []).some(c => c.key === activePage);
+    activePage === p.key || (p.children || []).some(appartiene);
 
   const links = NAV_PAGES.map(p => {
     const active = isActive(p);
@@ -44,7 +50,8 @@ function getNavHTML(activePage) {
       return `<a href="${p.href}"${cls}${cur}>${p.label}</a>`;
     }
     const sub = p.children.map(c =>
-      `<a href="${c.href}"${c.key === activePage ? ' aria-current="page"' : ''}>${c.label}</a>`
+      `<a href="${c.href}"${c.key === activePage ? ' aria-current="page"' : ''}${
+        appartiene(c) && c.key !== activePage ? ' class="nav-active"' : ''}>${c.label}</a>`
     ).join('');
     return `
       <div class="nav-dropdown">

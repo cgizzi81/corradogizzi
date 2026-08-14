@@ -13,11 +13,15 @@ dottore e su "glaucoma" + area geografica.
 
 | Cosa | Dove | Stato |
 |---|---|---|
+| 5 pagine della sezione diagnostica | `diagnostica/` | bozze, `noindex` + BOZZA |
 | 3 articoli del blog | `_blog/posts/` | bozze, `bozza: true` |
+| Modulo richiesta preventivo | `richiedi-preventivo/` | da rivedere (indicizzabile) |
 
-- `che-cos-e-il-glaucoma.md` — Approfondimento
-- `laser-slt-primo-trattamento.md` — Novità
-- `oct-campo-visivo-perche-si-ripetono.md` — Approfondimento
+Diagnostica: `index.html`, `oct.html`, `campo-visivo.html`, `pachimetria.html`,
+`gonioscopia.html`.
+
+Blog: `che-cos-e-il-glaucoma.md` (Approfondimento), `laser-slt-primo-trattamento.md`
+(Novità), `oct-campo-visivo-perche-si-ripetono.md` (Approfondimento).
 
 Per pubblicarli: `bozza: false` esplicito nel front matter (togliere la riga **non basta**,
 resta il default di `posts/posts.json`), data aggiornata al giorno della revisione, e riga
@@ -45,27 +49,23 @@ Entrambe le schede GBP (Bologna e Faenza) sono attive. Il GBP di Faenza usa il *
 ancora il fisso (0546 1910613). Schema e GBP che dicono cose diverse indeboliscono il
 segnale locale. Aggiungere anche il link al sito da entrambe le schede.
 
-### 4. Sezione diagnostica — il buco più grosso rimasto
+### 4. Sezione diagnostica — scritta, in attesa di revisione
 
-`diagnostica/` sul modello di `chirurgia/` e `laser/`: OCT, campo visivo, pachimetria,
-gonioscopia. Oggi queste parole compaiono sul sito solo come voci di elenco.
+`diagnostica/` costruita sul modello di `chirurgia/` e `laser/`: indice più una scheda per
+OCT, campo visivo, pachimetria e gonioscopia. Sono ricerche che i pazienti fanno **prima**
+di sapere di avere un glaucoma, quindi intercettano più in alto nel funnel rispetto a
+"trabeculectomia".
 
-Sono ricerche che i pazienti fanno **prima** di sapere di avere un glaucoma, quindi
-intercettano più in alto nel funnel rispetto a "trabeculectomia". L'articolo
-`oct-campo-visivo-perche-si-ripetono.md` copre già parte del materiale e può fare da
-base.
+Alla validazione: togliere `noindex` e commento BOZZA, aggiungere le cinque righe in
+`sitemap.xml`.
 
 ### 5. Blog con cadenza regolare — avviato
 
 Il sistema di etichette (Novità / Approfondimento / Curiosità) è in produzione. Tre bozze
-in attesa di revisione (sopra). Argomenti successivi possibili:
+in attesa di revisione (sopra).
 
-- I colliri per il glaucoma: come si usano, perché l'aderenza è il problema principale
-  (si lega alla PWA "Le Mie Gocce")
-- Glaucoma e guida: cosa cambia davvero nella vita quotidiana
-- L'attacco acuto di glaucoma: riconoscerlo ed evitarlo
-- Cosa succede il giorno dell'intervento, raccontato passo per passo
-- Glaucoma e cataratta: perché spesso si operano insieme
+**Gli argomenti dei prossimi articoli li decide Corrado di volta in volta** (deciso il
+14/8/2026): non proporre né scrivere post non richiesti.
 
 ### 6. Backlink di autorità — mai affrontato
 
