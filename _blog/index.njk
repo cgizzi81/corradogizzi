@@ -73,8 +73,13 @@ permalink: index.html
       {%- if collections.postsConBozze.length %}
         {%- for post in collections.postsConBozze %}
       <article class="info-card reveal" style="margin-bottom:1.5rem;">
-        <div style="font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--gold-deep); font-weight:700; margin-bottom:.5rem;">
-          {{ post.date | dataItaliana }}{% if post.data.bozza %} · bozza da revisionare{% endif %}
+        <div style="margin-bottom:.5rem;">
+          {%- if post.data.etichetta %}
+          <span class="post-label" style="margin-right:.6rem;">{{ post.data.etichetta }}</span>
+          {%- endif %}
+          <span style="font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--gold-deep); font-weight:700;">
+            {{ post.date | dataItaliana }}{% if post.data.bozza %} · bozza da revisionare{% endif %}
+          </span>
         </div>
         <h2 style="font-size:1.4rem; margin-bottom:.5rem;">
           <a href="{{ post.fileSlug }}/">{{ post.data.title }}</a>

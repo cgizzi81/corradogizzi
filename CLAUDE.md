@@ -72,6 +72,7 @@ Front matter di un articolo:
 title: "Titolo mostrato come H1 e usato come <title>"
 descrizione: "140-160 caratteri, diventa meta description, sommario e og:description"
 date: 2026-08-01
+etichetta: "Approfondimento"   # opzionale — vedi sotto
 bozza: true      # finché è true: noindex + banner "bozza", fuori da collections.posts
 ---
 ```
@@ -82,6 +83,13 @@ già lunghi e lo sfonderebbero. Se serve un titolo diverso da quello in pagina, 
 
 **`bozza: true` è il default** (impostato in `posts/posts.json`): un articolo nasce non
 indicizzato e viene aperto a Google solo quando Corrado lo approva, togliendo il campo.
+
+**`etichetta`** è opzionale e a testo libero, ma per coerenza visiva si usano solo tre
+valori: **Novità**, **Approfondimento**, **Curiosità**. Compare come badge (classe
+`.post-label` in `css/style.css`) sia nella lista di `_blog/index.njk` sia nell'hero
+dell'articolo in `_blog/_includes/base.njk` — lì con uno stile inline diverso, perché
+l'hero ha sfondo navy e il badge di base è pensato per sfondo chiaro. Se un articolo
+non ha `etichetta`, il badge semplicemente non compare.
 
 ## Sezioni di contenuto clinico
 

@@ -72,6 +72,9 @@
 <section class="page-hero">
   <div class="container">
     <span class="section-label">Blog</span>
+    {%- if etichetta %}
+    <span class="post-label" style="background:transparent; border:1px solid rgba(212,175,80,.45); color:var(--gold-light); margin-bottom:1rem;">{{ etichetta }}</span>
+    {%- endif %}
     <h1>{{ title }}</h1>
     <div class="gold-line"></div>
     <p class="lead">{{ descrizione }}</p>
