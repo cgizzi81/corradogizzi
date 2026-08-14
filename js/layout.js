@@ -21,7 +21,13 @@ const NAV_PAGES = [
     ],
   },
   { key: 'blog', href: '/blog/',        label: 'Blog' },
-  { key: 'book', href: '/prenota.html', label: 'Prenota' },
+  {
+    key: 'book', href: '/prenota.html', label: 'Prenota',
+    children: [
+      { key: 'book',       href: '/prenota.html',          label: 'Prenota una visita' },
+      { key: 'preventivo', href: '/richiedi-preventivo/',  label: 'Richiedi un preventivo' },
+    ],
+  },
 ];
 
 function getNavHTML(activePage) {
@@ -31,7 +37,9 @@ function getNavHTML(activePage) {
   const links = NAV_PAGES.map(p => {
     const active = isActive(p);
     const cls = active ? ' class="nav-active"' : '';
-    const cur = activePage === p.key ? ' aria-current="page"' : '';
+    // Con un sottomenu, aria-current sta sulla voce figlia: metterlo anche sul
+    // padre marcherebbe due link come "pagina corrente" nello stesso menu.
+    const cur = activePage === p.key && !p.children ? ' aria-current="page"' : '';
     if (!p.children) {
       return `<a href="${p.href}"${cls}${cur}>${p.label}</a>`;
     }

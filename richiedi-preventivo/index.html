@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Favicon. Percorsi assoluti dalla radice: valgono uguali per le pagine in
+       sottocartella, senza doverci anteporre ../ -->
+  <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <!-- Google mostra la favicon nei risultati solo se trova un quadrato di almeno
+       48px, preferibilmente multiplo di 48: senza queste due righe leggeva solo
+       il sizes="32x32" dichiarato sopra e scartava l'icona. -->
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png">
+  <link rel="icon" type="image/png" sizes="144x144" href="/assets/favicon-144.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#0d1f3c">
+  <title>Richiedi un preventivo | Dott. Corrado Gizzi</title>
+  <meta name="description" content="Richiedi un preventivo per visite, esami, trattamenti laser o chirurgia del glaucoma a Bologna e Faenza. Compila il modulo: riceverai una risposta personalizzata.">
+  <link rel="canonical" href="https://corradogizzi.it/richiedi-preventivo/">
+  <meta property="og:site_name" content="Dott. Corrado Gizzi">
+  <meta property="og:locale" content="it_IT">
+  <meta property="og:title" content="Richiedi un preventivo | Dott. Corrado Gizzi">
+  <meta property="og:description" content="Un preventivo su misura per visite, laser e chirurgia del glaucoma, a Bologna e Faenza.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://corradogizzi.it/richiedi-preventivo/">
+  <meta property="og:image" content="https://corradogizzi.it/assets/foto.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&display=swap">
+  <link rel="stylesheet" href="../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://corradogizzi.it/" },
+          { "@type": "ListItem", "position": 2, "name": "Richiedi un preventivo", "item": "https://corradogizzi.it/richiedi-preventivo/" }
+        ]
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://corradogizzi.it/richiedi-preventivo/#webpage",
+        "url": "https://corradogizzi.it/richiedi-preventivo/",
+        "name": "Richiedi un preventivo",
+        "inLanguage": "it-IT",
+        "isPartOf": { "@id": "https://corradogizzi.it/#website" },
+        "about": { "@id": "https://corradogizzi.it/#corrado-gizzi" }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+<section class="page-hero">
+  <div class="container">
+    <span class="section-label">Costi e preventivi</span>
+    <h1>Richiedi un preventivo</h1>
+    <div class="gold-line"></div>
+    <p class="lead">Una stima su misura, perché ogni caso ha esigenze diverse</p>
+  </div>
+</section>
+
+<section class="section section--white" style="padding-bottom:0;">
+  <div class="container">
+    <div style="max-width:760px;">
+      <p style="font-size:1.05rem; margin-bottom:1rem;">
+        Non esiste un listino valido per tutti: il costo di una visita, di un esame o di un
+        intervento dipende da cosa serve davvero nel singolo caso, e questo si stabilisce
+        guardando la situazione clinica.
+      </p>
+      <p style="margin-bottom:1rem;">
+        Compilando questo modulo mi dici di che cosa hai bisogno — anche solo
+        approssimativamente — e ti rispondo io con un preventivo personalizzato. Se non sai
+        quale prestazione ti serve, va benissimo: puoi indicarlo e lo valutiamo insieme in
+        visita.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="section section--white">
+  <div class="container">
+    <div style="max-width:760px;">
+      <div class="form-card reveal">
+        <!--
+          Netlify rileva il form dall'HTML statico al momento del deploy: essendo questa
+          una pagina statica, data-netlify sul form vero è sufficiente e non serve il
+          duplicato nascosto usato altrove.
+
+          action= porta alla pagina di conferma del sito: senza, Netlify mostra la propria
+          schermata generica, fuori dallo stile del sito.
+        -->
+        <form id="contact-form" name="richiesta-preventivo" method="POST"
+              action="/preventivo-inviato.html"
+              data-netlify="true" netlify-honeypot="bot-field">
+          <input type="hidden" name="form-name" value="richiesta-preventivo">
+          <p style="display:none;">
+            <label>Non compilare: <input name="bot-field"></label>
+          </p>
+
+          <!-- ══ DATI PAZIENTE ══ -->
+          <div class="form-fieldset">
+            <div class="form-legend">I tuoi dati</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="nome">Nome e cognome *</label>
+                <input type="text" id="nome" name="nome" required placeholder="Mario Rossi">
+              </div>
+              <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" required
+                       placeholder="mario.rossi@email.it">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="telefono">Telefono *</label>
+              <input type="tel" id="telefono" name="telefono" required
+                     inputmode="tel" pattern="[0-9+()\s.\-]{6,20}"
+                     placeholder="+39 333 000 0000">
+            </div>
+          </div>
+
+          <!-- ══ PRESTAZIONI ══ -->
+          <div class="form-fieldset">
+            <div class="form-legend">Di cosa hai bisogno</div>
+            <p class="form-hint">Puoi selezionare più di una voce.</p>
+
+            <div class="check-group">
+              <div class="check-group-title">
+                <span aria-hidden="true">🔍</span> Visite ed esami
+              </div>
+              <label class="check-item">
+                <input type="checkbox" name="prestazioni" value="Prima visita glaucoma">
+                <span>Prima visita glaucoma</span>
+              </label>
+              <label class="check-item">
+                <input type="checkbox" name="prestazioni" value="Visita di controllo">
+                <span>Visita di controllo</span>
+              </label>
+              <label class="check-item">
+                <input type="checkbox" name="prestazioni" value="OCT">
+                <span>OCT</span>
+              </label>
+              <label class="check-item">
+                <input type="checkbox" name="prestazioni" value="Campo visivo">
+                <span>Campo visivo</span>
+              </label>
+              <label class="check-item">
+                <input type="checkbox" name="prestazioni" value="Pachimetria">
+                <span>Pachimetria</span>
+              </label>
+            </div>
+
+            <div class="check-group">
+              <div class="check-group-title">
+                <span aria-hidden="true">✨</span> Trattamenti laser
+              </div>
+              <label class="check-item">
+                <input type="checkbox" name="prestazioni" value="SLT">
+                <span>SLT — trabeculoplastica selettiva</span>
+              </label>
+              <label class="check-item">
+                <input type="checkbox" name="prestazioni" value="YAG capsulotomia">
+                <span>YAG capsulotomia</span>
+              </label>
+              <label class="check-item">
+                <input type="checkbox" name="prestazioni" value="Iridotomia">
+                <span>Iridotomia</span>
+              </label>
+            </div>
+
+            <div class="check-group">
+              <div class="check-group-title">
+                <span aria-hidden="true">🔬</span> Chirurgia
+              </div>
+              <label class="check-item">
+                <input type="checkbox" name="prestazioni" value="Trabeculectomia">
+                <span>Trabeculectomia</span>
+              </label>
+              <label class="check-item">
+                <input type="checkbox" name="prestazioni" value="XEN">
+                <span>XEN</span>
+              </label>
+              <label class="check-item">
+                <input type="checkbox" name="prestazioni" value="Preserflo">
+                <span>Preserflo</span>
+              </label>
+              <label class="check-item">
+                <input type="checkbox" name="prestazioni" value="Chirurgia combinata cataratta/glaucoma">
+                <span>Chirurgia combinata cataratta e glaucoma</span>
+              </label>
+            </div>
+
+            <div class="check-group check-group--soft">
+              <label class="check-item">
+                <input type="checkbox" name="prestazioni" value="Non so, vorrei essere consigliato in visita">
+                <span><strong>Non so, vorrei essere consigliato in visita</strong></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- ══ SEDE ══ -->
+          <div class="form-fieldset">
+            <div class="form-legend">Dove preferisci</div>
+            <div class="sede-select-grid sede-select-grid--tre">
+              <div>
+                <input type="radio" name="sede" id="sede-bo" value="Bologna" class="sede-radio">
+                <label for="sede-bo" class="sede-radio-label">
+                  <h4>Bologna</h4>
+                  <p>Life Clinic</p>
+                </label>
+              </div>
+              <div>
+                <input type="radio" name="sede" id="sede-fa" value="Faenza" class="sede-radio">
+                <label for="sede-fa" class="sede-radio-label">
+                  <h4>Faenza</h4>
+                  <p>Le Cicogne</p>
+                </label>
+              </div>
+              <div>
+                <input type="radio" name="sede" id="sede-ind" value="Indifferente"
+                       class="sede-radio" checked>
+                <label for="sede-ind" class="sede-radio-label">
+                  <h4>Indifferente</h4>
+                  <p>Decidiamo insieme</p>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- ══ NOTE ══ -->
+          <div class="form-fieldset">
+            <div class="form-legend">Qualcosa che dovrei sapere</div>
+            <div class="form-group">
+              <label for="note">Note aggiuntive</label>
+              <textarea id="note" name="note"
+                placeholder="Se hai già una diagnosi, se hai referti recenti, se c'è urgenza…"></textarea>
+              <p class="form-hint" style="margin-top:.6rem;">
+                Non allegare referti qui: portali con te in visita, oppure attendi che ti
+                risponda e concordiamo il modo più sicuro per inviarmeli.
+              </p>
+            </div>
+          </div>
+
+          <!-- ══ CONSENSO ══ -->
+          <div class="form-fieldset" style="border-bottom:none; padding-bottom:0; margin-bottom:1.5rem;">
+            <label class="check-item check-item--consent">
+              <input type="checkbox" name="consenso" value="Sì" required>
+              <span>
+                Ho letto la <a href="../privacy.html">Privacy Policy</a> e acconsento al
+                trattamento dei miei dati, <strong>compresi eventuali dati relativi alla mia
+                salute</strong>, per ricevere una risposta a questa richiesta. *
+              </span>
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-primary"
+                  style="width:100%; justify-content:center;">
+            Invia richiesta
+          </button>
+          <p class="privacy-note">
+            I dati non vengono ceduti a terzi e sono conservati solo per il tempo necessario
+            a gestire la tua richiesta. Titolare del trattamento: Dott. Corrado Gizzi.
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AVVERTENZA -->
+<section class="section section--cream" style="padding:3rem 0;">
+  <div class="container">
+    <div style="max-width:760px;">
+      <div class="note-box" style="margin-top:0;">
+        Il preventivo è una stima basata su quanto mi indichi qui. L'importo definitivo si
+        stabilisce dopo la visita, quando la situazione clinica è chiara: è l'unico modo per
+        darti un numero di cui potersi fidare.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%); text-align:center;">
+  <div class="container reveal">
+    <span class="section-label" style="color:var(--gold-light);">Preferisci parlarne</span>
+    <h2 style="color:var(--white); margin-bottom:1rem;">Hai bisogno di una visita, non di un preventivo?</h2>
+    <p style="color:rgba(255,255,255,.65); max-width:560px; margin:0 auto 2.5rem;">
+      Se quello che ti serve è un appuntamento, puoi prenotarlo direttamente online senza
+      passare da qui.
+    </p>
+    <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+      <a href="../prenota.html" class="btn btn-primary">Prenota una visita</a>
+      <a href="../ambulatori.html" class="btn btn-white">Le sedi</a>
+    </div>
+  </div>
+</section>
+
+<script src="../js/layout.js"></script>
+<script src="../js/main.js"></script>
+<script>injectLayout('preventivo', '../');</script>
+</body>
+</html>

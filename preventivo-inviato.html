@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Favicon. Percorsi assoluti dalla radice: valgono uguali per le pagine in
+       sottocartella, senza doverci anteporre ../ -->
+  <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <!-- Google mostra la favicon nei risultati solo se trova un quadrato di almeno
+       48px, preferibilmente multiplo di 48: senza queste due righe leggeva solo
+       il sizes="32x32" dichiarato sopra e scartava l'icona. -->
+  <link rel="icon" type="image/png" sizes="96x96" href="/assets/favicon-96.png">
+  <link rel="icon" type="image/png" sizes="144x144" href="/assets/favicon-144.png">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#0d1f3c">
+  <title>Richiesta ricevuta — Dott. Corrado Gizzi</title>
+  <meta name="robots" content="noindex, follow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<section class="hero" style="min-height:100vh; display:flex; align-items:center;">
+  <div class="container" style="text-align:center; position:relative; z-index:1;">
+    <div style="font-size:4rem; margin-bottom:1.5rem;">✅</div>
+    <span class="section-label" style="color:var(--gold-light); justify-content:center; display:flex;">
+      Richiesta ricevuta
+    </span>
+    <h1 style="color:var(--white); margin-bottom:1rem;">Grazie, ho ricevuto la tua richiesta</h1>
+    <p style="color:rgba(255,255,255,.75); font-size:1.1rem; max-width:560px;
+        margin:0 auto 2.5rem; line-height:1.8;">
+      Ti risponderò personalmente con un preventivo, all'indirizzo email che mi hai indicato.<br>
+      Se nel frattempo ti viene in mente qualcosa da aggiungere, puoi scrivermi a
+      <a href="mailto:info@corradogizzi.it" style="color:var(--gold-light);">info@corradogizzi.it</a>.
+    </p>
+    <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+      <a href="/" class="btn btn-primary">Torna alla homepage</a>
+      <a href="pazienti.html" class="btn btn-white">Info per i pazienti</a>
+    </div>
+  </div>
+</section>
+
+<script src="js/layout.js"></script>
+<script src="js/main.js"></script>
+<script>injectLayout('');</script>
+</body>
+</html>
