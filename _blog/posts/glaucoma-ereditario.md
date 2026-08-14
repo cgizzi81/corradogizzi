@@ -1,9 +1,9 @@
 ---
 title: "Il glaucoma è ereditario? Cosa fare se un familiare ne soffre"
 descrizione: "Avere un genitore o un fratello con glaucoma aumenta il rischio di svilupparlo. Perché succede, quando iniziare i controlli, cosa comprende lo screening."
-date: 2026-08-01
+date: 2026-08-14
 etichetta: "Approfondimento"
-bozza: true
+bozza: false
 ---
 
 Quando diagnostico un glaucoma, una delle prime domande che ricevo riguarda i figli.
