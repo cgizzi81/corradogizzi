@@ -1,13 +1,13 @@
 ---
 title: "OCT e campo visivo: perché li rifacciamo ogni volta"
 descrizione: "Due esami che sembrano ripetitivi e non lo sono. Cosa misura l'OCT, cosa misura il campo visivo, e perché nel glaucoma è il confronto nel tempo a fare la diagnosi."
-date: 2026-08-14
+date: 2026-08-18
 etichetta: "Approfondimento"
-bozza: true
+bozza: false
 ---
 
 «Ma l'ho già fatto l'anno scorso.» È una delle frasi che sento più spesso quando prescrivo
-un OCT o un campo visivo di controllo, e la obiezione è ragionevole: sono esami che costano
+un OCT o un campo visivo di controllo, e l'obiezione è ragionevole: sono esami che costano
 tempo, e il campo visivo in particolare non è piacevole da eseguire.
 
 La risposta è che nel glaucoma **un esame singolo vale molto poco**. Quello che serve non è
@@ -39,7 +39,7 @@ Qui sta il vero motivo della ripetizione, ed è meno ovvio di quanto sembri.
 Il glaucoma **non si diagnostica su un valore fuori norma**. Si diagnostica su un
 cambiamento nel tempo.
 
-Prendiamo l'OCT. Lo spessore delle fibre nervose varia moltissimo da persona a persona
+Prendiamo l'OCT. Lo spessore delle fibre nervose varia moltissimo da persona a persona,
 sane comprese: c'è chi nasce con un nervo ottico più esile e chi con uno più robusto. Un
 valore leggermente sotto la media può essere del tutto normale per quella persona, oppure
 il segno di una perdita già avvenuta. **Dal singolo esame non è possibile distinguere le

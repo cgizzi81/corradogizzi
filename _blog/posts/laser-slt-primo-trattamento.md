@@ -1,9 +1,9 @@
 ---
 title: "Il laser prima del collirio: cosa è cambiato nella cura del glaucoma"
 descrizione: "La trabeculoplastica selettiva (SLT) non è più solo un'alternativa quando le gocce non bastano: oggi si propone anche come primo trattamento. Perché, e per chi ha senso."
-date: 2026-08-14
+date: 2026-08-18
 etichetta: "Novità"
-bozza: true
+bozza: false
 ---
 
 Per decenni la sequenza è stata sempre la stessa: si diagnostica un glaucoma, si prescrive
@@ -38,14 +38,20 @@ seguite di tutta la medicina, e non per negligenza: è che la malattia non dà s
 quindi non ricorda di sé. Chi salta le somministrazioni non se ne accorge, perché non
 succede nulla — finché non è successo troppo.
 
-**Ha effetti sulla superficie dell'occhio.** Anni di gocce, spesso più di una, con i loro
-conservanti, lasciano il segno: bruciore, arrossamento, occhio secco. Non sono solo
-fastidi. Una superficie oculare infiammata rende il paziente meno propenso a proseguire, e
-peggiora i risultati di un'eventuale chirurgia futura, perché una congiuntiva sofferente
-cicatrizza più facilmente.
+**Ha effetti sulla superficie dell'occhio.** Anni di gocce, spesso più di una, lasciano il
+segno: bruciore, arrossamento, occhio secco. I conservanti sono la causa più nota, e oggi
+molti colliri per il glaucoma esistono anche in versione che ne è priva — ma il problema
+non si esaurisce lì: **gli stessi principi attivi possono esercitare un'azione
+infiammatoria e ossidativa sui tessuti oculari**, indipendentemente dal conservante.
 
-**Costa, ogni mese, per sempre.** Il laser è un trattamento singolo, ripetibile a distanza
-di anni.
+Non sono solo fastidi. Una superficie oculare infiammata rende il paziente meno propenso a
+proseguire, e peggiora i risultati di un'eventuale chirurgia futura, perché una congiuntiva
+sofferente cicatrizza più facilmente.
+
+In Italia, invece, **l'argomento economico pesa poco**: la maggior parte dei colliri per il
+glaucoma è in fascia A, e chi ha l'esenzione 019 non li paga. È una differenza importante
+rispetto a come la stessa scelta viene raccontata altrove, e vale la pena dirlo: qui il
+motivo per considerare il laser non è il risparmio.
 
 Il laser non ha nessuno di questi problemi. Una volta fatto, agisce senza che il paziente
 debba ricordarsi di nulla. È questo il vantaggio vero, ed è un vantaggio che non si misura

@@ -1,9 +1,9 @@
 ---
 title: "Che cos'è il glaucoma, spiegato senza allarmismi"
 descrizione: "Non è una singola malattia e non coincide con la pressione alta dell'occhio. Che cosa colpisce davvero il glaucoma, perché non dà sintomi e su cosa si può intervenire."
-date: 2026-08-14
+date: 2026-08-18
 etichetta: "Approfondimento"
-bozza: true
+bozza: false
 ---
 
 Quando dico a un paziente che ha un glaucoma, la reazione più frequente è una domanda

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Generatore preventivi — uso interno</title>
+<!--
+  STRUMENTO INTERNO — non fa parte del sito pubblico.
+
+  netlify.toml blocca /strumenti/* con un 404: il file sta nel repo per essere
+  versionato, ma non viene servito. Se quella regola venisse rimossa, il listino
+  diventerebbe pubblicamente leggibile.
+
+  Uso: aprire questo file con un doppio clic (funziona offline, nessuna
+  dipendenza), compilare a sinistra, poi "Stampa / Salva PDF". La stampa
+  contiene solo il preventivo, non il modulo.
+
+  I prezzi in LISTINO sono i valori di partenza e si modificano qui sotto una
+  volta per tutte; nel modulo restano comunque ritoccabili caso per caso.
+-->
+<style>
+  :root{
+    --navy:#0d1f3c; --navy-mid:#1a3458; --gold:#b8962e; --gold-deep:#7f6720;
+    --gold-pale:#f5edcf; --cream:#faf8f3; --white:#fff;
+    --gray-100:#f4f4f2; --gray-300:#d0cfc9; --gray-500:#8a8880; --text:#1e1c1a;
+    --font-display:'Playfair Display',Georgia,'Times New Roman',serif;
+    --font-body:'Lato',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:var(--font-body);color:var(--text);background:var(--gray-100);line-height:1.6;}
+  h1,h2,h3,h4{font-family:var(--font-display);font-weight:600;margin:0;}
+
+  .app{display:grid;grid-template-columns:400px 1fr;min-height:100vh;}
+  @media(max-width:1100px){.app{grid-template-columns:1fr;}}
+
+  /* ── Pannello di compilazione ── */
+  .pannello{background:var(--navy);color:var(--white);padding:1.75rem;overflow-y:auto;max-height:100vh;}
+  @media(max-width:1100px){.pannello{max-height:none;}}
+  .pannello h1{color:var(--white);font-size:1.3rem;margin-bottom:.25rem;}
+  .pannello .sottotitolo{color:rgba(255,255,255,.5);font-size:.78rem;margin-bottom:1.75rem;}
+  .gruppo{border-top:1px solid rgba(255,255,255,.12);padding-top:1.1rem;margin-top:1.1rem;}
+  .gruppo:first-of-type{border-top:none;margin-top:0;padding-top:0;}
+  .gruppo-tit{font-size:.68rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.85rem;}
+  label{display:block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:.3rem;}
+  input[type=text],input[type=date],input[type=number],select,textarea{
+    width:100%;padding:.5rem .65rem;border:1px solid rgba(255,255,255,.2);border-radius:3px;
+    background:rgba(255,255,255,.07);color:var(--white);font-family:var(--font-body);font-size:.9rem;}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);background:rgba(255,255,255,.12);}
+  select option{background:var(--navy);color:var(--white);}
+  textarea{resize:vertical;min-height:70px;}
+  .campo{margin-bottom:.8rem;}
+  .riga2{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;}
+
+  .voce{display:grid;grid-template-columns:auto 1fr 52px 92px;gap:.5rem;align-items:center;
+    padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:.85rem;}
+  .voce:last-child{border-bottom:none;}
+  .voce input[type=checkbox]{width:17px;height:17px;accent-color:var(--gold);margin:0;cursor:pointer;}
+  .voce .nome{cursor:pointer;line-height:1.3;}
+  .voce input[type=number]{padding:.3rem .4rem;font-size:.82rem;text-align:right;}
+  .voce.spenta{opacity:.4;}
+
+  .azioni{position:sticky;bottom:0;background:var(--navy);padding-top:1rem;margin-top:1.25rem;
+    border-top:1px solid rgba(255,255,255,.12);}
+  .btn{display:block;width:100%;padding:.8rem;border:none;border-radius:3px;cursor:pointer;
+    font-family:var(--font-body);font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;}
+  .btn-oro{background:var(--gold);color:var(--navy);}
+  .btn-oro:hover{background:#d4af50;}
+  .btn-vuoto{background:transparent;color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.2);margin-top:.5rem;}
+  .nota-interna{font-size:.72rem;color:rgba(255,255,255,.4);margin-top:.9rem;line-height:1.5;}
+
+  /* ── Anteprima ── */
+  .area{padding:2rem;display:flex;justify-content:center;align-items:flex-start;overflow-y:auto;max-height:100vh;}
+  @media(max-width:1100px){.area{max-height:none;padding:1rem;}}
+
+  .foglio{background:var(--white);width:210mm;min-height:297mm;padding:18mm 16mm;
+    box-shadow:0 4px 24px rgba(0,0,0,.13);display:flex;flex-direction:column;}
+  @media(max-width:1100px){.foglio{width:100%;min-height:0;padding:12mm;}}
+
+  .testata{display:flex;justify-content:space-between;align-items:flex-start;
+    border-bottom:2px solid var(--navy);padding-bottom:1rem;margin-bottom:1.5rem;gap:1.5rem;}
+  .testata .nome{font-family:var(--font-display);font-size:1.5rem;color:var(--navy);line-height:1.2;}
+  .testata .ruolo{font-size:.78rem;color:var(--gray-500);margin-top:.2rem;}
+  .testata .cred{font-size:.72rem;color:var(--gray-500);margin-top:.45rem;line-height:1.5;}
+  .testata .contatti{text-align:right;font-size:.74rem;color:var(--gray-500);line-height:1.7;white-space:nowrap;}
+
+  .etichetta{font-size:.66rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-deep);}
+  .titolo-doc{font-family:var(--font-display);font-size:1.7rem;color:var(--navy);margin:.15rem 0 1.25rem;}
+
+  .meta{display:grid;grid-template-columns:1fr 1fr;gap:.5rem 1.5rem;background:var(--cream);
+    padding:.9rem 1.1rem;border-radius:3px;margin-bottom:1.5rem;font-size:.85rem;}
+  .meta .k{font-size:.64rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-500);}
+  .meta .v{color:var(--navy);font-weight:600;}
+
+  table{width:100%;border-collapse:collapse;margin-bottom:1.25rem;}
+  thead th{font-size:.64rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--gray-500);text-align:left;padding:0 0 .5rem;border-bottom:1.5px solid var(--gray-300);}
+  thead th.num{text-align:right;}
+  tbody td{padding:.65rem 0;border-bottom:1px solid var(--gray-100);font-size:.9rem;vertical-align:top;}
+  /* La cella della prestazione porta sopra l'etichetta di categoria: allineando
+     in basso, quantità e importo restano sulla riga del nome e non su quella. */
+  tbody td.num{text-align:right;white-space:nowrap;vertical-align:bottom;}
+  tbody .categoria{font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-deep);font-weight:700;}
+  tfoot td{padding:.55rem 0;font-size:.92rem;}
+  tfoot .totale td{border-top:2px solid var(--navy);padding-top:.8rem;font-size:1.15rem;
+    font-family:var(--font-display);color:var(--navy);font-weight:700;}
+  tfoot td.num{text-align:right;white-space:nowrap;}
+
+  .avviso{background:var(--gold-pale);border-left:3px solid var(--gold);padding:.9rem 1.1rem;
+    border-radius:0 3px 3px 0;font-size:.82rem;color:var(--navy);line-height:1.6;margin-bottom:1rem;}
+  .note-libere{font-size:.85rem;color:var(--text);margin-bottom:1.25rem;white-space:pre-wrap;}
+  .note-tit{font-size:.64rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-500);margin-bottom:.35rem;}
+
+  .chiusura{margin-top:auto;padding-top:1.5rem;border-top:1px solid var(--gray-300);
+    font-size:.7rem;color:var(--gray-500);line-height:1.6;}
+  .firma{margin-top:1.75rem;text-align:right;font-size:.82rem;color:var(--navy);}
+  .firma .riga{display:inline-block;border-top:1px solid var(--gray-300);padding-top:.3rem;min-width:190px;text-align:center;}
+
+  .vuoto{color:var(--gray-500);font-style:italic;padding:1.5rem 0;text-align:center;font-size:.9rem;}
+
+  @media print{
+    @page{size:A4;margin:0;}
+    body{background:var(--white);}
+    .app{display:block;}
+    .pannello,.area::before{display:none !important;}
+    .area{padding:0;max-height:none;display:block;}
+    .foglio{width:auto;min-height:0;box-shadow:none;padding:16mm 15mm;}
+    .avviso{background:var(--gold-pale) !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .meta{background:var(--cream) !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ═══════ PANNELLO ═══════ -->
+  <div class="pannello">
+    <h1>Generatore preventivi</h1>
+    <div class="sottotitolo">Strumento interno &middot; non pubblicato sul sito</div>
+
+    <div class="gruppo">
+      <div class="gruppo-tit">Paziente</div>
+      <div class="campo">
+        <label for="f-nome">Nome e cognome</label>
+        <input type="text" id="f-nome" placeholder="Mario Rossi">
+      </div>
+      <div class="riga2">
+        <div class="campo">
+          <label for="f-data">Data</label>
+          <input type="date" id="f-data">
+        </div>
+        <div class="campo">
+          <label for="f-numero">N. preventivo</label>
+          <input type="text" id="f-numero" placeholder="2026-001">
+        </div>
+      </div>
+      <div class="riga2">
+        <div class="campo">
+          <label for="f-sede">Sede</label>
+          <select id="f-sede">
+            <option>Life Clinic Bologna</option>
+            <option>Le Cicogne Faenza</option>
+            <option>Da definire</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="f-occhio">Occhio</label>
+          <select id="f-occhio">
+            <option>Da definire</option>
+            <option>Occhio destro</option>
+            <option>Occhio sinistro</option>
+            <option>Entrambi gli occhi</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="gruppo">
+      <div class="gruppo-tit">Prestazioni</div>
+      <div id="f-voci"></div>
+    </div>
+
+    <div class="gruppo">
+      <div class="gruppo-tit">Chiusura</div>
+      <div class="riga2">
+        <div class="campo">
+          <label for="f-sconto">Sconto &euro;</label>
+          <input type="number" id="f-sconto" value="0" min="0" step="10">
+        </div>
+        <div class="campo">
+          <label for="f-validita">Validit&agrave; giorni</label>
+          <input type="number" id="f-validita" value="60" min="0" step="15">
+        </div>
+      </div>
+      <div class="campo">
+        <label for="f-note">Note per il paziente</label>
+        <textarea id="f-note" placeholder="Es. il preventivo comprende i controlli post-operatori del primo mese."></textarea>
+      </div>
+    </div>
+
+    <div class="azioni">
+      <button class="btn btn-oro" onclick="window.print()">Stampa / Salva PDF</button>
+      <button class="btn btn-vuoto" onclick="azzera()">Azzera</button>
+      <div class="nota-interna">
+        Nella finestra di stampa scegli &laquo;Salva come PDF&raquo; e disattiva intestazioni e
+        pi&egrave; di pagina del browser. Il modulo non viene stampato.
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ ANTEPRIMA ═══════ -->
+  <div class="area">
+    <div class="foglio">
+      <div class="testata">
+        <div>
+          <div class="nome">Dott. Corrado Gizzi</div>
+          <div class="ruolo">Medico Chirurgo &middot; Specialista in Oftalmologia</div>
+          <div class="cred">
+            Fellowship in Glaucoma, Moorfields Eye Hospital, Londra<br>
+            Responsabile del Servizio di Glaucoma, Ospedale degli Infermi di Faenza<br>
+            Responsabile del Centro del Glaucoma, Ospedale Morgagni-Pierantoni di Forl&igrave;
+          </div>
+        </div>
+        <div class="contatti">
+          corradogizzi.it<br>
+          info@corradogizzi.it<br>
+          349 1908892
+        </div>
+      </div>
+
+      <div class="etichetta">Preventivo di spesa</div>
+      <div class="titolo-doc" id="p-titolo">Prestazioni oculistiche</div>
+
+      <div class="meta">
+        <div><div class="k">Paziente</div><div class="v" id="p-nome">&mdash;</div></div>
+        <div><div class="k">Data</div><div class="v" id="p-data">&mdash;</div></div>
+        <div><div class="k">Sede</div><div class="v" id="p-sede">&mdash;</div></div>
+        <div><div class="k">Riferimento</div><div class="v" id="p-numero">&mdash;</div></div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Prestazione</th>
+            <th class="num">Q.t&agrave;</th>
+            <th class="num">Importo</th>
+          </tr>
+        </thead>
+        <tbody id="p-righe"></tbody>
+        <tfoot id="p-totali"></tfoot>
+      </table>
+
+      <div id="p-note-blocco" style="display:none;">
+        <div class="note-tit">Note</div>
+        <div class="note-libere" id="p-note"></div>
+      </div>
+
+      <div class="avviso" id="p-avviso"></div>
+
+      <div class="chiusura">
+        Prestazioni sanitarie esenti IVA ai sensi dell'art. 10, n. 18 del D.P.R. 633/1972.
+        Il presente documento &egrave; un preventivo e non costituisce fattura.
+        L'importo definitivo pu&ograve; variare qualora, in sede di valutazione clinica,
+        emergano condizioni che richiedano prestazioni diverse o aggiuntive rispetto a quelle
+        qui indicate.
+        <div class="firma">
+          <div class="riga">Dott. Corrado Gizzi</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════
+//  LISTINO — i valori di partenza. Modificarli qui una volta per tutte;
+//  nel modulo restano comunque ritoccabili sul singolo preventivo.
+// ══════════════════════════════════════════════════════════════════════
+const LISTINO = [
+  { cat: 'Visite ed esami', nome: 'Prima visita glaucoma',            prezzo: 150 },
+  { cat: 'Visite ed esami', nome: 'Visita di controllo',               prezzo: 100 },
+  { cat: 'Visite ed esami', nome: 'OCT del nervo ottico',              prezzo: 100 },
+  { cat: 'Visite ed esami', nome: 'Campo visivo',                      prezzo: 80  },
+  { cat: 'Visite ed esami', nome: 'Pachimetria corneale',              prezzo: 40  },
+
+  { cat: 'Trattamenti laser', nome: 'SLT — trabeculoplastica selettiva', prezzo: 600 },
+  { cat: 'Trattamenti laser', nome: 'Iridotomia YAG',                    prezzo: 450 },
+  { cat: 'Trattamenti laser', nome: 'YAG capsulotomia',                  prezzo: 400 },
+  { cat: 'Trattamenti laser', nome: 'Ciclofotocoagulazione a diodo',     prezzo: 1100 },
+
+  { cat: 'Chirurgia', nome: 'Trabeculectomia',            prezzo: 3200 },
+  { cat: 'Chirurgia', nome: 'Impianto drenante',          prezzo: 3800 },
+  { cat: 'Chirurgia', nome: 'XEN',                        prezzo: 3000 },
+  { cat: 'Chirurgia', nome: 'Preserflo',                  prezzo: 3200 },
+  { cat: 'Chirurgia', nome: 'MIGS',                       prezzo: 2600 },
+  { cat: 'Chirurgia', nome: 'Chirurgia della cataratta',  prezzo: 2400 },
+];
+
+const euro = n => new Intl.NumberFormat('it-IT',
+  { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(n);
+
+// ── Costruzione del modulo ──
+const contenitore = document.getElementById('f-voci');
+let categoriaCorrente = '';
+LISTINO.forEach((v, i) => {
+  if (v.cat !== categoriaCorrente) {
+    categoriaCorrente = v.cat;
+    const t = document.createElement('div');
+    t.className = 'gruppo-tit';
+    t.style.cssText = 'margin-top:.9rem;color:rgba(255,255,255,.45);';
+    t.textContent = v.cat;
+    contenitore.appendChild(t);
+  }
+  const riga = document.createElement('div');
+  riga.className = 'voce spenta';
+  riga.innerHTML =
+    '<input type="checkbox" id="v' + i + '">' +
+    '<label class="nome" for="v' + i + '" style="text-transform:none;letter-spacing:0;font-weight:400;color:#fff;margin:0;font-size:.85rem;">' + v.nome + '</label>' +
+    '<input type="number" id="q' + i + '" value="1" min="1" step="1" aria-label="Quantità">' +
+    '<input type="number" id="p' + i + '" value="' + v.prezzo + '" min="0" step="10" aria-label="Importo">';
+  contenitore.appendChild(riga);
+});
+
+// ── Rendering dell'anteprima ──
+function aggiorna() {
+  const righe = document.getElementById('p-righe');
+  const totali = document.getElementById('p-totali');
+  righe.innerHTML = '';
+  totali.innerHTML = '';
+
+  let totale = 0, categoriaStampata = '', selezionate = 0, soloVisite = true;
+
+  LISTINO.forEach((v, i) => {
+    const attiva = document.getElementById('v' + i).checked;
+    document.getElementById('v' + i).closest('.voce').classList.toggle('spenta', !attiva);
+    if (!attiva) return;
+
+    const q = Math.max(1, parseInt(document.getElementById('q' + i).value) || 1);
+    const p = Math.max(0, parseFloat(document.getElementById('p' + i).value) || 0);
+    const importo = q * p;
+    totale += importo;
+    selezionate++;
+    if (v.cat !== 'Visite ed esami') soloVisite = false;
+
+    const tr = document.createElement('tr');
+    const etichettaCat = v.cat !== categoriaStampata
+      ? '<div class="categoria">' + v.cat + '</div>' : '';
+    categoriaStampata = v.cat;
+    tr.innerHTML = '<td>' + etichettaCat + v.nome + '</td>' +
+                   '<td class="num">' + q + '</td>' +
+                   '<td class="num">' + euro(importo) + '</td>';
+    righe.appendChild(tr);
+  });
+
+  if (!selezionate) {
+    righe.innerHTML = '<tr><td colspan="3" class="vuoto">Seleziona le prestazioni nel pannello a sinistra</td></tr>';
+  }
+
+  const sconto = Math.max(0, parseFloat(document.getElementById('f-sconto').value) || 0);
+  if (sconto > 0) {
+    totali.innerHTML += '<tr><td>Imponibile</td><td></td><td class="num">' + euro(totale) + '</td></tr>' +
+                        '<tr><td>Sconto applicato</td><td></td><td class="num">&minus;&nbsp;' + euro(sconto) + '</td></tr>';
+  }
+  totali.innerHTML += '<tr class="totale"><td>Totale</td><td></td><td class="num">' +
+                      euro(Math.max(0, totale - sconto)) + '</td></tr>';
+
+  // titolo coerente con ciò che è stato selezionato
+  const occhio = document.getElementById('f-occhio').value;
+  let titolo = soloVisite && selezionate ? 'Visite ed esami' : 'Prestazioni oculistiche';
+  if (occhio !== 'Da definire') titolo += ' — ' + occhio.toLowerCase();
+  document.getElementById('p-titolo').textContent = titolo;
+
+  const nome = document.getElementById('f-nome').value.trim();
+  document.getElementById('p-nome').textContent = nome || '—';
+  document.getElementById('p-sede').textContent = document.getElementById('f-sede').value;
+  const numero = document.getElementById('f-numero').value.trim();
+  document.getElementById('p-numero').textContent = numero || '—';
+
+  const d = document.getElementById('f-data').value;
+  document.getElementById('p-data').textContent = d
+    ? new Date(d + 'T00:00:00').toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })
+    : '—';
+
+  const note = document.getElementById('f-note').value.trim();
+  document.getElementById('p-note-blocco').style.display = note ? 'block' : 'none';
+  document.getElementById('p-note').textContent = note;
+
+  const giorni = parseInt(document.getElementById('f-validita').value) || 0;
+  let avviso = 'Gli importi indicati comprendono l\'onorario professionale. ' +
+    'I costi di sala operatoria, materiali e anestesia sono fatturati separatamente dalla struttura, ' +
+    'salvo diversa indicazione nelle note.';
+  if (giorni > 0) avviso += ' Preventivo valido ' + giorni + ' giorni dalla data di emissione.';
+  document.getElementById('p-avviso').textContent = avviso;
+}
+
+function azzera() {
+  if (!confirm('Azzerare tutti i campi del preventivo?')) return;
+  document.querySelectorAll('.pannello input[type=checkbox]').forEach(c => c.checked = false);
+  ['f-nome', 'f-numero', 'f-note'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f-sconto').value = 0;
+  LISTINO.forEach((v, i) => {
+    document.getElementById('q' + i).value = 1;
+    document.getElementById('p' + i).value = v.prezzo;
+  });
+  aggiorna();
+}
+
+document.addEventListener('input', aggiorna);
+document.addEventListener('change', aggiorna);
+document.getElementById('f-data').valueAsDate = new Date();
+aggiorna();
+</script>
+</body>
+</html>
