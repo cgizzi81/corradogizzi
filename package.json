@@ -4,8 +4,9 @@
   "private": true,
   "description": "Sito del Dott. Corrado Gizzi — statico, con il solo blog generato da Eleventy",
   "scripts": {
-    "build": "node tools/anteprime-noindex.mjs && eleventy",
-    "serve": "eleventy --serve"
+    "build": "node strumenti/verifica-listino.js && node tools/anteprime-noindex.mjs && eleventy",
+    "serve": "eleventy --serve",
+    "verifica": "node strumenti/verifica-listino.js"
   },
   "devDependencies": {
     "@11ty/eleventy": "^3.0.0"

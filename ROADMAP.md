@@ -13,8 +13,13 @@ dottore e su "glaucoma" + area geografica.
 
 | Cosa | Dove | Stato |
 |---|---|---|
-| Importi del listino | `strumenti/listino.js` | segnaposto, li imposta Corrado |
-| Variabili SMTP su Netlify | pannello Netlify | da impostare, vedi sotto |
+| Variabili SMTP su Netlify | pannello Netlify | Corrado le imposta la sera del 18/8 |
+| Costo dei dispositivi (XEN, Preserflo, PAUL) | `strumenti/listino.js` | escluso dal prezzo, da quantificare |
+
+Il listino è stato costruito il 18/8/2026 sui dati reali di Corrado: visita 150 € a
+Bologna e 120 € a Faenza, sala operatoria 1.000 € per il glaucoma e 800 € per la
+cataratta, sala laser 250 € a occhio. Il dettaglio onorario/struttura è documentato in
+testa a `listino.js`.
 
 **Tutte le pagine sono approvate e in sitemap** al 18/8/2026: le sette schede di
 `diagnostica/`, le nove di `chirurgia/` e `laser/`, e i quattro articoli del blog.
@@ -90,6 +95,11 @@ Tre file in `strumenti/`, con una sola fonte per i prezzi:
 - **`preventivo.html`** — strumento interattivo: si apre con un doppio clic, funziona
   offline, si compila a sinistra e l'anteprima A4 si aggiorna a destra. «Stampa / Salva PDF»
   produce il documento senza il modulo.
+- **`verifica-listino.js`** — controlla che i `value` dei checkbox del modulo pubblico
+  coincidano con i `nome` del listino. Gira dentro `npm run build`, quindi Netlify se ne
+  accorge prima di pubblicare. Serve perché il disallineamento è silenzioso: il modulo
+  funziona, la richiesta arriva, e la prestazione sparisce dall'email al paziente. È già
+  successo con SLT, OCT, pachimetria e iridotomia.
 - **`genera-preventivo.js`** — versione da riga di comando, per quando il preventivo lo
   produco io su richiesta di Corrado:
 

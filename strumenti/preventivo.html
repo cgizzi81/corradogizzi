@@ -358,8 +358,12 @@ function aggiorna() {
       ? '<div class="categoria">' + v.cat + '</div>' : '';
     categoriaStampata = v.cat;
     const { altrove } = prezzoPer(v, sedeScelta());
-    const nota = altrove
-      ? '<div style="font-size:.78rem;color:var(--gray-500);margin-top:.15rem;">Si esegue presso la sede di ' + altrove + '</div>'
+    const avvisi = [];
+    if (altrove) avvisi.push('Si esegue presso la sede di ' + altrove);
+    if (v.nota) avvisi.push(v.nota);
+    const nota = avvisi.length
+      ? '<div style="font-size:.78rem;color:var(--gray-500);margin-top:.15rem;">' +
+        avvisi.join('<br>') + '</div>'
       : '';
     tr.innerHTML = '<td>' + etichettaCat + v.nome + nota + '</td>' +
                    '<td class="num">' + q + '</td>' +

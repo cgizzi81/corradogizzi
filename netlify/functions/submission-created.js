@@ -81,8 +81,11 @@ function costruisciEmail({ nome, sedeScelta, sedeUsata, richieste, note, sedeNon
       ? `<div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:${ORO_SCURO};font-weight:700;padding-bottom:2px;">${esc(voce.cat)}</div>`
       : '';
     categoriaStampata = voce.cat;
-    const nota = altrove
-      ? `<div style="font-size:12px;color:${GRIGIO};padding-top:2px;">Si esegue presso la sede di ${esc(altrove)}</div>`
+    const avvisi = [];
+    if (altrove) avvisi.push(`Si esegue presso la sede di ${esc(altrove)}`);
+    if (voce.nota) avvisi.push(esc(voce.nota));
+    const nota = avvisi.length
+      ? `<div style="font-size:12px;color:${GRIGIO};padding-top:2px;line-height:1.5;">${avvisi.join('<br>')}</div>`
       : '';
     return `<tr>
       <td style="padding:10px 0;border-bottom:1px solid #f4f4f2;font-size:15px;color:#1e1c1a;">${cat}${esc(voce.nome)}${nota}</td>
@@ -191,7 +194,10 @@ function costruisciEmail({ nome, sedeScelta, sedeUsata, richieste, note, sedeNon
     '',
     `ho ricevuto la sua richiesta. Di seguito una stima indicativa${sedeScelta ? ` presso la sede di ${sedeScelta}` : ''}:`,
     '',
-    ...trovate.map(r => `  ${r.voce.nome}${r.altrove ? ` (presso ${r.altrove})` : ''}: ${euro(r.importo)}`),
+    ...trovate.flatMap(r => [
+      `  ${r.voce.nome}${r.altrove ? ` (presso ${r.altrove})` : ''}: ${euro(r.importo)}`,
+      ...(r.voce.nota ? [`    ${r.voce.nota}`] : []),
+    ]),
     '',
     trovate.length ? `  Totale indicativo: ${euro(totale)}` : '  Nessun importo automatico disponibile.',
     '',
