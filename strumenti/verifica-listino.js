@@ -43,9 +43,15 @@ nelModulo
 
 const offerte = new Set(nelModulo);
 LISTINO
-  .filter(v => !offerte.has(v.nome))
+  .filter(v => !v.soloInterno && !offerte.has(v.nome))
   .forEach(v => problemi.push(
     `"${v.nome}" è in listino.js ma non è selezionabile nel modulo.`));
+
+// Una voce marcata soloInterno non deve comparire nel modulo pubblico.
+LISTINO
+  .filter(v => v.soloInterno && offerte.has(v.nome))
+  .forEach(v => problemi.push(
+    `"${v.nome}" è marcata soloInterno ma è offerta nel modulo pubblico.`));
 
 // ── 2. Ogni voce deve avere un prezzo utilizzabile ──
 LISTINO.forEach(v => {
@@ -58,7 +64,17 @@ LISTINO.forEach(v => {
   }
 });
 
-// ── 3. Nomi duplicati ──
+// ── 3. La quota di struttura non può superare il totale ──
+LISTINO
+  .filter(v => typeof v.struttura === 'number')
+  .forEach(v => {
+    if (v.struttura >= v.prezzi.Bologna) {
+      problemi.push(`"${v.nome}": la quota di struttura (${v.struttura}) non lascia onorario ` +
+        `sul totale di ${v.prezzi.Bologna}.`);
+    }
+  });
+
+// ── 4. Nomi duplicati ──
 const visti = new Set();
 LISTINO.forEach(v => {
   if (visti.has(v.nome)) problemi.push(`"${v.nome}" compare due volte in listino.js.`);

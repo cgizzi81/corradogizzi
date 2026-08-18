@@ -14,7 +14,6 @@ dottore e su "glaucoma" + area geografica.
 | Cosa | Dove | Stato |
 |---|---|---|
 | Variabili SMTP su Netlify | pannello Netlify | Corrado le imposta la sera del 18/8 |
-| Costo dei dispositivi (XEN, Preserflo, PAUL) | `strumenti/listino.js` | escluso dal prezzo, da quantificare |
 
 Il listino è stato costruito il 18/8/2026 sui dati reali di Corrado: visita 150 € a
 Bologna e 120 € a Faenza, sala operatoria 1.000 € per il glaucoma e 800 € per la
@@ -95,6 +94,11 @@ Tre file in `strumenti/`, con una sola fonte per i prezzi:
 - **`preventivo.html`** — strumento interattivo: si apre con un doppio clic, funziona
   offline, si compila a sinistra e l'anteprima A4 si aggiorna a destra. «Stampa / Salva PDF»
   produce il documento senza il modulo.
+- **`genera-listino.js`** — produce i due listini in PDF dallo stesso `listino.js`:
+  `listino-segreteria-bologna-<data>.pdf` (solo Bologna, prezzi al paziente, da dare alla
+  segreteria di Life Clinic) e `listino-completo-<data>.pdf` (entrambe le sedi, con quota
+  di struttura e onorario — interno, non si diffonde). Uso:
+  `node strumenti/genera-listino.js [cartella]`.
 - **`verifica-listino.js`** — controlla che i `value` dei checkbox del modulo pubblico
   coincidano con i `nome` del listino. Gira dentro `npm run build`, quindi Netlify se ne
   accorge prima di pubblicare. Serve perché il disallineamento è silenzioso: il modulo

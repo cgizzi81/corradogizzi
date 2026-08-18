@@ -19,6 +19,14 @@
 //    voci il cui importo non è completo, es. gli impianti dove il dispositivo
 //    si quantifica caso per caso.
 //
+//  · `struttura` (facoltativa) è la quota che la struttura di Bologna
+//    trattiene. Non serve al preventivo — il paziente vede solo il totale — ma
+//    rende esplicito da dove viene il numero e alimenta il listino interno.
+//
+//  · `soloInterno: true` tiene la voce fuori dal modulo pubblico. Serve per le
+//    prestazioni che non ha senso far richiedere online, come la sola
+//    misurazione della pressione.
+//
 //  · I `nome` sono identificatori, non etichette: la risposta automatica
 //    riconosce le prestazioni confrontandoli con quelli del modulo in
 //    richiedi-preventivo/index.html. Se cambi un nome, cambialo anche lì.
@@ -55,7 +63,16 @@
 
 const SEDI = ['Bologna', 'Faenza'];
 
-const DISPOSITIVO = 'Il costo del dispositivo non è compreso e viene quantificato in sede di indicazione chirurgica.';
+// Il dispositivo (XEN, Preserflo, tubo PAUL) non è compreso nella quota di
+// sala: costa orientativamente 1.000-1.200 €. Dirlo nel preventivo evita al
+// paziente una sorpresa e a Corrado una discussione.
+const DISPOSITIVO = 'Il costo del dispositivo non è compreso: si aggira orientativamente ' +
+  'fra 1.000 e 1.200 € e viene quantificato in sede di indicazione chirurgica.';
+
+// Quote trattenute dalla struttura di Bologna.
+const SALA_GLAUCOMA = 1000;
+const SALA_CATARATTA = 800;
+const SALA_LASER = 250;
 
 const LISTINO = [
   // ── Visite ed esami ──
@@ -63,31 +80,33 @@ const LISTINO = [
   // pachimetria sono solo a Bologna (vedi ambulatori.html).
   { cat: 'Visite ed esami', nome: 'Prima visita glaucoma',              prezzi: { Bologna: 150, Faenza: 120 } },
   { cat: 'Visite ed esami', nome: 'Visita di controllo',                prezzi: { Bologna: 150, Faenza: 120 } },
+  { cat: 'Visite ed esami', nome: 'Controllo breve',                    prezzi: { Bologna:  80, Faenza:  80 }, soloInterno: true },
+  { cat: 'Visite ed esami', nome: 'Misurazione della pressione oculare', prezzi: { Bologna:  60, Faenza:  60 }, soloInterno: true },
   { cat: 'Visite ed esami', nome: 'OCT del nervo ottico',               prezzi: { Bologna: 100, Faenza:  80 } },
   { cat: 'Visite ed esami', nome: 'Campo visivo',                       prezzi: { Bologna:  80, Faenza: null } },
   { cat: 'Visite ed esami', nome: 'Pachimetria corneale',               prezzi: { Bologna:  40, Faenza: null } },
 
   // ── Trattamenti laser — solo Bologna, struttura 250 € a occhio ──
-  { cat: 'Trattamenti laser', nome: 'SLT — trabeculoplastica selettiva', prezzi: { Bologna: 600, Faenza: null } },
-  { cat: 'Trattamenti laser', nome: 'Iridotomia YAG',                    prezzi: { Bologna: 550, Faenza: null } },
-  { cat: 'Trattamenti laser', nome: 'YAG capsulotomia',                  prezzi: { Bologna: 500, Faenza: null } },
-  { cat: 'Trattamenti laser', nome: 'Ciclofotocoagulazione a diodo',     prezzi: { Bologna: 900, Faenza: null } },
+  { cat: 'Trattamenti laser', nome: 'SLT — trabeculoplastica selettiva', prezzi: { Bologna: 600, Faenza: null }, struttura: SALA_LASER },
+  { cat: 'Trattamenti laser', nome: 'Iridotomia YAG',                    prezzi: { Bologna: 550, Faenza: null }, struttura: SALA_LASER },
+  { cat: 'Trattamenti laser', nome: 'YAG capsulotomia',                  prezzi: { Bologna: 500, Faenza: null }, struttura: SALA_LASER },
+  { cat: 'Trattamenti laser', nome: 'Ciclofotocoagulazione a diodo',     prezzi: { Bologna: 900, Faenza: null }, struttura: SALA_LASER },
 
   // ── Chirurgia — solo Bologna ──
   { cat: 'Chirurgia', nome: 'Chirurgia della cataratta',
-    prezzi: { Bologna: 2000, Faenza: null } },
+    prezzi: { Bologna: 2000, Faenza: null }, struttura: SALA_CATARATTA },
   { cat: 'Chirurgia', nome: 'Chirurgia della cataratta associata a MIGS',
-    prezzi: { Bologna: 2800, Faenza: null } },
+    prezzi: { Bologna: 2800, Faenza: null }, struttura: SALA_GLAUCOMA },
   { cat: 'Chirurgia', nome: 'MIGS',
-    prezzi: { Bologna: 2500, Faenza: null } },
+    prezzi: { Bologna: 2500, Faenza: null }, struttura: SALA_GLAUCOMA },
   { cat: 'Chirurgia', nome: 'XEN',
-    prezzi: { Bologna: 3000, Faenza: null }, nota: DISPOSITIVO },
+    prezzi: { Bologna: 3000, Faenza: null }, struttura: SALA_GLAUCOMA, nota: DISPOSITIVO },
   { cat: 'Chirurgia', nome: 'Preserflo',
-    prezzi: { Bologna: 3000, Faenza: null }, nota: DISPOSITIVO },
+    prezzi: { Bologna: 3000, Faenza: null }, struttura: SALA_GLAUCOMA, nota: DISPOSITIVO },
   { cat: 'Chirurgia', nome: 'Trabeculectomia',
-    prezzi: { Bologna: 3200, Faenza: null } },
+    prezzi: { Bologna: 3200, Faenza: null }, struttura: SALA_GLAUCOMA },
   { cat: 'Chirurgia', nome: 'Impianto drenante',
-    prezzi: { Bologna: 3400, Faenza: null }, nota: DISPOSITIVO },
+    prezzi: { Bologna: 3400, Faenza: null }, struttura: SALA_GLAUCOMA, nota: DISPOSITIVO },
 ];
 
 // Testo che chiude ogni preventivo. Deve dire tre cose: cosa è compreso, cosa
