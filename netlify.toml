@@ -53,8 +53,33 @@
   status = 404
   force = true
 
+# ATTENZIONE alla sintassi: Netlify accetta il jolly solo in coda al percorso.
+# "/*.md" NON funziona come glob sull'estensione — verificato in produzione il
+# 18 agosto 2026, /CLAUDE.md rispondeva 200. Servono percorsi esatti o splat
+# in fondo, come "/cartella/*".
 [[redirects]]
-  from = "/*.md"
+  from = "/CLAUDE.md"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/ROADMAP.md"
+  to = "/404.html"
+  status = 404
+  force = true
+
+# Sorgenti del blog: l'output pubblico è /blog/, questi sono i Markdown e i
+# template da cui viene generato.
+[[redirects]]
+  from = "/_blog/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+# Codice delle funzioni. Girano da /.netlify/functions/, non da qui.
+[[redirects]]
+  from = "/netlify/*"
   to = "/404.html"
   status = 404
   force = true
