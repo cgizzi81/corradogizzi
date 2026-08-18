@@ -16,7 +16,9 @@
 //   SMTP_PORT      es. 465
 //   SMTP_USER      info@corradogizzi.it
 //   SMTP_PASS      password della casella
-//   COPIA_A        (facoltativa) indirizzo in copia; default SMTP_USER
+//   COPIA_A        (facoltativa) indirizzo in copia nascosta; default SMTP_USER.
+//                  Va in Bcc, non in Cc: il Cc è visibile al paziente e gli
+//                  mostrerebbe l'indirizzo personale di Corrado.
 //   PREVENTIVI_OFF (facoltativa) se vale "1" la funzione non invia nulla
 //                  e si limita a registrare il log: interruttore di sicurezza.
 //
@@ -283,7 +285,7 @@ exports.handler = async (event) => {
     await trasporto.sendMail({
       from: `"Dott. Corrado Gizzi" <${SMTP_USER}>`,
       to: destinatario,
-      cc: COPIA_A || SMTP_USER,
+      bcc: COPIA_A || SMTP_USER,
       replyTo: SMTP_USER,
       subject: 'Preventivo indicativo — Dott. Corrado Gizzi',
       text: testo,
