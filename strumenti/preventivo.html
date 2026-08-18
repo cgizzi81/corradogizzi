@@ -167,9 +167,8 @@
         <div class="campo">
           <label for="f-sede">Sede</label>
           <select id="f-sede">
-            <option>Life Clinic Bologna</option>
-            <option>Le Cicogne Faenza</option>
-            <option>Da definire</option>
+            <option value="Bologna">Life Clinic Bologna</option>
+            <option value="Faenza">Le Cicogne Faenza</option>
           </select>
         </div>
         <div class="campo">
@@ -282,30 +281,56 @@
 
 <script src="listino.js"></script>
 <script>
-const euro = n => new Intl.NumberFormat('it-IT',
-  { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(n);
+// listino.js espone LISTINO, SEDI e AVVISO come costanti globali.
+// euro() arriva da listino.js.
+
+const sedeScelta = () => document.getElementById('f-sede').value;
+
+// Prezzo nella sede scelta. Se la prestazione lì non si esegue, si ricade su
+// Bologna e la riga verrà marcata nel documento.
+function prezzoPer(v, sede) {
+  const p = v.prezzi[sede];
+  if (p !== null && p !== undefined) return { importo: p, altrove: null };
+  const alt = SEDI.find(s => v.prezzi[s] !== null && v.prezzi[s] !== undefined);
+  return alt ? { importo: v.prezzi[alt], altrove: alt } : { importo: 0, altrove: null };
+}
 
 // ── Costruzione del modulo ──
 const contenitore = document.getElementById('f-voci');
-let categoriaCorrente = '';
-LISTINO.forEach((v, i) => {
-  if (v.cat !== categoriaCorrente) {
-    categoriaCorrente = v.cat;
-    const t = document.createElement('div');
-    t.className = 'gruppo-tit';
-    t.style.cssText = 'margin-top:.9rem;color:rgba(255,255,255,.45);';
-    t.textContent = v.cat;
-    contenitore.appendChild(t);
-  }
-  const riga = document.createElement('div');
-  riga.className = 'voce spenta';
-  riga.innerHTML =
-    '<input type="checkbox" id="v' + i + '">' +
-    '<label class="nome" for="v' + i + '" style="text-transform:none;letter-spacing:0;font-weight:400;color:#fff;margin:0;font-size:.85rem;">' + v.nome + '</label>' +
-    '<input type="number" id="q' + i + '" value="1" min="1" step="1" aria-label="Quantità">' +
-    '<input type="number" id="p' + i + '" value="' + v.prezzo + '" min="0" step="10" aria-label="Importo">';
-  contenitore.appendChild(riga);
-});
+function costruisciModulo() {
+  const stato = LISTINO.map((v, i) => {
+    const c = document.getElementById('v' + i);
+    return c ? { on: c.checked, q: document.getElementById('q' + i).value } : null;
+  });
+  contenitore.innerHTML = '';
+  const sede = sedeScelta();
+  let categoriaCorrente = '';
+  LISTINO.forEach((v, i) => {
+    if (v.cat !== categoriaCorrente) {
+      categoriaCorrente = v.cat;
+      const t = document.createElement('div');
+      t.className = 'gruppo-tit';
+      t.style.cssText = 'margin-top:.9rem;color:rgba(255,255,255,.45);';
+      t.textContent = v.cat;
+      contenitore.appendChild(t);
+    }
+    const { importo, altrove } = prezzoPer(v, sede);
+    const riga = document.createElement('div');
+    riga.className = 'voce spenta';
+    riga.innerHTML =
+      '<input type="checkbox" id="v' + i + '">' +
+      '<label class="nome" for="v' + i + '" style="text-transform:none;letter-spacing:0;font-weight:400;color:#fff;margin:0;font-size:.85rem;">' +
+        v.nome + (altrove ? ' <span style="color:var(--gold);font-size:.75rem;">(' + altrove + ')</span>' : '') + '</label>' +
+      '<input type="number" id="q' + i + '" value="1" min="1" step="1" aria-label="Quantità">' +
+      '<input type="number" id="p' + i + '" value="' + importo + '" min="0" step="10" aria-label="Importo">';
+    contenitore.appendChild(riga);
+    if (stato[i]) {
+      document.getElementById('v' + i).checked = stato[i].on;
+      document.getElementById('q' + i).value = stato[i].q;
+    }
+  });
+}
+costruisciModulo();
 
 // ── Rendering dell'anteprima ──
 function aggiorna() {
@@ -332,7 +357,11 @@ function aggiorna() {
     const etichettaCat = v.cat !== categoriaStampata
       ? '<div class="categoria">' + v.cat + '</div>' : '';
     categoriaStampata = v.cat;
-    tr.innerHTML = '<td>' + etichettaCat + v.nome + '</td>' +
+    const { altrove } = prezzoPer(v, sedeScelta());
+    const nota = altrove
+      ? '<div style="font-size:.78rem;color:var(--gray-500);margin-top:.15rem;">Si esegue presso la sede di ' + altrove + '</div>'
+      : '';
+    tr.innerHTML = '<td>' + etichettaCat + v.nome + nota + '</td>' +
                    '<td class="num">' + q + '</td>' +
                    '<td class="num">' + euro(importo) + '</td>';
     righe.appendChild(tr);
@@ -358,7 +387,8 @@ function aggiorna() {
 
   const nome = document.getElementById('f-nome').value.trim();
   document.getElementById('p-nome').textContent = nome || '—';
-  document.getElementById('p-sede').textContent = document.getElementById('f-sede').value;
+  document.getElementById('p-sede').textContent =
+    sedeScelta() === 'Faenza' ? 'Le Cicogne Faenza' : 'Life Clinic Bologna';
   const numero = document.getElementById('f-numero').value.trim();
   document.getElementById('p-numero').textContent = numero || '—';
 
@@ -372,9 +402,7 @@ function aggiorna() {
   document.getElementById('p-note').textContent = note;
 
   const giorni = parseInt(document.getElementById('f-validita').value) || 0;
-  let avviso = 'Gli importi indicati comprendono l\'onorario professionale. ' +
-    'I costi di sala operatoria, materiali e anestesia sono fatturati separatamente dalla struttura, ' +
-    'salvo diversa indicazione nelle note.';
+  let avviso = AVVISO;
   if (giorni > 0) avviso += ' Preventivo valido ' + giorni + ' giorni dalla data di emissione.';
   document.getElementById('p-avviso').textContent = avviso;
 }
@@ -384,10 +412,7 @@ function azzera() {
   document.querySelectorAll('.pannello input[type=checkbox]').forEach(c => c.checked = false);
   ['f-nome', 'f-numero', 'f-note'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('f-sconto').value = 0;
-  LISTINO.forEach((v, i) => {
-    document.getElementById('q' + i).value = 1;
-    document.getElementById('p' + i).value = v.prezzo;
-  });
+  costruisciModulo();
   aggiorna();
 }
 
@@ -400,6 +425,7 @@ function applicaPrecompilato(d) {
   set('f-data', d.data); set('f-sconto', d.sconto); set('f-validita', d.validita);
   if (d.sede)   document.getElementById('f-sede').value = d.sede;
   if (d.occhio) document.getElementById('f-occhio').value = d.occhio;
+  costruisciModulo();   // i prezzi dipendono dalla sede: va rifatto ora
 
   (d.prestazioni || []).forEach(voce => {
     const nome = typeof voce === 'string' ? voce : voce.nome;
@@ -414,6 +440,7 @@ function applicaPrecompilato(d) {
   document.body.classList.add('solo-documento');
 }
 
+document.getElementById('f-sede').addEventListener('change', () => { costruisciModulo(); aggiorna(); });
 document.addEventListener('input', aggiorna);
 document.addEventListener('change', aggiorna);
 document.getElementById('f-data').valueAsDate = new Date();

@@ -107,9 +107,34 @@ Tre file in `strumenti/`, con una sola fonte per i prezzi:
 **Nessuno di questi file è servito in produzione**: `netlify.toml` risponde 404 su
 `/strumenti/*`. Se quella regola sparisse, il listino diventerebbe pubblicamente leggibile.
 
-**L'invio resta manuale.** Posso preparare il PDF e una bozza di email in Gmail con
-l'allegato già pronto, ma il tasto Invia lo preme Corrado: un preventivo è un impegno
-economico verso un paziente, e va riletto da lui prima di partire.
+### Risposta automatica dal sito
+
+`netlify/functions/submission-created.js` risponde da sola alle richieste inviate dal
+modulo `/richiedi-preventivo/`. Netlify invoca la funzione a ogni invio di form; lei filtra
+sul solo form `richiesta-preventivo` e ignora gli altri.
+
+Flusso: modulo → funzione → email al paziente da `info@corradogizzi.it`, con copia a
+Corrado. Gli importi vengono da `listino.js`, e il testo dichiara che sono indicativi e che
+l'importo definitivo può variare.
+
+**Variabili d'ambiente da impostare su Netlify** (Site configuration → Environment
+variables). Senza queste la funzione non invia e lo scrive nei log, ma il modulo continua a
+funzionare e la richiesta resta registrata:
+
+| Variabile | Valore |
+|---|---|
+| `SMTP_HOST` | server SMTP della casella, es. `smtps.aruba.it` |
+| `SMTP_PORT` | `465` |
+| `SMTP_USER` | `info@corradogizzi.it` |
+| `SMTP_PASS` | password della casella |
+| `COPIA_A` | facoltativa, indirizzo in copia (default: `SMTP_USER`) |
+| `PREVENTIVI_OFF` | facoltativa, `1` sospende gli invii lasciando i log |
+
+`PREVENTIVI_OFF=1` è l'interruttore da usare se qualcosa va storto: ferma gli invii senza
+dover ridistribuire il sito.
+
+**Prima di attivarla in produzione**, fare un invio di prova dal modulo con un proprio
+indirizzo e controllare i log della funzione su Netlify.
 
 ---
 

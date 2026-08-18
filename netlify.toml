@@ -6,6 +6,15 @@
   command = "npm run build"
   publish = "."
 
+[functions]
+  # Risposta automatica alle richieste di preventivo: Netlify invoca
+  # netlify/functions/submission-created.js a ogni invio di form.
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+  # listino.js sta fuori dalla cartella delle funzioni: senza questa riga
+  # esbuild non lo include nel bundle e la funzione fallisce in produzione.
+  included_files = ["strumenti/listino.js"]
+
 [[redirects]]
   from   = "https://www.corradogizzi.it/*"
   to     = "https://corradogizzi.it/:splat"

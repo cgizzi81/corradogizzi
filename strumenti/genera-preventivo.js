@@ -17,14 +17,14 @@
 //     "paziente": "Mario Rossi",
 //     "numero": "2026-014",
 //     "data": "2026-08-18",              // ISO; se manca, oggi
-//     "sede": "Life Clinic Bologna",     // o "Le Cicogne Faenza" / "Da definire"
+//     "sede": "Bologna",                 // oppure "Faenza" — determina i prezzi
 //     "occhio": "Occhio destro",
 //     "sconto": 200,
 //     "validita": 60,
 //     "note": "Comprende i controlli del primo mese.",
 //     "prestazioni": [
 //       "SLT — trabeculoplastica selettiva",
-//       { "nome": "Trabeculectomia", "quantita": 1, "prezzo": 3000 }
+//       { "nome": "Trabeculectomia", "quantita": 1, "prezzo": 3600 }   // prezzo: forza l'importo
 //     ]
 //   }
 //
@@ -34,7 +34,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const LISTINO = require('./listino.js');
+const { LISTINO } = require('./listino.js');
 
 const [, , fileRichiesta, cartellaArg] = process.argv;
 
@@ -75,8 +75,10 @@ const modello = fs.readFileSync(path.join(cartellaStrumenti, 'preventivo.html'),
 
 // listino.js è caricato come file esterno: nel documento generato va incorporato,
 // altrimenti il file smette di funzionare appena lo si sposta o lo si allega.
-const listinoInline = fs.readFileSync(path.join(cartellaStrumenti, 'listino.js'), 'utf8')
-  .replace(/if \(typeof module.*$/m, '');
+// Non serve rimuovere il blocco module.exports: la guardia `typeof module` lo
+// rende già inerte nel browser. (Toglierlo con una regex a una riga spezzava il
+// file, perché il blocco è su più righe.)
+const listinoInline = fs.readFileSync(path.join(cartellaStrumenti, 'listino.js'), 'utf8');
 
 const dati = { ...richiesta };
 if (!dati.data) dati.data = new Date().toISOString().slice(0, 10);
