@@ -13,12 +13,11 @@ dottore e su "glaucoma" + area geografica.
 
 | Cosa | Dove | Stato |
 |---|---|---|
-| `diagnostica/tonometria.html` | scheda nuova | bozza, `noindex` + BOZZA |
-| `diagnostica/disco-ottico.html` | scheda nuova | bozza, `noindex` + BOZZA |
-| Listino del generatore preventivi | `strumenti/preventivo.html` | importi indicativi, da confermare |
+| Importi del listino | `strumenti/listino.js` | segnaposto, li imposta Corrado |
+| Variabili SMTP su Netlify | pannello Netlify | da impostare, vedi sotto |
 
-Approvato il 18/8/2026 e già in sitemap: le altre cinque pagine di `diagnostica/` e i tre
-articoli del blog.
+**Tutte le pagine sono approvate e in sitemap** al 18/8/2026: le sette schede di
+`diagnostica/`, le nove di `chirurgia/` e `laser/`, e i quattro articoli del blog.
 
 Per pubblicare un post: `bozza: false` esplicito nel front matter (togliere la riga **non
 basta**, resta il default di `posts/posts.json`), data aggiornata al giorno della revisione,
