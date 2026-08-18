@@ -82,15 +82,34 @@ Forlì dove Corrado è responsabile di servizio.
 
 ---
 
-## Strumenti interni
+## Strumenti interni — preventivi
 
-- **`strumenti/preventivo.html`** — generatore di preventivi: file HTML autonomo, si apre
-  con un doppio clic e funziona offline. Si compila a sinistra, l'anteprima A4 si aggiorna
-  a destra, «Stampa / Salva PDF» produce il documento senza il modulo. Il listino di
-  partenza sta nella costante `LISTINO` in fondo al file; i singoli importi restano
-  modificabili sul singolo preventivo.
-- **Non è servito in produzione**: `netlify.toml` risponde 404 su `/strumenti/*`. Se quella
-  regola sparisse, il listino diventerebbe pubblicamente leggibile.
+Tre file in `strumenti/`, con una sola fonte per i prezzi:
+
+- **`listino.js`** — **la fonte unica degli importi.** Lo mantiene Corrado. Lo leggono sia
+  la pagina interattiva sia lo script: non esistono altri posti dove i prezzi siano scritti.
+- **`preventivo.html`** — strumento interattivo: si apre con un doppio clic, funziona
+  offline, si compila a sinistra e l'anteprima A4 si aggiorna a destra. «Stampa / Salva PDF»
+  produce il documento senza il modulo.
+- **`genera-preventivo.js`** — versione da riga di comando, per quando il preventivo lo
+  produco io su richiesta di Corrado:
+
+  ```
+  node strumenti/genera-preventivo.js richiesta.json [cartella]
+  ```
+
+  Scrive un HTML autonomo e, se Playwright è disponibile, anche il PDF. Non duplica il
+  documento: inietta `window.PRECOMPILATO` dentro `preventivo.html` e lascia che sia la
+  pagina a renderizzare, così le due strade non possono divergere nell'aspetto. Un nome di
+  prestazione non presente in `listino.js` fa fallire il comando con l'elenco delle voci
+  valide, invece di produrre un preventivo incompleto.
+
+**Nessuno di questi file è servito in produzione**: `netlify.toml` risponde 404 su
+`/strumenti/*`. Se quella regola sparisse, il listino diventerebbe pubblicamente leggibile.
+
+**L'invio resta manuale.** Posso preparare il PDF e una bozza di email in Gmail con
+l'allegato già pronto, ma il tasto Invia lo preme Corrado: un preventivo è un impegno
+economico verso un paziente, e va riletto da lui prima di partire.
 
 ---
 

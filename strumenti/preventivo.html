@@ -16,8 +16,9 @@
   dipendenza), compilare a sinistra, poi "Stampa / Salva PDF". La stampa
   contiene solo il preventivo, non il modulo.
 
-  I prezzi in LISTINO sono i valori di partenza e si modificano qui sotto una
-  volta per tutte; nel modulo restano comunque ritoccabili caso per caso.
+  I prezzi stanno in listino.js, che è la fonte unica: lo legge questa pagina e
+  lo legge genera-preventivo.js. Nel modulo restano ritoccabili caso per caso,
+  ma la modifica stabile va fatta lì.
 -->
 <style>
   :root{
@@ -117,6 +118,13 @@
   .firma .riga{display:inline-block;border-top:1px solid var(--gray-300);padding-top:.3rem;min-width:190px;text-align:center;}
 
   .vuoto{color:var(--gray-500);font-style:italic;padding:1.5rem 0;text-align:center;font-size:.9rem;}
+
+  /* Modalità documento: la pagina viene generata già compilata da
+     genera-preventivo.js e non deve mostrare il modulo. */
+  body.solo-documento .pannello{display:none;}
+  body.solo-documento .app{display:block;}
+  body.solo-documento .area{max-height:none;padding:0;background:var(--white);}
+  body.solo-documento .foglio{box-shadow:none;}
 
   @media print{
     @page{size:A4;margin:0;}
@@ -272,31 +280,8 @@
   </div>
 </div>
 
+<script src="listino.js"></script>
 <script>
-// ══════════════════════════════════════════════════════════════════════
-//  LISTINO — i valori di partenza. Modificarli qui una volta per tutte;
-//  nel modulo restano comunque ritoccabili sul singolo preventivo.
-// ══════════════════════════════════════════════════════════════════════
-const LISTINO = [
-  { cat: 'Visite ed esami', nome: 'Prima visita glaucoma',            prezzo: 150 },
-  { cat: 'Visite ed esami', nome: 'Visita di controllo',               prezzo: 100 },
-  { cat: 'Visite ed esami', nome: 'OCT del nervo ottico',              prezzo: 100 },
-  { cat: 'Visite ed esami', nome: 'Campo visivo',                      prezzo: 80  },
-  { cat: 'Visite ed esami', nome: 'Pachimetria corneale',              prezzo: 40  },
-
-  { cat: 'Trattamenti laser', nome: 'SLT — trabeculoplastica selettiva', prezzo: 600 },
-  { cat: 'Trattamenti laser', nome: 'Iridotomia YAG',                    prezzo: 450 },
-  { cat: 'Trattamenti laser', nome: 'YAG capsulotomia',                  prezzo: 400 },
-  { cat: 'Trattamenti laser', nome: 'Ciclofotocoagulazione a diodo',     prezzo: 1100 },
-
-  { cat: 'Chirurgia', nome: 'Trabeculectomia',            prezzo: 3200 },
-  { cat: 'Chirurgia', nome: 'Impianto drenante',          prezzo: 3800 },
-  { cat: 'Chirurgia', nome: 'XEN',                        prezzo: 3000 },
-  { cat: 'Chirurgia', nome: 'Preserflo',                  prezzo: 3200 },
-  { cat: 'Chirurgia', nome: 'MIGS',                       prezzo: 2600 },
-  { cat: 'Chirurgia', nome: 'Chirurgia della cataratta',  prezzo: 2400 },
-];
-
 const euro = n => new Intl.NumberFormat('it-IT',
   { style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(n);
 
@@ -406,9 +391,35 @@ function azzera() {
   aggiorna();
 }
 
+// Se la pagina è stata generata da genera-preventivo.js, i dati arrivano già
+// pronti in window.PRECOMPILATO: si applicano ai campi e si rende il documento
+// con lo stesso codice usato dallo strumento interattivo, senza duplicarlo.
+function applicaPrecompilato(d) {
+  const set = (id, v) => { if (v !== undefined && v !== null) document.getElementById(id).value = v; };
+  set('f-nome', d.paziente); set('f-numero', d.numero); set('f-note', d.note);
+  set('f-data', d.data); set('f-sconto', d.sconto); set('f-validita', d.validita);
+  if (d.sede)   document.getElementById('f-sede').value = d.sede;
+  if (d.occhio) document.getElementById('f-occhio').value = d.occhio;
+
+  (d.prestazioni || []).forEach(voce => {
+    const nome = typeof voce === 'string' ? voce : voce.nome;
+    const i = LISTINO.findIndex(v => v.nome === nome);
+    if (i < 0) { console.warn('Prestazione non a listino, ignorata:', nome); return; }
+    document.getElementById('v' + i).checked = true;
+    if (typeof voce === 'object') {
+      if (voce.quantita) document.getElementById('q' + i).value = voce.quantita;
+      if (voce.prezzo !== undefined) document.getElementById('p' + i).value = voce.prezzo;
+    }
+  });
+  document.body.classList.add('solo-documento');
+}
+
 document.addEventListener('input', aggiorna);
 document.addEventListener('change', aggiorna);
 document.getElementById('f-data').valueAsDate = new Date();
+if (typeof window.PRECOMPILATO === 'object' && window.PRECOMPILATO) {
+  applicaPrecompilato(window.PRECOMPILATO);
+}
 aggiorna();
 </script>
 </body>
