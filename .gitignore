@@ -10,3 +10,10 @@ blog/
 
 # Scritto dalla build solo sui deploy di anteprima, per tenerli fuori da Google
 _headers
+
+# Credenziali: le variabili SMTP vivono nel pannello Netlify, mai nel repo.
+# La radice del sito è pubblicata così com'è (publish = "."), quindi un .env
+# committato per sbaglio sarebbe scaricabile da chiunque.
+.env
+.env.*
+!.env.esempio
