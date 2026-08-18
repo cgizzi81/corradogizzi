@@ -42,12 +42,11 @@ Netlify, per questo si va a blocchi.
 Inviare la sitemap aggiornata e richiedere l'indicizzazione delle pagine nuove. Senza,
 Google può metterci settimane a scoprirle.
 
-### 3. Allineare i nodi `Physician` al Google Business Profile
+### 3. Google Business Profile — nodi allineati il 18/8/2026
 
-Entrambe le schede GBP (Bologna e Faenza) sono attive. Il GBP di Faenza usa il **cellulare**
-(349 1908892), mentre i nodi `Physician` in `index.html` e `ambulatori.html` dichiarano
-ancora il fisso (0546 1910613). Schema e GBP che dicono cose diverse indeboliscono il
-segnale locale. Aggiungere anche il link al sito da entrambe le schede.
+I nodi `Physician` di `index.html` e `ambulatori.html` dichiarano ora il cellulare
+(349 1908892) per Faenza, come il GBP. **Resta da fare da parte di Corrado:** aggiungere il
+link al sito da entrambe le schede GBP.
 
 ### 4. Sezione diagnostica — fatta
 
