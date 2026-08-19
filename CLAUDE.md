@@ -191,6 +191,12 @@ I `<link>` della favicon usano percorsi **assoluti dalla radice** (`/favicon.ico
 differenza del resto del sito: così l'unico blocco vale identico anche per le pagine in
 sottocartella. Va copiato nell'`<head>` di ogni pagina nuova.
 
+`favicon-192.png` è la più grande delle icone **ricavate dal mark semplificato**, ed è
+quella che si vuole far scegliere a Google nei risultati di ricerca. Non va confusa con
+`icon-192.png`, che serve al manifest e porta il **logo reale**: a dimensione di favicon
+quelle linee sottili diventano illeggibili, ed è esattamente il motivo per cui il mark
+semplificato esiste. Se un giorno si rigenera, la fonte è `assets/favicon.svg`.
+
 ### Orari: due punti da tenere allineati
 
 Gli orari degli ambulatori compaiono in **due posti che vanno aggiornati insieme**:
