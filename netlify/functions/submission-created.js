@@ -191,20 +191,52 @@ function costruisciEmail({ nome, sedeScelta, sedeUsata, richieste, note, sedeNon
 
 </table></td></tr></table></body></html>`;
 
+  // Costruita per rami paralleli a quelli dell'HTML qui sopra: un caso mancante
+  // qui produceva un messaggio diverso da quello che il paziente vede aprendo
+  // l'email in HTML — è già successo con "Non so, vorrei essere consigliato",
+  // dove il testo semplice diceva "nessun importo disponibile" invece di
+  // spiegare che è la scelta giusta quando non si sa cosa serve.
   const testo = [
     `Gentile ${nome},`,
     '',
-    `ho ricevuto la sua richiesta. Di seguito una stima indicativa${sedeScelta ? ` presso la sede di ${sedeScelta}` : ''}:`,
+    `ho ricevuto la sua richiesta. Di seguito trova una stima indicativa per le ` +
+      `prestazioni che ha indicato${sedeScelta ? `, presso la sede di ${sedeScelta}` : ''}.`,
     '',
-    ...trovate.flatMap(r => [
-      `  ${r.voce.nome}${r.altrove ? ` (presso ${r.altrove})` : ''}: ${euro(r.importo)}`,
-      ...(r.voce.nota ? [`    ${r.voce.nota}`] : []),
-    ]),
-    '',
-    trovate.length ? `  Totale indicativo: ${euro(totale)}` : '  Nessun importo automatico disponibile.',
-    '',
-    trovate.length ? AVVISO : '',
-    '',
+    ...(chiedeConsiglio ? [
+      'Ha indicato di voler essere consigliato in visita: è la scelta giusta quando ' +
+        'non è chiaro quale prestazione serva. Ne parliamo di persona e decidiamo insieme.',
+      '',
+    ] : []),
+    ...(trovate.length ? [
+      ...trovate.flatMap(r => [
+        `  ${r.voce.nome}${r.altrove ? ` (presso ${r.altrove})` : ''}: ${euro(r.importo)}`,
+        ...(r.voce.nota ? [`    ${r.voce.nota}`] : []),
+      ]),
+      '',
+      `  Totale indicativo: ${euro(totale)}`,
+      '',
+      AVVISO,
+      '',
+    ] : (chiedeConsiglio ? [] : [
+      'Dalla sua richiesta non è stato possibile ricavare un importo automatico. ' +
+        'La ricontatto direttamente per capire meglio cosa le serve.',
+      '',
+    ])),
+    ...(sedeNonSpecificata ? [
+      `Non avendo indicato una sede, gli importi qui sopra si riferiscono a ${sedeUsata}. ` +
+        'Per l\'altra sede possono variare: basta segnalarcelo.',
+      '',
+    ] : []),
+    ...(nonRiconosciute.length ? [
+      `Per ${nonRiconosciute.join(', ')} non è possibile indicare un importo automatico: ` +
+        'ne parliamo direttamente.',
+      '',
+    ] : []),
+    ...(note ? [
+      'Quanto ci ha scritto:',
+      `  ${note}`,
+      '',
+    ] : []),
     'Per fissare una visita può rispondere a questa email o chiamare il 349 1908892.',
     '',
     'Un cordiale saluto,',
