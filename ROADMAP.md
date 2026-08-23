@@ -149,6 +149,25 @@ indirizzo e controllare i log della funzione su Netlify.
 
 ---
 
+## Idee valutate e messe in standby
+
+- **Banner "date extra" in `prenota.html`**: discusso il 23/8/2026. Corrado edita un file,
+  il sito mostra un banner con le date aggiuntive di ambulatorio, che sparisce da solo dal
+  giorno dopo. Tecnicamente richiede JS lato client (il sito è statico, nessun processo
+  gira a mezzanotte) e — se si vuole editare il file senza spendere un deploy di produzione
+  a ogni data — una fonte esterna a Netlify (es. GitHub raw da un branch non collegato al
+  sito), perché Netlify fattura per deploy, non per quanto è piccola la modifica, e il
+  meccanismo `ignore` di Netlify per saltare i build non garantisce (non lo dice nemmeno la
+  sua documentazione) che il deploy saltato non venga comunque conteggiato nei crediti.
+
+  **Deciso di rimandare**: le date extra si gestiscono per ora telefonicamente tramite la
+  segreteria, come già scritto nel riquadro orari di `ambulatori.html` ("conviene
+  verificarlo telefonicamente"). Nessun codice toccato. Se in futuro le date extra diventano
+  frequenti abbastanza da giustificare il lavoro, riprendere da qui invece di ridiscutere
+  l'architettura da capo.
+
+---
+
 ## Debito tecnico noto
 
 - **`prenota.html` non ha `action` sul form**: dopo l'invio Netlify mostra la propria
