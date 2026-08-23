@@ -75,7 +75,16 @@ p{color:var(--gray-700);font-size:1.02rem;}
 
 /* ── Navbar ── */
 #navbar{position:fixed;top:0;left:0;right:0;height:var(--nav-height);z-index:1000;transition:all var(--transition);}
-#navbar.scrolled{background:rgba(13,31,60,.97);backdrop-filter:blur(12px);box-shadow:0 2px 30px rgba(0,0,0,.25);}
+/* Lo sfondo sfocato sta su uno pseudo-elemento e non su #navbar stesso: un
+   backdrop-filter sull'antenato crea un nuovo containing block per i suoi
+   discendenti position:fixed, e .nav-links (il menu mobile) ci restava
+   intrappolato — con la pagina scrollata, bottom:0 si misurava dal fondo
+   della sola navbar (~70px) invece che dal fondo reale dello schermo, e il
+   menu aperto mostrava solo la prima voce con il resto della pagina che
+   trapelava sotto. */
+#navbar.scrolled{box-shadow:0 2px 30px rgba(0,0,0,.25);}
+#navbar.scrolled::before{content:'';position:absolute;inset:0;z-index:-1;
+  background:rgba(13,31,60,.97);backdrop-filter:blur(12px);}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;height:100%;max-width:1160px;margin:0 auto;padding:0 clamp(1.25rem,5vw,3rem);}
 
 /* Nav logo with symbol */
