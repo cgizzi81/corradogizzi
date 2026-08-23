@@ -69,6 +69,11 @@ const SEDI = ['Bologna', 'Faenza'];
 const DISPOSITIVO = 'Il costo del dispositivo non è compreso: si aggira orientativamente ' +
   'fra 1.000 e 1.200 € e viene quantificato in sede di indicazione chirurgica.';
 
+// Anche lo stent MIGS è un dispositivo a sé, non compreso nella quota di sala:
+// ~1.200 €, distinto dal costo di XEN/Preserflo/PAUL sopra.
+const DISPOSITIVO_MIGS = 'Il costo del dispositivo non è compreso: si aggira ' +
+  'orientativamente intorno ai 1.200 € e viene quantificato in sede di indicazione chirurgica.';
+
 // Quote trattenute dalla struttura di Bologna.
 const SALA_GLAUCOMA = 1000;
 const SALA_CATARATTA = 800;
@@ -105,9 +110,9 @@ const LISTINO = [
   { cat: 'Chirurgia', nome: 'Preserflo',
     prezzi: { Bologna: 3000, Faenza: null }, struttura: SALA_GLAUCOMA, nota: DISPOSITIVO },
   { cat: 'Chirurgia', nome: 'MIGS',
-    prezzi: { Bologna: 2500, Faenza: null }, struttura: SALA_GLAUCOMA },
+    prezzi: { Bologna: 2500, Faenza: null }, struttura: SALA_GLAUCOMA, nota: DISPOSITIVO_MIGS },
   { cat: 'Chirurgia', nome: 'Chirurgia della cataratta associata a MIGS',
-    prezzi: { Bologna: 2800, Faenza: null }, struttura: SALA_GLAUCOMA },
+    prezzi: { Bologna: 2800, Faenza: null }, struttura: SALA_GLAUCOMA, nota: DISPOSITIVO_MIGS },
   { cat: 'Chirurgia', nome: 'Chirurgia della cataratta',
     prezzi: { Bologna: 2000, Faenza: null }, struttura: SALA_CATARATTA },
 ];
