@@ -72,7 +72,6 @@
   <input name="email">
   <input name="telefono">
   <input name="tipo">
-  <input name="disponibilita">
   <textarea name="messaggio"></textarea>
 </form>
 
@@ -261,11 +260,6 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="disponibilita">Preferenza orario / giorni</label>
-            <input type="text" id="disponibilita" name="disponibilita"
-                   placeholder="es. mattina, lunedì e mercoledì">
-          </div>
-          <div class="form-group">
             <label for="messaggio">Messaggio / Note</label>
             <textarea id="messaggio" name="messaggio"
               placeholder="Descrivi brevemente il motivo della visita..."></textarea>
@@ -290,16 +284,11 @@
 <!-- URGENZE -->
 <section class="section" style="background:var(--navy); padding:3rem 0;">
   <div class="container">
-    <div style="display:flex; align-items:center; gap:2rem;
-        flex-wrap:wrap; justify-content:space-between;">
-      <div>
-        <h3 style="color:var(--white); margin-bottom:.5rem;">⚠️ Urgenza oculistica?</h3>
-        <p style="color:rgba(255,255,255,.65);">In caso di dolore improvviso, calo visivo
-        acuto, occhio rosso o trauma: non aspettare l'appuntamento.</p>
-      </div>
-      <a href="tel:118" class="btn btn-white" style="white-space:nowrap;">
-        Chiama il 118 o vai al Pronto Soccorso
-      </a>
+    <div style="max-width:640px;">
+      <h3 style="color:var(--white); margin-bottom:.5rem;">⚠️ Urgenza oculistica?</h3>
+      <p style="color:rgba(255,255,255,.65);">In caso di dolore improvviso, calo visivo
+      acuto, occhio rosso o trauma, non aspettare l'appuntamento: rivolgiti al
+      <strong style="color:var(--white);">Pronto Soccorso Oculistico</strong> più vicino.</p>
     </div>
   </div>
 </section>
