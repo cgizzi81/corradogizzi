@@ -36,13 +36,28 @@ function pagina({ titolo, sottotitolo, riservato, colonne, righe, chiusura, incl
   const intestazioni = colonne
     .map(c => `<th class="${c.num ? 'num' : ''}">${esc(c.testo)}</th>`).join('');
 
-  const corpo = righe.map(r => {
-    if (r.categoria) {
-      return `<tr class="cat"><td colspan="${colonne.length}">${esc(r.categoria)}</td></tr>`;
-    }
-    const celle = r.celle.map((c, i) =>
-      `<td class="${colonne[i].num ? 'num' : ''}">${c}</td>`).join('');
-    return `<tr>${celle}</tr>`;
+  // Ogni categoria va nel suo <tbody> con break-inside:avoid, così non si
+  // spezza fra due pagine lasciando una riga orfana di là. Se una categoria è
+  // più alta di una pagina — la chirurgia lo è — la regola viene ignorata dal
+  // browser e la categoria si spezza comunque: è il comportamento previsto
+  // dalle specifiche, quindi la regola è sicura anche sui gruppi lunghi.
+  const gruppi = [];
+  righe.forEach(r => {
+    if (r.categoria) { gruppi.push({ categoria: r.categoria, righe: [] }); return; }
+    if (!gruppi.length) gruppi.push({ categoria: null, righe: [] });
+    gruppi[gruppi.length - 1].righe.push(r);
+  });
+
+  const corpo = gruppi.map(g => {
+    const intestazione = g.categoria
+      ? `<tr class="cat"><td colspan="${colonne.length}">${esc(g.categoria)}</td></tr>`
+      : '';
+    const voci = g.righe.map(r => {
+      const celle = r.celle.map((c, i) =>
+        `<td class="${colonne[i].num ? 'num' : ''}">${c}</td>`).join('');
+      return `<tr>${celle}</tr>`;
+    }).join('\n');
+    return `<tbody class="gruppo-cat">${intestazione}\n${voci}</tbody>`;
   }).join('\n');
 
   return `<!DOCTYPE html>
@@ -56,6 +71,7 @@ function pagina({ titolo, sottotitolo, riservato, colonne, righe, chiusura, incl
   body{margin:0;font-family:'Lato',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
     color:var(--text);background:#fff;line-height:1.55;}
   .foglio{width:210mm;min-height:297mm;margin:0 auto;padding:16mm 15mm;display:flex;flex-direction:column;}
+  @media print{ .foglio{min-height:0;} }
 
   .testata{display:flex;justify-content:space-between;align-items:flex-start;
     border-bottom:2px solid var(--navy);padding-bottom:.9rem;margin-bottom:1.4rem;gap:1.5rem;}
@@ -76,6 +92,13 @@ function pagina({ titolo, sottotitolo, riservato, colonne, righe, chiusura, incl
     color:var(--gray-500);text-align:left;padding:0 0 .45rem;border-bottom:1.5px solid var(--gray-300);}
   thead th.num{text-align:right;}
   tbody td{padding:.5rem 0;border-bottom:1px solid var(--gray-100);font-size:.88rem;vertical-align:top;}
+  /* Una riga con la sua nota resta unita, e l'intestazione di categoria non
+     rimane orfana in fondo alla pagina senza le voci che introduce. */
+  tbody tr{break-inside:avoid;page-break-inside:avoid;}
+  .gruppo-cat{break-inside:avoid;page-break-inside:avoid;}
+  tbody tr.cat{break-after:avoid;page-break-after:avoid;}
+  thead{display:table-header-group;}
+  tfoot{display:table-row-group;}
   tbody td.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;}
   /* Senza distanza le intestazioni delle colonne numeriche si toccano fra loro
      ("BOLOGNAFAENZASTRUTTURA"): sono corte e allineate a destra. */
@@ -87,15 +110,20 @@ function pagina({ titolo, sottotitolo, riservato, colonne, righe, chiusura, incl
   .nota-voce{display:block;font-size:.75rem;color:var(--gray-500);margin-top:.1rem;line-height:1.45;}
   .assente{color:var(--gray-300);}
 
+  /* Il riquadro non deve mai spezzarsi fra due pagine: è una lista di cose da
+     non addebitare, e leggerne metà è peggio che non leggerla. */
   .inclusioni{background:var(--cream);border-left:3px solid var(--gold);padding:.8rem 1.1rem;
-    border-radius:0 3px 3px 0;margin-bottom:1.2rem;}
+    border-radius:0 3px 3px 0;margin-bottom:1.2rem;
+    break-inside:avoid;page-break-inside:avoid;}
   .inclusioni-tit{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
     color:var(--gold-deep);margin-bottom:.4rem;}
   .inclusioni ul{margin:0;padding-left:1.1rem;}
   .inclusioni li{font-size:.78rem;color:var(--text);line-height:1.55;margin-bottom:.15rem;}
 
   .chiusura{margin-top:auto;padding-top:1.2rem;border-top:1px solid var(--gray-300);
-    font-size:.72rem;color:var(--gray-500);line-height:1.6;}
+    font-size:.72rem;color:var(--gray-500);line-height:1.6;
+    break-inside:avoid;page-break-inside:avoid;}
+  .testata{break-inside:avoid;page-break-inside:avoid;}
 
   @media print{ @page{size:A4;margin:0;} .foglio{margin:0;} }
 </style></head>
@@ -107,7 +135,7 @@ function pagina({ titolo, sottotitolo, riservato, colonne, righe, chiusura, incl
       <div class="ruolo">Medico Chirurgo &middot; Specialista in Oftalmologia</div>
     </div>
     <div class="contatti">
-      corradogizzi.it<br>info@corradogizzi.it<br>349 1908892
+      corradogizzi.it<br>info@corradogizzi.it
     </div>
   </div>
 
@@ -118,9 +146,7 @@ function pagina({ titolo, sottotitolo, riservato, colonne, righe, chiusura, incl
 
   <table>
     <thead><tr>${intestazioni}</tr></thead>
-    <tbody>
 ${corpo}
-    </tbody>
   </table>
 
   ${inclusioni || ''}
@@ -196,9 +222,12 @@ const completo = pagina({
       bo, fa, st, on,
     ];
   }),
+  inclusioni: bloccoInclusioni,
   chiusura:
-    'La colonna <strong>Struttura</strong> è la quota trattenuta da Life Clinic: 1.000 &euro; per gli ' +
-    'interventi di glaucoma, 800 &euro; per la cataratta, 250 &euro; a occhio per il laser. ' +
+    'La colonna <strong>Struttura</strong> è la quota trattenuta da Life Clinic: ' +
+    '1.000 &euro; per la sala glaucoma con mitomicina, 900 &euro; senza; ' +
+    '900 &euro; per la cataratta con monofocale, 800 &euro; con premium; ' +
+    '150 &euro; a occhio per il laser. L\'anestesista è compreso in queste quote. ' +
     'L\'<strong>Onorario</strong> è quanto resta. A Faenza gli importi indicati sono quelli richiesti al paziente. ' +
     'Il trattino indica una prestazione non eseguita in quella sede. ' +
     'Fonte: <code>strumenti/listino.js</code>.',

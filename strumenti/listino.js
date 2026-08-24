@@ -47,6 +47,7 @@
 //    MIGS standalone            1.100     XEN / Preserflo          2.000
 //    Faco + MIGS                1.500     Needling in sala           800
 //    Faco + premium + MIGS      1.900     Laser (a occhio)           350
+//                                         Ciclofotocoagulazione        800
 //
 //  Negli interventi sono compresi i controlli post-operatori dei primi tre
 //  mesi; nel laser il controllo a 6-8 settimane. Se questo cambia, aggiornare
@@ -78,6 +79,13 @@ const LENTE_PREMIUM = 'Il costo della lente premium non è compreso: varia orien
 
 const BEVACIZUMAB = 'Se il caso richiede bevacizumab, il costo aggiuntivo è di 370 €.';
 
+const PER_OCCHIO = 'Prezzo per occhio.';
+
+// La ciclofotocoagulazione si esegue in sala operatoria, non in ambulatorio
+// laser: si applica la tariffa della sala glaucoma e la sonda è monouso.
+const SONDA_MONOUSO = 'Il costo della sonda monouso non è compreso: si aggira ' +
+  'orientativamente intorno ai 1.000 €.';
+
 const unisci = (...note) => note.filter(Boolean).join(' ');
 
 const LISTINO = [
@@ -103,13 +111,16 @@ const LISTINO = [
 
   // ══ Trattamenti laser — solo Bologna, prezzo a occhio ══
   { cat: 'Trattamenti laser', nome: 'SLT — trabeculoplastica selettiva',
-    prezzi: { Bologna: 500, Faenza: null }, struttura: SALA_LASER },
+    prezzi: { Bologna: 500, Faenza: null }, struttura: SALA_LASER, nota: PER_OCCHIO },
   { cat: 'Trattamenti laser', nome: 'Iridotomia YAG',
-    prezzi: { Bologna: 500, Faenza: null }, struttura: SALA_LASER },
+    prezzi: { Bologna: 500, Faenza: null }, struttura: SALA_LASER, nota: PER_OCCHIO },
   { cat: 'Trattamenti laser', nome: 'YAG capsulotomia',
-    prezzi: { Bologna: 500, Faenza: null }, struttura: SALA_LASER },
+    prezzi: { Bologna: 500, Faenza: null }, struttura: SALA_LASER, nota: PER_OCCHIO },
+  // Si esegue in sala operatoria: tariffa sala glaucoma senza mitomicina, più
+  // la sonda monouso a carico del paziente.
   { cat: 'Trattamenti laser', nome: 'Ciclofotocoagulazione a diodo',
-    prezzi: { Bologna: 900, Faenza: null }, struttura: SALA_LASER },
+    prezzi: { Bologna: 1700, Faenza: null }, struttura: SALA_GLAUCOMA,
+    nota: unisci(PER_OCCHIO, SONDA_MONOUSO) },
 
   // ══ Chirurgia — solo Bologna ══
   { cat: 'Chirurgia', nome: 'Faco + IOL monofocale',
@@ -168,6 +179,9 @@ const COMBINAZIONI = [
   { nome: 'Visita + OCT',
     componenti: [VISITA, 'OCT del nervo ottico'],
     prezzi: { Bologna: 200, Faenza: 160 } },
+  { nome: 'Visita + campo visivo',
+    componenti: [VISITA, 'Campo visivo'],
+    prezzi: { Bologna: 200, Faenza: null } },
   { nome: 'Visita + topografia corneale',
     componenti: [VISITA, 'Topografia corneale'],
     prezzi: { Bologna: 200, Faenza: null } },

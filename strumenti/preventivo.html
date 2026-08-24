@@ -101,6 +101,10 @@
   /* La cella della prestazione porta sopra l'etichetta di categoria: allineando
      in basso, quantità e importo restano sulla riga del nome e non su quella. */
   tbody td.num{text-align:right;white-space:nowrap;vertical-align:bottom;}
+  /* Senza distanza le intestazioni corte allineate a destra si toccano fra
+     loro: "Q.TÀ" e "IMPORTO" uscivano attaccate. */
+  th.num,td.num{padding-left:1.4rem;}
+  th:first-child{width:58%;}
   tbody .categoria{font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-deep);font-weight:700;}
   tfoot td{padding:.55rem 0;font-size:.92rem;}
   tfoot .totale td{border-top:2px solid var(--navy);padding-top:.8rem;font-size:1.15rem;
@@ -126,8 +130,16 @@
   body.solo-documento .area{max-height:none;padding:0;background:var(--white);}
   body.solo-documento .foglio{box-shadow:none;}
 
+  /* Un preventivo con molte voci può sfondare la pagina: qui valgono le stesse
+     regole del listino, così una riga non si spezza a metà e il riquadro
+     dell'avviso non finisce a cavallo di due fogli. */
+  tbody tr{break-inside:avoid;page-break-inside:avoid;}
+  thead{display:table-header-group;}
+  .avviso,.chiusura,.testata,.meta{break-inside:avoid;page-break-inside:avoid;}
+
   @media print{
     @page{size:A4;margin:0;}
+    .foglio{min-height:0;}
     body{background:var(--white);}
     .app{display:block;}
     .pannello,.area::before{display:none !important;}
@@ -231,8 +243,7 @@
         </div>
         <div class="contatti">
           corradogizzi.it<br>
-          info@corradogizzi.it<br>
-          349 1908892
+          info@corradogizzi.it
         </div>
       </div>
 
