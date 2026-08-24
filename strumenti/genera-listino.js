@@ -33,14 +33,12 @@ const esc = t => String(t == null ? '' : t)
 
 // ── Impaginazione, condivisa dalle due versioni ──
 function pagina({ titolo, sottotitolo, riservato, colonne, righe, chiusura, inclusioni }) {
-  const intestazioni = colonne
-    .map(c => `<th class="${c.num ? 'num' : ''}">${esc(c.testo)}</th>`).join('');
-
-  // Ogni categoria va nel suo <tbody> con break-inside:avoid, così non si
-  // spezza fra due pagine lasciando una riga orfana di là. Se una categoria è
-  // più alta di una pagina — la chirurgia lo è — la regola viene ignorata dal
-  // browser e la categoria si spezza comunque: è il comportamento previsto
-  // dalle specifiche, quindi la regola è sicura anche sui gruppi lunghi.
+  // Ogni categoria è una tabella a sé. Il motivo è l'impaginazione: il <thead>
+  // di una tabella viene ripetuto su ogni pagina su cui la tabella si estende,
+  // quindi mettendoci dentro il nome della categoria, una categoria che si
+  // spezza — la chirurgia è più alta di una pagina e non può non spezzarsi —
+  // si ripresenta con la propria etichetta invece che con una riga orfana.
+  // break-inside:avoid tiene comunque unite le categorie che ci stanno.
   const gruppi = [];
   righe.forEach(r => {
     if (r.categoria) { gruppi.push({ categoria: r.categoria, righe: [] }); return; }
@@ -48,16 +46,25 @@ function pagina({ titolo, sottotitolo, riservato, colonne, righe, chiusura, incl
     gruppi[gruppi.length - 1].righe.push(r);
   });
 
+  // table-layout:fixed richiede larghezze esplicite, altrimenti tabelle diverse
+  // allineerebbero le colonne in modo diverso a seconda del contenuto.
+  const primaColonna = colonne.length > 2 ? 40 : 72;
+  const altre = (100 - primaColonna) / (colonne.length - 1);
+  const larghezze = colonne
+    .map((c, i) => `<col style="width:${i === 0 ? primaColonna : altre}%">`).join('');
+
   const corpo = gruppi.map(g => {
-    const intestazione = g.categoria
-      ? `<tr class="cat"><td colspan="${colonne.length}">${esc(g.categoria)}</td></tr>`
-      : '';
+    // Prima cella: il nome della categoria. Le altre: le etichette di colonna.
+    const testa = colonne.map((c, i) => (i === 0
+      ? `<th class="cat">${esc(g.categoria || c.testo)}</th>`
+      : `<th class="${c.num ? 'num' : ''}">${esc(c.testo)}</th>`)).join('');
     const voci = g.righe.map(r => {
       const celle = r.celle.map((c, i) =>
         `<td class="${colonne[i].num ? 'num' : ''}">${c}</td>`).join('');
       return `<tr>${celle}</tr>`;
     }).join('\n');
-    return `<tbody class="gruppo-cat">${intestazione}\n${voci}</tbody>`;
+    return `<table class="gruppo-cat"><colgroup>${larghezze}</colgroup>` +
+           `<thead><tr>${testa}</tr></thead><tbody>${voci}</tbody></table>`;
   }).join('\n');
 
   return `<!DOCTYPE html>
@@ -71,7 +78,7 @@ function pagina({ titolo, sottotitolo, riservato, colonne, righe, chiusura, incl
   body{margin:0;font-family:'Lato',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
     color:var(--text);background:#fff;line-height:1.55;}
   .foglio{width:210mm;min-height:297mm;margin:0 auto;padding:16mm 15mm;display:flex;flex-direction:column;}
-  @media print{ .foglio{min-height:0;} }
+
 
   .testata{display:flex;justify-content:space-between;align-items:flex-start;
     border-bottom:2px solid var(--navy);padding-bottom:.9rem;margin-bottom:1.4rem;gap:1.5rem;}
@@ -87,16 +94,18 @@ function pagina({ titolo, sottotitolo, riservato, colonne, righe, chiusura, incl
     letter-spacing:.12em;text-transform:uppercase;padding:.35rem .8rem;border-radius:2px;
     display:inline-block;margin-bottom:1rem;}
 
-  table{width:100%;border-collapse:collapse;margin-bottom:1.2rem;}
+  table{width:100%;border-collapse:collapse;margin-bottom:1rem;table-layout:fixed;}
+  table:last-of-type{margin-bottom:1.2rem;}
   thead th{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--gray-500);text-align:left;padding:0 0 .45rem;border-bottom:1.5px solid var(--gray-300);}
+    color:var(--gray-500);text-align:left;padding:0 0 .45rem;border-bottom:1.5px solid var(--gray-300);
+    vertical-align:bottom;}
+  thead th.cat{color:var(--gold-deep);}
   thead th.num{text-align:right;}
   tbody td{padding:.5rem 0;border-bottom:1px solid var(--gray-100);font-size:.88rem;vertical-align:top;}
   /* Una riga con la sua nota resta unita, e l'intestazione di categoria non
      rimane orfana in fondo alla pagina senza le voci che introduce. */
   tbody tr{break-inside:avoid;page-break-inside:avoid;}
   .gruppo-cat{break-inside:avoid;page-break-inside:avoid;}
-  tbody tr.cat{break-after:avoid;page-break-after:avoid;}
   thead{display:table-header-group;}
   tfoot{display:table-row-group;}
   tbody td.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;}
@@ -104,9 +113,6 @@ function pagina({ titolo, sottotitolo, riservato, colonne, righe, chiusura, incl
      ("BOLOGNAFAENZASTRUTTURA"): sono corte e allineate a destra. */
   th.num,td.num{padding-left:1.4rem;}
   th:first-child{width:42%;}
-  tbody tr.cat td{padding:1rem 0 .3rem;border-bottom:none;font-size:.64rem;font-weight:700;
-    letter-spacing:.1em;text-transform:uppercase;color:var(--gold-deep);}
-  tbody tr:first-child.cat td{padding-top:.2rem;}
   .nota-voce{display:block;font-size:.75rem;color:var(--gray-500);margin-top:.1rem;line-height:1.45;}
   .assente{color:var(--gray-300);}
 
@@ -125,7 +131,16 @@ function pagina({ titolo, sottotitolo, riservato, colonne, righe, chiusura, incl
     break-inside:avoid;page-break-inside:avoid;}
   .testata{break-inside:avoid;page-break-inside:avoid;}
 
-  @media print{ @page{size:A4;margin:0;} .foglio{margin:0;} }
+  /* Il margine di pagina vale su OGNI foglio, mentre il padding di .foglio
+     vale solo sul primo: senza, l'intestazione ripetuta si appoggiava al bordo
+     superiore delle pagine 2 e 3. Il padding si riduce di altrettanto, così la
+     prima pagina resta identica a prima. */
+  @media print{
+    @page{size:A4;margin:16mm 0 14mm;}
+    .foglio{margin:0;min-height:0;padding-top:0;padding-bottom:2mm;}
+    /* Un filo d'aria fra il bordo superiore e la riga di intestazione. */
+    thead th{padding-top:2mm;}
+  }
 </style></head>
 <body>
 <div class="foglio">
@@ -144,10 +159,7 @@ function pagina({ titolo, sottotitolo, riservato, colonne, righe, chiusura, incl
   <div class="sottotitolo">${esc(sottotitolo)} &middot; aggiornato al ${dataEstesa}</div>
   ${riservato ? `<div class="riservato">${esc(riservato)}</div>` : ''}
 
-  <table>
-    <thead><tr>${intestazioni}</tr></thead>
 ${corpo}
-  </table>
 
   ${inclusioni || ''}
   <div class="chiusura">${chiusura}</div>
@@ -261,7 +273,7 @@ for (const [base, html] of [
       await pagina.goto('file://' + u.html, { waitUntil: 'networkidle' });
       const pdf = path.join(cartella, u.base + '.pdf');
       await pagina.pdf({ path: pdf, format: 'A4', printBackground: true,
-        margin: { top: '0', right: '0', bottom: '0', left: '0' } });
+        margin: { top: '16mm', right: '0', bottom: '14mm', left: '0' } });
       console.log('PDF   ' + pdf);
       await pagina.close();
     }
