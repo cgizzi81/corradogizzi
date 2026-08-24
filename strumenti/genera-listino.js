@@ -19,7 +19,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { LISTINO, euro } = require('./listino.js');
+const { LISTINO, COMBINAZIONI, INCLUSIONI, euro } = require('./listino.js');
 
 const cartella = process.argv[2] || process.cwd();
 fs.mkdirSync(cartella, { recursive: true });
@@ -32,7 +32,7 @@ const esc = t => String(t == null ? '' : t)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 // ── Impaginazione, condivisa dalle due versioni ──
-function pagina({ titolo, sottotitolo, riservato, colonne, righe, chiusura }) {
+function pagina({ titolo, sottotitolo, riservato, colonne, righe, chiusura, inclusioni }) {
   const intestazioni = colonne
     .map(c => `<th class="${c.num ? 'num' : ''}">${esc(c.testo)}</th>`).join('');
 
@@ -87,6 +87,13 @@ function pagina({ titolo, sottotitolo, riservato, colonne, righe, chiusura }) {
   .nota-voce{display:block;font-size:.75rem;color:var(--gray-500);margin-top:.1rem;line-height:1.45;}
   .assente{color:var(--gray-300);}
 
+  .inclusioni{background:var(--cream);border-left:3px solid var(--gold);padding:.8rem 1.1rem;
+    border-radius:0 3px 3px 0;margin-bottom:1.2rem;}
+  .inclusioni-tit{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--gold-deep);margin-bottom:.4rem;}
+  .inclusioni ul{margin:0;padding-left:1.1rem;}
+  .inclusioni li{font-size:.78rem;color:var(--text);line-height:1.55;margin-bottom:.15rem;}
+
   .chiusura{margin-top:auto;padding-top:1.2rem;border-top:1px solid var(--gray-300);
     font-size:.72rem;color:var(--gray-500);line-height:1.6;}
 
@@ -116,6 +123,7 @@ ${corpo}
     </tbody>
   </table>
 
+  ${inclusioni || ''}
   <div class="chiusura">${chiusura}</div>
 </div>
 </body></html>`;
@@ -134,8 +142,20 @@ function righePerCategoria(voci, celle) {
 const nomeConNota = v =>
   esc(v.nome) + (v.nota ? `<span class="nota-voce">${esc(v.nota)}</span>` : '');
 
+// Le combinazioni entrano nel listino come una categoria a sé: alla segreteria
+// servono come voci da applicare, non come sconto da calcolare a mente.
+const comboPerSede = sede => COMBINAZIONI
+  .filter(c => typeof c.prezzi[sede] === 'number')
+  .map(c => ({ cat: 'Visite ed esami insieme', nome: c.nome, prezzi: c.prezzi }));
+
+const bloccoInclusioni = INCLUSIONI.length
+  ? '<div class="inclusioni"><div class="inclusioni-tit">Gi\u00e0 compreso, da non addebitare</div><ul>' +
+    INCLUSIONI.map(t => `<li>${t}</li>`).join('') + '</ul></div>'
+  : '';
+
 // ══ Versione per la segreteria di Bologna ══
-const perBologna = LISTINO.filter(v => typeof v.prezzi.Bologna === 'number');
+const perBologna = [...LISTINO.filter(v => typeof v.prezzi.Bologna === 'number'),
+                    ...comboPerSede('Bologna')];
 
 const segreteria = pagina({
   titolo: 'Sede di Bologna',
@@ -143,6 +163,7 @@ const segreteria = pagina({
   riservato: null,
   colonne: [{ testo: 'Prestazione' }, { testo: 'Importo', num: true }],
   righe: righePerCategoria(perBologna, v => [nomeConNota(v), euro(v.prezzi.Bologna)]),
+  inclusioni: bloccoInclusioni,
   chiusura:
     'Gli importi sono comprensivi dei costi di struttura e, per gli interventi, dei controlli ' +
     'post-operatori dei primi tre mesi. Prestazioni sanitarie esenti IVA ai sensi dell\'art. 10, ' +
@@ -162,7 +183,7 @@ const completo = pagina({
     { testo: 'Struttura', num: true },
     { testo: 'Onorario', num: true },
   ],
-  righe: righePerCategoria(LISTINO, v => {
+  righe: righePerCategoria([...LISTINO, ...comboPerSede('Bologna')], v => {
     const bo = typeof v.prezzi.Bologna === 'number' ? euro(v.prezzi.Bologna) : '<span class="assente">&mdash;</span>';
     const fa = typeof v.prezzi.Faenza === 'number' ? euro(v.prezzi.Faenza) : '<span class="assente">&mdash;</span>';
     const st = typeof v.struttura === 'number' ? euro(v.struttura) : '<span class="assente">&mdash;</span>';

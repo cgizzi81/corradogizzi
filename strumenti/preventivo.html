@@ -341,10 +341,46 @@ function aggiorna() {
 
   let totale = 0, categoriaStampata = '', selezionate = 0, soloVisite = true;
 
+  // Le combinazioni scattano solo su prestazioni a prezzo di listino: se un
+  // importo è stato ritoccato a mano, la riga resta singola. Altrimenti la
+  // modifica verrebbe silenziosamente sostituita dal prezzo del pacchetto.
+  const scelteAPrezzoPieno = [];
+  LISTINO.forEach((v, i) => {
+    const c = document.getElementById('v' + i);
+    if (!c || !c.checked) return;
+    const q = Math.max(1, parseInt(document.getElementById('q' + i).value) || 1);
+    const p = Math.max(0, parseFloat(document.getElementById('p' + i).value) || 0);
+    if (q === 1 && p === prezzoPer(v, sedeScelta()).importo) scelteAPrezzoPieno.push(v.nome);
+  });
+  const { combinazioni } = applicaCombinazioni(scelteAPrezzoPieno, sedeScelta());
+  const assorbiti = new Set();
+  combinazioni.forEach(combo => {
+    combo.componenti.forEach(componente => {
+      const alternative = Array.isArray(componente) ? componente : [componente];
+      const usato = alternative.find(n => scelteAPrezzoPieno.includes(n) && !assorbiti.has(n));
+      if (usato) assorbiti.add(usato);
+    });
+  });
+
+  combinazioni.forEach(combo => {
+    const etichettaCat = 'Visite ed esami' !== categoriaStampata
+      ? '<div class="categoria">Visite ed esami</div>' : '';
+    categoriaStampata = 'Visite ed esami';
+    const importo = combo.prezzi[sedeScelta()];
+    totale += importo;
+    selezionate++;
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td>' + etichettaCat + combo.nome +
+      '<div style="font-size:.78rem;color:var(--gray-500);margin-top:.15rem;">Prezzo agevolato per le prestazioni richieste insieme</div></td>' +
+      '<td class="num">1</td><td class="num">' + euro(importo) + '</td>';
+    righe.appendChild(tr);
+  });
+
   LISTINO.forEach((v, i) => {
     const attiva = document.getElementById('v' + i).checked;
     document.getElementById('v' + i).closest('.voce').classList.toggle('spenta', !attiva);
     if (!attiva) return;
+    if (assorbiti.has(v.nome)) return;   // già conteggiata dentro una combinazione
 
     const q = Math.max(1, parseInt(document.getElementById('q' + i).value) || 1);
     const p = Math.max(0, parseFloat(document.getElementById('p' + i).value) || 0);

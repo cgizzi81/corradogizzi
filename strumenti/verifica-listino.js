@@ -19,7 +19,7 @@ const fs = require('fs');
 const path = require('path');
 
 const RADICE = path.join(__dirname, '..');
-const { LISTINO, SEDI } = require('./listino.js');
+const { LISTINO, SEDI, COMBINAZIONI } = require('./listino.js');
 
 // Voce del modulo che non è una prestazione: chi la sceglie chiede una
 // valutazione, non un importo.
@@ -79,6 +79,55 @@ const visti = new Set();
 LISTINO.forEach(v => {
   if (visti.has(v.nome)) problemi.push(`"${v.nome}" compare due volte in listino.js.`);
   visti.add(v.nome);
+});
+
+// ── 5. Le combinazioni devono riferirsi a prestazioni che esistono ──
+//
+// Un componente scritto male non dà errore da nessuna parte: la combinazione
+// semplicemente non scatta mai, e il paziente paga la somma delle singole
+// senza che nessuno se ne accorga.
+COMBINAZIONI.forEach(combo => {
+  combo.componenti.forEach(componente => {
+    const alternative = Array.isArray(componente) ? componente : [componente];
+    alternative
+      .filter(n => !nomiListino.has(n))
+      .forEach(n => problemi.push(
+        `La combinazione "${combo.nome}" richiede "${n}", che non è in listino.js: non scatterà mai.`));
+
+    // Se nessuna alternativa è selezionabile dal modulo, la combinazione può
+    // valere solo sul preventivo compilato a mano, mai da sito.
+    if (alternative.every(n => !offerte.has(n))) {
+      problemi.push(`La combinazione "${combo.nome}" richiede "${alternative.join('" o "')}", ` +
+        `che il modulo pubblico non offre: dal sito non scatterà mai.`);
+    }
+  });
+
+  SEDI.forEach(sede => {
+    if (!(sede in combo.prezzi)) {
+      problemi.push(`La combinazione "${combo.nome}" non dichiara un prezzo per ${sede}.`);
+    }
+  });
+
+  // Una combinazione che costa quanto o più della somma delle sue parti non ha
+  // senso: al paziente conviene chiedere le prestazioni separate.
+  SEDI.forEach(sede => {
+    const prezzoCombo = combo.prezzi[sede];
+    if (prezzoCombo == null) return;
+    let somma = 0;
+    let calcolabile = true;
+    combo.componenti.forEach(componente => {
+      const alternative = Array.isArray(componente) ? componente : [componente];
+      const voci = alternative
+        .map(n => LISTINO.find(v => v.nome === n))
+        .filter(v => v && typeof v.prezzi[sede] === 'number');
+      if (!voci.length) { calcolabile = false; return; }
+      somma += Math.min(...voci.map(v => v.prezzi[sede]));
+    });
+    if (calcolabile && prezzoCombo >= somma) {
+      problemi.push(`La combinazione "${combo.nome}" a ${sede} costa ${prezzoCombo} €, ` +
+        `ma le prestazioni separate ne costano ${somma}: non è un'agevolazione.`);
+    }
+  });
 });
 
 if (problemi.length) {

@@ -27,7 +27,7 @@
 // perché la nostra email non è partita.
 
 const nodemailer = require('nodemailer');
-const { LISTINO, AVVISO, euro } = require('../../strumenti/listino.js');
+const { LISTINO, AVVISO, euro, applicaCombinazioni } = require('../../strumenti/listino.js');
 
 const NAVY = '#0d1f3c';
 const ORO_SCURO = '#7f6720';
@@ -67,10 +67,29 @@ function costruisciEmail({ nome, sedeScelta, sedeUsata, richieste, note, sedeNon
 
   let chiedeConsiglio = false;
 
+  // Prima si separa ciò che il listino conosce da ciò che non conosce.
+  const riconosciute = [];
   richieste.forEach(etichetta => {
     if (etichetta === CHIEDE_CONSIGLIO) { chiedeConsiglio = true; return; }
+    if (LISTINO.some(v => v.nome === etichetta)) riconosciute.push(etichetta);
+    else nonRiconosciute.push(etichetta);
+  });
+
+  // Poi si applicano le combinazioni: se il paziente ha scelto tutte le
+  // prestazioni di un pacchetto, le righe singole vengono sostituite da quella
+  // del pacchetto, al suo prezzo.
+  const { combinazioni, singole } = applicaCombinazioni(riconosciute, sedeUsata);
+
+  combinazioni.forEach(combo => {
+    trovate.push({
+      voce: { nome: combo.nome, cat: 'Visite ed esami' },
+      importo: combo.prezzi[sedeUsata],
+      altrove: null,
+    });
+  });
+
+  singole.forEach(etichetta => {
     const voce = LISTINO.find(v => v.nome === etichetta);
-    if (!voce) { nonRiconosciute.push(etichetta); return; }
     const p = prezzoPer(voce, sedeUsata);
     if (p) trovate.push({ voce, ...p });
   });
