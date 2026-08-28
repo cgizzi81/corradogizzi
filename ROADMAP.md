@@ -1,7 +1,7 @@
 # Roadmap — corradogizzi.it
 
 Stato dei lavori in sospeso. **Aggiornare questo file a ogni avanzamento**, così non serve
-ricostruire il contesto a ogni sessione. Ultimo aggiornamento: 18 agosto 2026.
+ricostruire il contesto a ogni sessione. Ultimo aggiornamento: 29 agosto 2026.
 
 L'obiettivo di fondo resta quello del briefing: essere il riferimento regionale per il
 glaucoma in Emilia-Romagna, superando in ranking i profili di terze parti sul nome del
@@ -11,17 +11,15 @@ dottore e su "glaucoma" + area geografica.
 
 ## In attesa di revisione da Corrado
 
-| Cosa | Dove | Stato |
-|---|---|---|
-| Variabili SMTP su Netlify | pannello Netlify | Corrado le imposta la sera del 18/8 |
+Coda vuota al 29/8/2026. Tutte le pagine cliniche sono approvate e in sitemap, il listino è
+stato ricostruito da zero il 24/8 sui costi reali di Life Clinic (dettaglio e tariffe di
+sala in testa a `strumenti/listino.js`, non qui: cambiano troppo spesso per restare
+duplicate in questo file), e le variabili SMTP sono confermate funzionanti — la risposta
+automatica ai preventivi manda email vere dal 24/8.
 
-Il listino è stato costruito il 18/8/2026 sui dati reali di Corrado: visita 150 € a
-Bologna e 120 € a Faenza, sala operatoria 1.000 € per il glaucoma e 800 € per la
-cataratta, sala laser 250 € a occhio. Il dettaglio onorario/struttura è documentato in
-testa a `listino.js`.
-
-**Tutte le pagine sono approvate e in sitemap** al 18/8/2026: le sette schede di
-`diagnostica/`, le nove di `chirurgia/` e `laser/`, e i quattro articoli del blog.
+Il bug del menu mobile che si rompeva a pagina scrollata (scoperto il 23/8, causato da
+`backdrop-filter` su `#navbar` che intrappolava `.nav-links` nel proprio containing block)
+è risolto e verificato in produzione.
 
 Per pubblicare un post: `bozza: false` esplicito nel front matter (togliere la riga **non
 basta**, resta il default di `posts/posts.json`), data aggiornata al giorno della revisione,
@@ -33,9 +31,9 @@ e riga in `sitemap.xml`.
 
 ### 1. Merge su `main` — bloccato sul via libera di Corrado
 
-Nove pagine cliniche sono approvate e pronte ma vivono su `revisione`: finché non arrivano
-in produzione non contano nulla per il ranking. Un deploy di produzione costa 15 crediti
-Netlify, per questo si va a blocchi.
+Fatto: tutte le pagine cliniche, il modulo preventivi e il listino sono in produzione dal
+29/8/2026. Il ciclo di fatturazione Netlify va dal 2 di ogni mese all'1 del successivo,
+300 crediti a ciclo, 15 per deploy di produzione — si continua ad andare a blocchi.
 
 ### 2. Search Console — dopo il merge
 
