@@ -18,10 +18,10 @@ const NAV_PAGES = [
     children: [
       { key: 'diagnostica', href: '/diagnostica/', label: 'Diagnostica del glaucoma',
         interne: ['tonometria', 'disco-ottico', 'oct', 'campo-visivo', 'pachimetria', 'gonioscopia'] },
-      { key: 'chirurgia',   href: '/chirurgia/',   label: 'Chirurgia del glaucoma',
-        interne: ['trabeculectomia', 'drenanti', 'migs', 'mibs'] },
       { key: 'laser',       href: '/laser/',       label: 'Trattamenti laser',
         interne: ['slt', 'yag', 'diodo'] },
+      { key: 'chirurgia',   href: '/chirurgia/',   label: 'Chirurgia del glaucoma',
+        interne: ['trabeculectomia', 'drenanti', 'migs', 'mibs'] },
     ],
   },
   { key: 'blog', href: '/blog/',        label: 'Blog' },
