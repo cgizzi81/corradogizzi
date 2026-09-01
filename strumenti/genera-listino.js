@@ -184,7 +184,8 @@ const nomeConNota = v =>
 // servono come voci da applicare, non come sconto da calcolare a mente.
 const comboPerSede = sede => COMBINAZIONI
   .filter(c => typeof c.prezzi[sede] === 'number')
-  .map(c => ({ cat: 'Visite ed esami insieme', nome: c.nome, prezzi: c.prezzi }));
+  .map(c => ({ cat: 'Visite ed esami insieme', nome: c.nome, prezzi: c.prezzi,
+               soloInterno: c.soloInterno }));
 
 const bloccoInclusioni = INCLUSIONI.length
   ? '<div class="inclusioni"><div class="inclusioni-tit">Gi\u00e0 compreso, da non addebitare</div><ul>' +

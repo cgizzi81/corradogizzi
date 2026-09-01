@@ -173,6 +173,19 @@ const LISTINO = [
 const VISITA = ['Visita oculistica completa', 'Visita di controllo per glaucoma'];
 
 const COMBINAZIONI = [
+  // Quando in visita si avvia o si cambia una terapia per il glaucoma e serve
+  // rivedere il paziente entro un paio di mesi per il solo tono, il controllo
+  // si paga in anticipo insieme alla visita (30 € invece dei 60 della
+  // "Misurazione della pressione oculare" isolata): evita l'imbarazzo di
+  // richiedere il pagamento a distanza ravvicinata dalla visita appena fatta.
+  // Vale una volta sola per episodio di titolazione: se serve un ulteriore
+  // aggiustamento si passa a una vera visita di controllo, non a un secondo
+  // sconto. Combinazione riservata al preventivo compilato in visita: non
+  // è (e non deve diventare) selezionabile dal modulo pubblico, perché è
+  // Corrado a decidere in visita se serve, non il paziente da sé.
+  { nome: 'Visita + controllo tono successivo', soloInterno: true,
+    componenti: [VISITA, 'Misurazione della pressione oculare'],
+    prezzi: { Bologna: 180, Faenza: 150 } },
   { nome: 'Visita + OCT + campo visivo',
     componenti: [VISITA, 'OCT del nervo ottico', 'Campo visivo'],
     prezzi: { Bologna: 250, Faenza: null } },

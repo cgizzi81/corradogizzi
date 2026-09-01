@@ -95,8 +95,10 @@ COMBINAZIONI.forEach(combo => {
         `La combinazione "${combo.nome}" richiede "${n}", che non è in listino.js: non scatterà mai.`));
 
     // Se nessuna alternativa è selezionabile dal modulo, la combinazione può
-    // valere solo sul preventivo compilato a mano, mai da sito.
-    if (alternative.every(n => !offerte.has(n))) {
+    // valere solo sul preventivo compilato a mano, mai da sito — a meno che
+    // non sia dichiaratamente riservata all'uso interno (soloInterno), nel
+    // qual caso è la condizione attesa, non un errore.
+    if (!combo.soloInterno && alternative.every(n => !offerte.has(n))) {
       problemi.push(`La combinazione "${combo.nome}" richiede "${alternative.join('" o "')}", ` +
         `che il modulo pubblico non offre: dal sito non scatterà mai.`);
     }
