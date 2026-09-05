@@ -259,7 +259,15 @@ async function prova() {
     } else if (esito.errore === 'telefono-non-iscritto') {
       messaggio('Il server non conosce questo telefono: prema «Attiva i promemoria» e riprovi.', 'attesa')
     } else {
-      messaggio('La consegna è stata rifiutata dal servizio di notifiche.', 'errore')
+      // ⚠️ Il codice del rifiuto si mostra, non si nasconde: 403 vuol dire che
+      // le due chiavi non sono una coppia, 400 che l'iscrizione è malformata,
+      // 429 che si sta esagerando. Senza quel numero si tira a indovinare —
+      // ed è costato un giro di prove.
+      const codice = esito.dettaglio ? ` (codice ${esito.dettaglio})` : ''
+      const spiega = esito.dettaglio === 403 || esito.dettaglio === 401
+        ? ' Le due chiavi del mittente non sono una coppia: controlli VAPID_PRIVATE_KEY.'
+        : ''
+      messaggio(`La consegna è stata rifiutata dal servizio di notifiche${codice}.${spiega}`, 'errore')
     }
   } catch {
     messaggio('Non è stato possibile chiedere la prova.', 'errore')
