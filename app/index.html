@@ -108,6 +108,11 @@
 
   <div class="scheda">
     <button class="primario" id="attiva">Attiva i promemoria</button>
+    <!-- ⚠️ La prova immediata: il mittente a orario di Netlify parte solo sul
+         sito pubblicato, non sui rami. Con questo pulsante si prova tutto il
+         resto della catena — chiavi, consegna, service worker, telefono —
+         senza aspettare un orario e senza pubblicare. -->
+    <button class="secondario" id="prova" style="margin-top:0.6rem" hidden>Manda una notifica di prova adesso</button>
     <div id="stato"></div>
     <p id="dettaglioFuso"></p>
   </div>
@@ -218,6 +223,7 @@ async function attiva() {
 
     salvaOrari(orari)
     messaggio('Promemoria attivi. Può chiudere l’app: arriveranno lo stesso.', 'ok')
+    $('prova').hidden = false
     $('dettaglioFuso').textContent = `Orari nel fuso ${FUSO}. Per fermarli, tolga il permesso alle notifiche dalle impostazioni del telefono.`
   } catch (e) {
     messaggio('Non è stato possibile attivare i promemoria. Riprovi fra poco.', 'errore')
@@ -227,6 +233,48 @@ async function attiva() {
 }
 
 $('attiva').addEventListener('click', attiva)
+
+async function prova() {
+  $('prova').disabled = true
+  try {
+    const registrazione = await navigator.serviceWorker.getRegistration('/app/')
+    const iscrizione = await registrazione?.pushManager.getSubscription()
+    if (!iscrizione) {
+      messaggio('Questo telefono non è ancora iscritto: prema prima «Attiva i promemoria».', 'attesa')
+      return
+    }
+    const r = await fetch('/api/gocce-prova', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ endpoint: iscrizione.endpoint }),
+    })
+    const esito = await r.json().catch(() => ({}))
+    if (r.ok) {
+      messaggio('Inviata. Se entro qualche secondo non arriva nulla, il problema è nella consegna: melo dica.', 'ok')
+    } else if (esito.errore === 'chiavi-mancanti') {
+      // Il caso in cui non arriva niente e non si capisce perché: si dice.
+      messaggio('Il mittente non è configurato sul server (chiavi mancanti). Le notifiche non possono partire.', 'errore')
+    } else if (esito.errore === 'troppo-presto') {
+      messaggio('Ha appena mandato una prova: aspetti un minuto.', 'attesa')
+    } else if (esito.errore === 'telefono-non-iscritto') {
+      messaggio('Il server non conosce questo telefono: prema «Attiva i promemoria» e riprovi.', 'attesa')
+    } else {
+      messaggio('La consegna è stata rifiutata dal servizio di notifiche.', 'errore')
+    }
+  } catch {
+    messaggio('Non è stato possibile chiedere la prova.', 'errore')
+  } finally {
+    $('prova').disabled = false
+  }
+}
+$('prova').addEventListener('click', prova)
+
+// Il pulsante di prova compare solo a permesso già dato: prima non avrebbe
+// nulla da mandare, e sarebbe un comando che non fa niente.
+if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+  $('prova').hidden = false
+}
+
 disegnaOrari()
 
 if (Notification.permission === 'granted') {
