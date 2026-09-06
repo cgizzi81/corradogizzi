@@ -28,6 +28,24 @@ const UMAMI_SRC = 'https://cloud.umami.is/script.js';
 const DOMINIO_PRODUZIONE = 'corradogizzi.it';
 
 function injectAnalytics() {
+  // Chi cura il sito lo apre di continuo, e con un traffico ancora basso le
+  // proprie visite falserebbero ogni statistica. Aprire una pagina qualsiasi
+  // con ?notrack=1 spegne il conteggio su quel browser una volta per tutte
+  // (?notrack=0 lo riaccende): è la chiave che Umami stesso controlla.
+  // Serve perché Firefox su Android non ha una console da cui impostarla a
+  // mano, ed è il browser da cui Corrado visita il sito più spesso.
+  const q = new URLSearchParams(location.search);
+  if (q.has('notrack')) {
+    const spegni = q.get('notrack') !== '0';
+    try {
+      if (spegni) localStorage.setItem('umami.disabled', '1');
+      else localStorage.removeItem('umami.disabled');
+      alert(spegni
+        ? 'Statistiche disattivate su questo browser.'
+        : 'Statistiche riattivate su questo browser.');
+    } catch (e) { /* navigazione privata: localStorage non disponibile */ }
+  }
+
   if (!UMAMI_ID) return;
   const host = location.hostname;
   if (host !== DOMINIO_PRODUZIONE && host !== 'www.' + DOMINIO_PRODUZIONE) return;
