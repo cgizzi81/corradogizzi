@@ -32,7 +32,7 @@ logorare: uno, due, tre colliri al giorno per vent'anni sono un impegno che poch
 mantengono con la regolarità necessaria, e i conservanti irritano la superficie oculare
 fino a rendere l'occhio cronicamente arrossato e secco. A questo si aggiungono le cose
 pratiche — ricordarsene, riuscire a instillarli con mani non più ferme, portarseli in
-viaggio, pagarli.
+viaggio.
 
 Tutto questo è il **carico terapeutico**, ed è una parte reale della malattia, non un
 dettaglio di comodità. Una MIGS punta lì: ridurre il numero di colliri necessari a tenere
