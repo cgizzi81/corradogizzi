@@ -16,7 +16,7 @@
 // insieme all'indirizzo dello script, che va confermato lì perché cambia a
 // seconda di dove è ospitato l'account. Finché UMAMI_ID è vuoto non viene
 // caricato nulla e il sito si comporta esattamente come prima.
-const UMAMI_ID  = '';
+const UMAMI_ID  = '1ca714ad-5dc5-481d-8cc6-f55d7f7a0d6a';
 const UMAMI_SRC = 'https://cloud.umami.is/script.js';
 
 // Si conta solo il dominio di produzione. I deploy di anteprima del ramo
