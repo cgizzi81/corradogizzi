@@ -53,7 +53,7 @@ export default async (req) => {
           testo: 'Se legge questo, i promemoria possono arrivare.',
           tag: 'gocce-prova',
         }),
-        { TTL: 600 },
+        { TTL: 600, urgency: 'high' },
       )
       await store.setJSON(voce.key, { ...iscr, ultimaProva: new Date(adesso).toISOString() })
       return Response.json({ inviata: true })

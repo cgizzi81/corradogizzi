@@ -91,6 +91,18 @@
        puntuali con il telefono in tasca e l'app chiusa.</p>
   </div>
 
+  <!-- ⚠️ Il banner che si apre da solo dipende dall'importanza che Android dà
+       alle notifiche di questa app, non da come sono mandate: senza dirlo, chi
+       vede solo l'icona in alto pensa che l'app funzioni a metà. -->
+  <div class="scheda">
+    <h2>Se vede solo l’icona in alto</h2>
+    <p>Perché il promemoria compaia come riquadro sullo schermo, Android deve
+       trattarlo come importante: <b>Impostazioni → App → Le Mie Gocce →
+       Notifiche</b>, e metta l’importanza su «Predefinita» o «Alta», con
+       «Mostra sullo schermo» attivo. Controlli anche che «Non disturbare» non
+       sia acceso.</p>
+  </div>
+
   <div class="scheda" id="passiInstallazione" hidden>
     <h2>Prima cosa: aggiunga l’app alla schermata Home</h2>
     <div class="passo"><span class="numero">1</span><span>Tocchi il menu del browser (i tre puntini in alto).</span></div>
@@ -113,6 +125,11 @@
          resto della catena — chiavi, consegna, service worker, telefono —
          senza aspettare un orario e senza pubblicare. -->
     <button class="secondario" id="prova" style="margin-top:0.6rem" hidden>Manda una notifica di prova adesso</button>
+    <!-- ⚠️ Deve esistere prima che l'app arrivi a un paziente: finora l'unico
+         modo di fermare i promemoria era togliere il permesso alle notifiche
+         dalle impostazioni di Android, un percorso che un ottantenne non trova
+         — e che lasciava comunque il telefono iscritto sul server. -->
+    <button class="secondario" id="disattiva" style="margin-top:0.6rem" hidden>Smetti di ricevere i promemoria</button>
     <div id="stato"></div>
     <p id="dettaglioFuso"></p>
   </div>
@@ -224,6 +241,7 @@ async function attiva() {
     salvaOrari(orari)
     messaggio('Promemoria attivi. Può chiudere l’app: arriveranno lo stesso.', 'ok')
     $('prova').hidden = false
+    $('disattiva').hidden = false
     $('dettaglioFuso').textContent = `Orari nel fuso ${FUSO}. Per fermarli, tolga il permesso alle notifiche dalle impostazioni del telefono.`
   } catch (e) {
     messaggio('Non è stato possibile attivare i promemoria. Riprovi fra poco.', 'errore')
@@ -277,10 +295,37 @@ async function prova() {
 }
 $('prova').addEventListener('click', prova)
 
+async function disattiva() {
+  if (!confirm('Vuole smettere di ricevere i promemoria?')) return
+  $('disattiva').disabled = true
+  try {
+    const registrazione = await navigator.serviceWorker.getRegistration('/app/')
+    const iscrizione = await registrazione?.pushManager.getSubscription()
+    if (iscrizione) {
+      // Prima si dice al server di dimenticarlo, poi il telefono si disiscrive:
+      // nell'ordine inverso, se la rete cade a metà, il server continuerebbe a
+      // mandare a un telefono che non ascolta più.
+      await fetch('/api/gocce-disattiva', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ endpoint: iscrizione.endpoint }),
+      }).catch(() => {})
+      await iscrizione.unsubscribe().catch(() => {})
+    }
+    $('prova').hidden = true
+    $('disattiva').hidden = true
+    messaggio('Promemoria disattivati. Per riaverli, prema di nuovo «Attiva i promemoria».', 'attesa')
+  } finally {
+    $('disattiva').disabled = false
+  }
+}
+$('disattiva').addEventListener('click', disattiva)
+
 // Il pulsante di prova compare solo a permesso già dato: prima non avrebbe
 // nulla da mandare, e sarebbe un comando che non fa niente.
 if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
   $('prova').hidden = false
+  $('disattiva').hidden = false
 }
 
 disegnaOrari()

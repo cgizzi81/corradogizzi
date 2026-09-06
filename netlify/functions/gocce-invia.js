@@ -64,7 +64,17 @@ export default async () => {
             testo: `Promemoria delle ${orario}.`,
             tag: `gocce-${orario}`,
           }),
-          { TTL: 3600 },
+          // ⚠️ `urgency: high` non è enfasi: è l'intestazione che dice al
+          // servizio di notifiche di consegnare SUBITO invece di aspettare che
+          // il telefono si svegli da sé. Su Android, dopo qualche ora di
+          // inattività, il sonno profondo ritarda tutto ciò che non è urgente,
+          // e un promemoria delle sei che arriva alle sette non serve a niente.
+          //
+          // TTL di un'ora: se il telefono resta spento più a lungo quel
+          // promemoria è passato comunque. Meglio perderlo che vederlo
+          // comparire a metà pomeriggio, quando la goccia o è stata messa o
+          // non lo sarà.
+          { TTL: 3600, urgency: 'high' },
         )
         memoria[segno] = true
         cambiato = true
