@@ -3,7 +3,7 @@ title: "MIGS: la chirurgia del glaucoma che punta a ridurre i colliri"
 descrizione: "Le MIGS non servono a operare prima per il gusto di farlo: nei glaucomi iniziali puntano ad alleggerire la terapia di tutti i giorni, con un rischio contenuto."
 date: 2026-09-06
 etichetta: "Approfondimento"
-bozza: true
+bozza: false
 ---
 
 Quando si parla di «operare» un glaucoma, quasi tutti pensano alla stessa cosa: l'intervento

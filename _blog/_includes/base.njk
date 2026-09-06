@@ -31,8 +31,18 @@
   <meta property="og:description" content="{{ descrizione }}">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://corradogizzi.it/blog/{{ page.fileSlug }}/">
-  <meta property="og:image" content="https://corradogizzi.it/assets/foto.jpg">
+  {#- Anteprima di condivisione. Senza una card per articolo, WhatsApp e
+      Facebook mostrerebbero lo stesso ritratto per tutti i post e tre link
+      condivisi in una chat sarebbero indistinguibili. Le card le genera
+      tools/card-condivisione.mjs e stanno in assets/og/.
+      Un articolo può dichiarare `immagine: /assets/…` nel front matter
+      (percorso dalla radice) per usare un'illustrazione propria. -#}
+  {%- set anteprima = immagine or ('/assets/og/' + page.fileSlug + '.png') %}
+  <meta property="og:image" content="https://corradogizzi.it{{ anteprima }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://corradogizzi.it{{ anteprima }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&display=swap">
