@@ -1,5 +1,9 @@
 User-agent: *
 Allow: /
+# L'app dei promemoria si consegna in ambulatorio, non si trova cercando: una
+# pagina che chiede il permesso alle notifiche e che chiunque può aprire è un
+# invito a diffidare.
+Disallow: /app/
 Disallow: /grazie.html
 Disallow: /preventivo-inviato.html
 

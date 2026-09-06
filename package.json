@@ -12,6 +12,8 @@
     "@11ty/eleventy": "^3.0.0"
   },
   "dependencies": {
-    "nodemailer": "^9.0.5"
+    "@netlify/blobs": "^11.0.3",
+    "nodemailer": "^9.0.5",
+    "web-push": "^3.6.7"
   }
 }

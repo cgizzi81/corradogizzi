@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- ⚠️ Fuori dai motori di ricerca e fuori dalla sitemap: l'app si consegna in
+     ambulatorio, non si trova cercando. Una pagina che chiede il permesso alle
+     notifiche e che chiunque può aprire è un invito a diffidare. -->
+<meta name="robots" content="noindex, nofollow">
+<title>Le Mie Gocce</title>
+<link rel="manifest" href="/app/manifest.webmanifest">
+<meta name="theme-color" content="#0d1f3c">
+<link rel="apple-touch-icon" href="/app/icona-192.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap">
+<style>
+  :root {
+    --navy: #0d1f3c; --oro: #b8962e; --oro-scuro: #7f6720;
+    --crema: #faf8f3; --carta: #ffffff; --testo: #1e1c1a; --tenue: #6f6d65;
+    --linea: #e6e4dc; --verde: #2f6b4f; --rosso: #9b2c2c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--crema); color: var(--testo);
+    font-family: Lato, -apple-system, BlinkMacSystemFont, sans-serif;
+    /* ⚠️ Corpo grande e comandi alti: chi usa colliri per il glaucoma spesso
+       non vede bene da vicino, ed è la ragione per cui l'app esiste. */
+    font-size: 18px; line-height: 1.6;
+  }
+  .foglio { max-width: 460px; margin: 0 auto; padding: 1.5rem 1.1rem 3rem; }
+  header { text-align: center; margin-bottom: 1.5rem; }
+  h1 { font-size: 1.6rem; margin: 0.6rem 0 0.2rem; color: var(--navy); }
+  .sottotitolo { color: var(--tenue); font-size: 0.95rem; margin: 0; }
+  .marchio { width: 64px; height: 64px; }
+
+  .scheda {
+    background: var(--carta); border: 1px solid var(--linea); border-radius: 14px;
+    padding: 1.1rem; margin-bottom: 1rem;
+  }
+  .scheda h2 { font-size: 1.05rem; margin: 0 0 0.5rem; color: var(--navy); }
+  .scheda p { margin: 0.4rem 0; color: var(--tenue); font-size: 0.95rem; }
+
+  button {
+    font-family: inherit; font-size: 1.05rem; font-weight: 700; cursor: pointer;
+    border-radius: 10px; padding: 0.85rem 1.1rem; width: 100%; border: none;
+  }
+  .primario { background: var(--navy); color: #fff; }
+  .secondario { background: var(--carta); color: var(--navy); border: 1px solid var(--linea); }
+  button[disabled] { opacity: 0.5; cursor: default; }
+
+  .orari { display: flex; flex-direction: column; gap: 0.6rem; margin: 0.8rem 0; }
+  .ora {
+    display: flex; align-items: center; gap: 0.7rem;
+    border: 1px solid var(--linea); border-radius: 10px; padding: 0.6rem 0.7rem;
+  }
+  .ora input[type=time] {
+    font-family: inherit; font-size: 1.3rem; font-weight: 700; color: var(--navy);
+    border: none; background: transparent; flex: 1;
+  }
+  .ora .togli { width: auto; background: none; color: var(--rosso); font-size: 1.4rem; padding: 0 0.4rem; }
+
+  .stato { border-radius: 10px; padding: 0.7rem 0.9rem; font-size: 0.95rem; margin-top: 0.8rem; }
+  .ok { background: #eef7f0; border: 1px solid #c6e2d0; color: var(--verde); }
+  .attesa { background: #fff8e1; border: 1px solid #f0d488; color: var(--oro-scuro); }
+  .errore { background: #fff5f5; border: 1px solid #f0b7b7; color: var(--rosso); }
+
+  .passo { display: flex; gap: 0.7rem; align-items: flex-start; margin: 0.7rem 0; }
+  .numero {
+    flex: 0 0 1.8rem; height: 1.8rem; border-radius: 50%; background: var(--oro);
+    color: #fff; font-weight: 900; display: flex; align-items: center; justify-content: center;
+    font-size: 0.95rem;
+  }
+  footer { text-align: center; color: var(--tenue); font-size: 0.8rem; margin-top: 2rem; }
+</style>
+</head>
+<body>
+<div class="foglio">
+
+  <header>
+    <img class="marchio" src="/app/icona-192.png" alt="">
+    <h1>Le Mie Gocce</h1>
+    <p class="sottotitolo">Il telefono le ricorda al posto suo.</p>
+  </header>
+
+  <!-- ⚠️ Prova tecnica, e lo dice. Finché non c'è il parere del legale e la
+       terapia non arriva dall'EMR, questa pagina serve a una cosa sola:
+       vedere se le notifiche arrivano davvero e puntuali su Android. -->
+  <div class="scheda" id="avvisoProva">
+    <h2>Prova delle notifiche</h2>
+    <p>Questa è la versione di prova: gli orari li scrive lei, e non c'è nessun
+       dato del paziente. Serve a verificare che i promemoria arrivino
+       puntuali con il telefono in tasca e l'app chiusa.</p>
+  </div>
+
+  <!-- ⚠️ Il banner che si apre da solo dipende dall'importanza che Android dà
+       alle notifiche di questa app, non da come sono mandate: senza dirlo, chi
+       vede solo l'icona in alto pensa che l'app funzioni a metà. -->
+  <div class="scheda">
+    <h2>Se vede solo l’icona in alto</h2>
+    <p>Perché il promemoria compaia come riquadro sullo schermo, Android deve
+       trattarlo come importante: <b>Impostazioni → App → Le Mie Gocce →
+       Notifiche</b>, e metta l’importanza su «Predefinita» o «Alta», con
+       «Mostra sullo schermo» attivo. Controlli anche che «Non disturbare» non
+       sia acceso.</p>
+  </div>
+
+  <div class="scheda" id="passiInstallazione" hidden>
+    <h2>Prima cosa: aggiunga l’app alla schermata Home</h2>
+    <div class="passo"><span class="numero">1</span><span>Tocchi il menu del browser (i tre puntini in alto).</span></div>
+    <div class="passo"><span class="numero">2</span><span>Scelga <b>Installa app</b> o <b>Aggiungi a schermata Home</b>.</span></div>
+    <div class="passo"><span class="numero">3</span><span>Apra l’app dalla schermata Home e torni qui.</span></div>
+    <p>Senza questo passaggio le notifiche possono non arrivare quando il
+       browser è chiuso.</p>
+  </div>
+
+  <div class="scheda">
+    <h2>Gli orari</h2>
+    <div class="orari" id="orari"></div>
+    <button class="secondario" id="aggiungi">+ Aggiungi un orario</button>
+  </div>
+
+  <div class="scheda">
+    <button class="primario" id="attiva">Attiva i promemoria</button>
+    <!-- ⚠️ La prova immediata: il mittente a orario di Netlify parte solo sul
+         sito pubblicato, non sui rami. Con questo pulsante si prova tutto il
+         resto della catena — chiavi, consegna, service worker, telefono —
+         senza aspettare un orario e senza pubblicare. -->
+    <button class="secondario" id="prova" style="margin-top:0.6rem" hidden>Manda una notifica di prova adesso</button>
+    <!-- ⚠️ Deve esistere prima che l'app arrivi a un paziente: finora l'unico
+         modo di fermare i promemoria era togliere il permesso alle notifiche
+         dalle impostazioni di Android, un percorso che un ottantenne non trova
+         — e che lasciava comunque il telefono iscritto sul server. -->
+    <button class="secondario" id="disattiva" style="margin-top:0.6rem" hidden>Smetti di ricevere i promemoria</button>
+    <div id="stato"></div>
+    <p id="dettaglioFuso"></p>
+  </div>
+
+  <footer>
+    Dott. Corrado Gizzi — Oculista · versione di prova
+  </footer>
+</div>
+
+<script>
+// ⚠️ La chiave pubblica del server: non è un segreto (la privata sta solo su
+// Netlify), ma dev'essere la stessa, o il telefono si iscrive a un mittente
+// che non esiste e le notifiche non partono mai — senza errori visibili.
+const CHIAVE_PUBBLICA = 'BNjNwFvQuPYepmj5R3iAjCmOMr91T1_sO7gn6qmspGEg5ZV-lzIWd5lMz2j3qnXNRHYlyI47QwFTSdjlTM9D-Uk'
+
+const $ = (id) => document.getElementById(id)
+const FUSO = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Europe/Rome'
+
+// Gli orari vivono nel telefono finché non si attiva: chi cambia idea due
+// volte prima di premere il pulsante non deve mandare niente a nessuno.
+const leggiOrari = () => {
+  try { return JSON.parse(localStorage.getItem('gocce-orari') || '[]') } catch { return [] }
+}
+const salvaOrari = (o) => {
+  try { localStorage.setItem('gocce-orari', JSON.stringify(o)) } catch { /* si riparte da capo */ }
+}
+
+let orari = leggiOrari()
+if (orari.length === 0) orari = ['08:00', '20:00']
+
+function disegnaOrari() {
+  const c = $('orari')
+  c.innerHTML = ''
+  orari.forEach((valore, i) => {
+    const riga = document.createElement('div')
+    riga.className = 'ora'
+    const campo = document.createElement('input')
+    campo.type = 'time'
+    campo.value = valore
+    campo.setAttribute('aria-label', 'Orario del promemoria')
+    campo.addEventListener('change', () => { orari[i] = campo.value; salvaOrari(orari) })
+    const togli = document.createElement('button')
+    togli.className = 'togli'
+    togli.type = 'button'
+    togli.textContent = '×'
+    togli.setAttribute('aria-label', 'Togli questo orario')
+    togli.addEventListener('click', () => { orari.splice(i, 1); salvaOrari(orari); disegnaOrari() })
+    riga.append(campo, togli)
+    c.append(riga)
+  })
+}
+
+$('aggiungi').addEventListener('click', () => {
+  if (orari.length >= 6) return
+  orari.push('12:00'); salvaOrari(orari); disegnaOrari()
+})
+
+function messaggio(testo, classe) {
+  $('stato').innerHTML = `<div class="stato ${classe}">${testo}</div>`
+}
+
+// In Android «installata» si riconosce dalla modalità di visualizzazione: se
+// la pagina gira ancora dentro il browser, i passi dell'installazione restano
+// in vista.
+const installata = window.matchMedia('(display-mode: standalone)').matches
+  || window.navigator.standalone === true
+$('passiInstallazione').hidden = installata
+
+const daBase64 = (base64) => {
+  const riempimento = '='.repeat((4 - base64.length % 4) % 4)
+  const normale = (base64 + riempimento).replace(/-/g, '+').replace(/_/g, '/')
+  const grezzo = atob(normale)
+  return Uint8Array.from([...grezzo].map(c => c.charCodeAt(0)))
+}
+
+async function attiva() {
+  $('attiva').disabled = true
+  try {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+      messaggio('Questo telefono non sa ricevere notifiche da un’app web. Ce lo dica: è proprio quello che stiamo verificando.', 'errore')
+      return
+    }
+
+    const registrazione = await navigator.serviceWorker.register('/app/sw.js', { scope: '/app/' })
+    await navigator.serviceWorker.ready
+
+    const permesso = await Notification.requestPermission()
+    if (permesso !== 'granted') {
+      messaggio('Il permesso alle notifiche è stato negato. Senza, i promemoria non possono arrivare.', 'errore')
+      return
+    }
+
+    const iscrizione = await registrazione.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: daBase64(CHIAVE_PUBBLICA),
+    })
+
+    const risposta = await fetch('/api/gocce-iscrivi', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        iscrizione,
+        orari: orari.filter(Boolean),
+        fuso: FUSO,
+      }),
+    })
+    if (!risposta.ok) throw new Error('server')
+
+    salvaOrari(orari)
+    messaggio('Promemoria attivi. Può chiudere l’app: arriveranno lo stesso.', 'ok')
+    $('prova').hidden = false
+    $('disattiva').hidden = false
+    $('dettaglioFuso').textContent = `Orari nel fuso ${FUSO}. Per fermarli, tolga il permesso alle notifiche dalle impostazioni del telefono.`
+  } catch (e) {
+    messaggio('Non è stato possibile attivare i promemoria. Riprovi fra poco.', 'errore')
+  } finally {
+    $('attiva').disabled = false
+  }
+}
+
+$('attiva').addEventListener('click', attiva)
+
+async function prova() {
+  $('prova').disabled = true
+  try {
+    const registrazione = await navigator.serviceWorker.getRegistration('/app/')
+    const iscrizione = await registrazione?.pushManager.getSubscription()
+    if (!iscrizione) {
+      messaggio('Questo telefono non è ancora iscritto: prema prima «Attiva i promemoria».', 'attesa')
+      return
+    }
+    const r = await fetch('/api/gocce-prova', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ endpoint: iscrizione.endpoint }),
+    })
+    const esito = await r.json().catch(() => ({}))
+    if (r.ok) {
+      messaggio('Inviata. Se entro qualche secondo non arriva nulla, il problema è nella consegna: melo dica.', 'ok')
+    } else if (esito.errore === 'chiavi-mancanti') {
+      // Il caso in cui non arriva niente e non si capisce perché: si dice.
+      messaggio('Il mittente non è configurato sul server (chiavi mancanti). Le notifiche non possono partire.', 'errore')
+    } else if (esito.errore === 'troppo-presto') {
+      messaggio('Ha appena mandato una prova: aspetti un minuto.', 'attesa')
+    } else if (esito.errore === 'telefono-non-iscritto') {
+      messaggio('Il server non conosce questo telefono: prema «Attiva i promemoria» e riprovi.', 'attesa')
+    } else {
+      // ⚠️ Il codice del rifiuto si mostra, non si nasconde: 403 vuol dire che
+      // le due chiavi non sono una coppia, 400 che l'iscrizione è malformata,
+      // 429 che si sta esagerando. Senza quel numero si tira a indovinare —
+      // ed è costato un giro di prove.
+      const codice = esito.dettaglio ? ` (codice ${esito.dettaglio})` : ''
+      const spiega = esito.dettaglio === 403 || esito.dettaglio === 401
+        ? ' Le due chiavi del mittente non sono una coppia: controlli VAPID_PRIVATE_KEY.'
+        : ''
+      messaggio(`La consegna è stata rifiutata dal servizio di notifiche${codice}.${spiega}`, 'errore')
+    }
+  } catch {
+    messaggio('Non è stato possibile chiedere la prova.', 'errore')
+  } finally {
+    $('prova').disabled = false
+  }
+}
+$('prova').addEventListener('click', prova)
+
+async function disattiva() {
+  if (!confirm('Vuole smettere di ricevere i promemoria?')) return
+  $('disattiva').disabled = true
+  try {
+    const registrazione = await navigator.serviceWorker.getRegistration('/app/')
+    const iscrizione = await registrazione?.pushManager.getSubscription()
+    if (iscrizione) {
+      // Prima si dice al server di dimenticarlo, poi il telefono si disiscrive:
+      // nell'ordine inverso, se la rete cade a metà, il server continuerebbe a
+      // mandare a un telefono che non ascolta più.
+      await fetch('/api/gocce-disattiva', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ endpoint: iscrizione.endpoint }),
+      }).catch(() => {})
+      await iscrizione.unsubscribe().catch(() => {})
+    }
+    $('prova').hidden = true
+    $('disattiva').hidden = true
+    messaggio('Promemoria disattivati. Per riaverli, prema di nuovo «Attiva i promemoria».', 'attesa')
+  } finally {
+    $('disattiva').disabled = false
+  }
+}
+$('disattiva').addEventListener('click', disattiva)
+
+// Il pulsante di prova compare solo a permesso già dato: prima non avrebbe
+// nulla da mandare, e sarebbe un comando che non fa niente.
+if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+  $('prova').hidden = false
+  $('disattiva').hidden = false
+}
+
+disegnaOrari()
+
+if (Notification.permission === 'granted') {
+  messaggio('Le notifiche sono già permesse su questo telefono. Prema «Attiva» per aggiornare gli orari.', 'attesa')
+}
+</script>
+</body>
+</html>

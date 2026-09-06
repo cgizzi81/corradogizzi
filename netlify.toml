@@ -15,6 +15,14 @@
   # esbuild non lo include nel bundle e la funzione fallisce in produzione.
   included_files = ["strumenti/listino.js"]
 
+# ⚠️ Il mittente dei promemoria: gira ogni quarto d'ora e guarda, per ogni
+# telefono iscritto, se in quel momento — nell'ora di QUEL telefono — cade uno
+# degli orari che gli sono stati chiesti. Un passo più lungo farebbe arrivare
+# le gocce delle otto alle otto e mezza; uno più corto sarebbe lavoro sprecato,
+# perché quasi tutti i giri non hanno niente da mandare.
+[functions."gocce-invia"]
+  schedule = "*/15 * * * *"
+
 [[redirects]]
   from   = "https://www.corradogizzi.it/*"
   to     = "https://corradogizzi.it/:splat"

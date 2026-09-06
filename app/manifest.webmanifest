@@ -1,0 +1,15 @@
+{
+  "name": "Le Mie Gocce",
+  "short_name": "Le Mie Gocce",
+  "description": "I promemoria dei colliri, sul telefono.",
+  "start_url": "/app/",
+  "scope": "/app/",
+  "display": "standalone",
+  "background_color": "#faf8f3",
+  "theme_color": "#0d1f3c",
+  "lang": "it",
+  "icons": [
+    { "src": "/app/icona-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/app/icona-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
