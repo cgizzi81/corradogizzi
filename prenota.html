@@ -199,7 +199,10 @@
       </div>
 
       <div class="form-card reveal">
+        <!-- action= porta alla pagina di conferma del sito: senza, Netlify mostra la
+             propria schermata generica, fuori dallo stile del sito. -->
         <form id="contact-form" name="contatto" method="POST"
+              action="/grazie.html"
               data-netlify="true" netlify-honeypot="bot-field">
           <input type="hidden" name="form-name" value="contatto">
           <p style="display:none;">
