@@ -6,6 +6,38 @@
 // Il secondo argomento di injectLayout non serve più ed è ignorato: resta accettato
 // solo per non dover toccare le chiamate esistenti in fondo a ogni pagina.
 
+// ── Statistiche di visita (Umami) ──
+//
+// Umami non usa cookie e non scrive nulla sul dispositivo del visitatore:
+// per questo non serve un banner di consenso e la dichiarazione «solo cookie
+// tecnici» della privacy policy resta vera. Con GA4 non sarebbe stato così.
+//
+// L'ID si copia dalla dashboard Umami (Settings → Websites → Edit → Website ID),
+// insieme all'indirizzo dello script, che va confermato lì perché cambia a
+// seconda di dove è ospitato l'account. Finché UMAMI_ID è vuoto non viene
+// caricato nulla e il sito si comporta esattamente come prima.
+const UMAMI_ID  = '';
+const UMAMI_SRC = 'https://cloud.umami.is/script.js';
+
+// Si conta solo il dominio di produzione. I deploy di anteprima del ramo
+// `revisione` sono una copia integrale del sito su un secondo host: senza
+// questo filtro ogni pagina che apriamo noi per revisionarla finirebbe nelle
+// statistiche insieme alle visite dei pazienti, e i numeri non direbbero più
+// niente. È lo stesso motivo per cui tools/anteprime-noindex.mjs tiene le
+// anteprime fuori da Google.
+const DOMINIO_PRODUZIONE = 'corradogizzi.it';
+
+function injectAnalytics() {
+  if (!UMAMI_ID) return;
+  const host = location.hostname;
+  if (host !== DOMINIO_PRODUZIONE && host !== 'www.' + DOMINIO_PRODUZIONE) return;
+  const s = document.createElement('script');
+  s.defer = true;
+  s.src = UMAMI_SRC;
+  s.setAttribute('data-website-id', UMAMI_ID);
+  document.head.appendChild(s);
+}
+
 // Voci di menu. Una voce con `children` diventa un menu a tendina; la voce
 // principale resta comunque un link cliccabile alla pagina indice.
 const NAV_PAGES = [
@@ -147,4 +179,5 @@ function injectLayout(activePage) {
   while (footDiv.firstChild) document.body.appendChild(footDiv.firstChild);
   const year = document.getElementById('footer-year');
   if (year) year.textContent = new Date().getFullYear();
+  injectAnalytics();
 }
