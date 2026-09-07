@@ -126,7 +126,7 @@
        di com'era. Restano i bordi, che separano lo stesso. */
     .blocco {
       border: 1pt solid #999; border-radius: 3mm; background: #fff;
-      padding: 3mm 4.5mm; margin-bottom: 3mm;
+      padding: 2.8mm 4.5mm; margin-bottom: 2.6mm;
       /* Un riquadro spezzato fra due facciate è il modo di rendere
          illeggibile un elenco di passaggi. */
       break-inside: avoid;
@@ -138,7 +138,7 @@
     .qr { width: 34mm; height: 34mm; flex: 0 0 34mm; color: #000; }
     .codice { gap: 6mm; }
 
-    ol.passi > li { margin: 2.2mm 0; padding-left: 9mm; }
+    ol.passi > li { margin: 2mm 0; padding-left: 8.5mm; }
     /* ⚠️ In stampa il pallino pieno diventa un cerchio vuoto con il numero
        nero: il bianco su oro, su una stampante in bianco e nero, è bianco su
        grigio chiaro — cioè un numero che sparisce. */
@@ -147,7 +147,7 @@
       width: 6mm; height: 6mm; font-size: 10pt;
     }
     .via, .nota b { color: #000; }
-    .nota { font-size: 9.5pt; color: #333; }
+    .nota { font-size: 9pt; color: #333; margin: 1.5mm 0 0; }
     footer { margin-top: 3mm; font-size: 9pt; padding-top: 2mm; }
   }
 </style>
@@ -179,8 +179,9 @@
     <h2>I passaggi, in ordine</h2>
     <ol class="passi">
       <li>Apra il collegamento. Nel menu del browser — <span class="via">i tre
-          puntini in alto</span> — scelga <span class="via">Installa app</span>
-          oppure <span class="via">Aggiungi a schermata Home</span>.</li>
+          puntini</span>, in alto con Chrome e in basso con Firefox — scelga
+          <span class="via">Installa app</span> oppure <span class="via">Aggiungi
+          a schermata Home</span>.</li>
       <li>Chiuda il browser e apra <span class="via">Le Mie Gocce</span>
           dalla nuova icona sulla schermata Home.</li>
       <li>Scriva gli orari delle sue gocce, uno per ogni momento della
@@ -199,10 +200,15 @@
       <li>Sul telefono apra <span class="via">Impostazioni → App → Le Mie
           Gocce → Batteria</span> e scelga <span class="via">Senza
           restrizioni</span>.</li>
-      <li>Faccia la stessa identica cosa per <span class="via">Chrome</span>:
-          è il programma che le consegna i promemoria, e se il telefono
-          addormenta lui non arriva niente lo stesso.</li>
+      <li>Faccia la stessa identica cosa per il <b>browser</b> con cui ha
+          aperto il collegamento — <span class="via">Chrome</span> oppure
+          <span class="via">Firefox</span>: è lui che le consegna i
+          promemoria, e se il telefono addormenta lui non arriva niente lo
+          stesso.</li>
     </ol>
+    <p class="nota">Usi sempre lo stesso browser: i promemoria sono legati a
+       quello con cui li ha attivati, e aprendo l&rsquo;app con l&rsquo;altro
+       andrebbero riattivati da capo.</p>
     <p class="nota">Su telefoni <b>Samsung</b> serve anche togliere le due app
        dalle «app in sospensione»: <b>Impostazioni → Batteria → Limiti di
        utilizzo in background</b>. Su <b>Xiaomi</b> e <b>Huawei</b> la voce si
