@@ -73,6 +73,12 @@
     font-size: 0.95rem;
   }
   footer { text-align: center; color: var(--tenue); font-size: 0.8rem; margin-top: 2rem; }
+  /* ⚠️ Oro scuro e non oro: l'oro chiaro su fondo crema dà 2,66:1, sotto il
+     minimo leggibile, e questa è un'app per chi ci vede poco. Il collegamento
+     è anche più grande del resto del piè di pagina, perché si deve poter
+     centrare con un dito. */
+  footer a { color: var(--oro-scuro); font-weight: 700; font-size: 0.95rem;
+             display: inline-block; padding: 0.4rem 0; }
 </style>
 </head>
 <body>
@@ -170,6 +176,11 @@
   </div>
 
   <footer>
+    <!-- ⚠️ Il collegamento al foglio serve a due persone diverse: al paziente
+         che ha perso la carta e cerca i passaggi, e al dottore che apre la
+         pagina per stamparne una copia. È lo stesso file — istruzioni in due
+         posti divergono, e quelle vecchie fanno concludere che l'app è rotta. -->
+    <a href="/app/istruzioni.html">Le istruzioni, da rileggere o stampare</a><br>
     Dott. Corrado Gizzi — Oculista · versione di prova
   </footer>
 </div>
