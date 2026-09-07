@@ -94,39 +94,6 @@
        puntuali con il telefono in tasca e l'app chiusa.</p>
   </div>
 
-  <!-- ⚠️ Le due impostazioni sono in quest'ordine perché è l'ordine in cui
-       contano. Il risparmio energetico fa arrivare il promemoria in ritardo —
-       mezz'ora, a telefono fermo dalla notte — e una notifica consegnata a
-       schermo spento non apre nessun riquadro: si trova solo fra le icone al
-       risveglio. Quindi chi vede «solo l'icona» quasi sempre non ha un
-       problema di banner, ha un problema di ritardo, e mettere mano
-       all'importanza delle notifiche non gli risolve niente. -->
-  <div class="scheda">
-    <h2>Se il promemoria arriva tardi</h2>
-    <p>Android mette a dormire le app per risparmiare batteria, e con l’app
-       addormentata il promemoria resta fermo finché non si riaccende lo
-       schermo. Vada in <b>Impostazioni → App → Le Mie Gocce → Batteria</b> e
-       scelga <b>«Senza restrizioni»</b>. Poi faccia la stessa cosa per
-       <b>Chrome</b>, che è il programma che consegna i promemoria: se dorme
-       lui, non arriva niente lo stesso.</p>
-    <p class="tenue">Su Samsung serve anche togliere l’app dalle «app in
-       sospensione»: <b>Impostazioni → Batteria → Limiti di utilizzo in
-       background</b>.</p>
-  </div>
-
-  <div class="scheda">
-    <h2>Se vede solo l’icona in alto</h2>
-    <p>Perché il promemoria compaia come riquadro sullo schermo, Android deve
-       trattarlo come importante: <b>Impostazioni → App → Le Mie Gocce →
-       Notifiche</b>, e metta l’importanza su «Predefinita» o «Alta», con
-       «Mostra sullo schermo» attivo. Controlli anche che «Non disturbare» non
-       sia acceso.</p>
-    <p class="tenue">Il riquadro si apre solo se il telefono è acceso e sbloccato
-       quando il promemoria arriva. Se arriva mentre lo schermo è spento, lo
-       ritroverà fra le icone: è normale, e si risolve con l’impostazione qui
-       sopra.</p>
-  </div>
-
   <div class="scheda" id="passiInstallazione" hidden>
     <h2>Prima cosa: aggiunga l’app alla schermata Home</h2>
     <div class="passo"><span class="numero">1</span><span>Tocchi il menu del browser (i tre puntini in alto).</span></div>
@@ -134,6 +101,32 @@
     <div class="passo"><span class="numero">3</span><span>Apra l’app dalla schermata Home e torni qui.</span></div>
     <p>Senza questo passaggio le notifiche possono non arrivare quando il
        browser è chiuso.</p>
+  </div>
+
+  <!-- ⚠️ QUESTO È UN PASSO DELLA PREPARAZIONE, NON UN RIMEDIO, e sta qui e non
+       in fondo per quel motivo. Android addormenta le app per risparmiare
+       batteria: con l'app addormentata il promemoria resta in coda finché non
+       si riaccende lo schermo — mezz'ora, a telefono fermo dalla notte, è
+       normale. Scritto come «se arriva tardi, faccia così» lo legge solo chi si
+       accorge del ritardo; e chi non se ne accorge mette le gocce in ritardo
+       tutti i giorni convinto che l'app funzioni.
+
+       ⚠️ Chrome va messo insieme all'app. Anche installata dalla schermata
+       Home, chi CONSEGNA materialmente la notifica è Chrome: se dorme lui non
+       arriva niente lo stesso, ed è il passaggio che salta chiunque. -->
+  <div class="scheda">
+    <h2>Perché arrivino in orario</h2>
+    <p>Android mette a dormire le app per risparmiare batteria. Se le mette a
+       dormire queste due, il promemoria arriva in ritardo.</p>
+    <div class="passo"><span class="numero">1</span><span><b>Impostazioni → App
+       → Le Mie Gocce → Batteria</b>, e scelga <b>«Senza restrizioni»</b>.</span></div>
+    <div class="passo"><span class="numero">2</span><span>La stessa cosa per
+       <b>Chrome</b>: è il programma che consegna i promemoria, e se dorme lui
+       non arriva niente lo stesso.</span></div>
+    <p class="tenue">Su Samsung serve anche togliere le due app dalle «app in
+       sospensione»: <b>Impostazioni → Batteria → Limiti di utilizzo in
+       background</b>. Su Xiaomi e Huawei la voce si chiama «avvio automatico»
+       o «risparmio energetico», e va concessa allo stesso modo.</p>
   </div>
 
   <div class="scheda">
@@ -156,6 +149,24 @@
     <button class="secondario" id="disattiva" style="margin-top:0.6rem" hidden>Smetti di ricevere i promemoria</button>
     <div id="stato"></div>
     <p id="dettaglioFuso"></p>
+  </div>
+
+  <!-- ⚠️ Questo sì è un rimedio, e sta in fondo: si legge quando serve, dopo
+       aver attivato. E dice la cosa che evita la diagnosi sbagliata — chi vede
+       «solo l'icona» quasi sempre non ha un problema di banner, ha un problema
+       di ritardo, perché una notifica consegnata a schermo spento non apre
+       nessun riquadro. Mandarlo a cambiare l'importanza delle notifiche non gli
+       risolverebbe niente: la scheda della batteria, sopra, sì. -->
+  <div class="scheda">
+    <h2>Se vede solo l’icona in alto</h2>
+    <p>Il riquadro sullo schermo si apre solo se il telefono è acceso e
+       sbloccato quando il promemoria arriva. Se lo trova fra le icone al
+       risveglio, quasi sempre vuol dire che è arrivato in ritardo: controlli la
+       batteria, qui sopra.</p>
+    <p class="tenue">Se invece arriva puntuale e resta un’icona, vada in
+       <b>Impostazioni → App → Le Mie Gocce → Notifiche</b> e metta l’importanza
+       su «Predefinita» o «Alta», con «Mostra sullo schermo» attivo. Controlli
+       anche che «Non disturbare» non sia acceso.</p>
   </div>
 
   <footer>
