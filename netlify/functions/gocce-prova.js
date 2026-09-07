@@ -52,6 +52,9 @@ export default async (req) => {
           titolo: 'Prova riuscita',
           testo: 'Se legge questo, i promemoria possono arrivare.',
           tag: 'gocce-prova',
+          // Anche qui l'ora della partenza: con la prova a mano si vede a
+          // colpo d'occhio quanto ci mette il telefono a mostrarla.
+          quando: Date.now(),
         }),
         { TTL: 600, urgency: 'high' },
       )

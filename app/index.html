@@ -38,6 +38,9 @@
   }
   .scheda h2 { font-size: 1.05rem; margin: 0 0 0.5rem; color: var(--navy); }
   .scheda p { margin: 0.4rem 0; color: var(--tenue); font-size: 0.95rem; }
+  /* La precisazione che serve a chi ha quel telefono lì: più piccola, così non
+     compete con l'istruzione principale ma resta leggibile da un anziano. */
+  .scheda p.tenue { font-size: 0.88rem; opacity: 0.85; }
 
   button {
     font-family: inherit; font-size: 1.05rem; font-weight: 700; cursor: pointer;
@@ -91,9 +94,26 @@
        puntuali con il telefono in tasca e l'app chiusa.</p>
   </div>
 
-  <!-- ⚠️ Il banner che si apre da solo dipende dall'importanza che Android dà
-       alle notifiche di questa app, non da come sono mandate: senza dirlo, chi
-       vede solo l'icona in alto pensa che l'app funzioni a metà. -->
+  <!-- ⚠️ Le due impostazioni sono in quest'ordine perché è l'ordine in cui
+       contano. Il risparmio energetico fa arrivare il promemoria in ritardo —
+       mezz'ora, a telefono fermo dalla notte — e una notifica consegnata a
+       schermo spento non apre nessun riquadro: si trova solo fra le icone al
+       risveglio. Quindi chi vede «solo l'icona» quasi sempre non ha un
+       problema di banner, ha un problema di ritardo, e mettere mano
+       all'importanza delle notifiche non gli risolve niente. -->
+  <div class="scheda">
+    <h2>Se il promemoria arriva tardi</h2>
+    <p>Android mette a dormire le app per risparmiare batteria, e con l’app
+       addormentata il promemoria resta fermo finché non si riaccende lo
+       schermo. Vada in <b>Impostazioni → App → Le Mie Gocce → Batteria</b> e
+       scelga <b>«Senza restrizioni»</b>. Poi faccia la stessa cosa per
+       <b>Chrome</b>, che è il programma che consegna i promemoria: se dorme
+       lui, non arriva niente lo stesso.</p>
+    <p class="tenue">Su Samsung serve anche togliere l’app dalle «app in
+       sospensione»: <b>Impostazioni → Batteria → Limiti di utilizzo in
+       background</b>.</p>
+  </div>
+
   <div class="scheda">
     <h2>Se vede solo l’icona in alto</h2>
     <p>Perché il promemoria compaia come riquadro sullo schermo, Android deve
@@ -101,6 +121,10 @@
        Notifiche</b>, e metta l’importanza su «Predefinita» o «Alta», con
        «Mostra sullo schermo» attivo. Controlli anche che «Non disturbare» non
        sia acceso.</p>
+    <p class="tenue">Il riquadro si apre solo se il telefono è acceso e sbloccato
+       quando il promemoria arriva. Se arriva mentre lo schermo è spento, lo
+       ritroverà fra le icone: è normale, e si risolve con l’impostazione qui
+       sopra.</p>
   </div>
 
   <div class="scheda" id="passiInstallazione" hidden>
