@@ -63,6 +63,11 @@ export default async () => {
             titolo: 'È ora delle gocce',
             testo: `Promemoria delle ${orario}.`,
             tag: `gocce-${orario}`,
+            // L'ora della partenza, che il telefono mostra sulla notifica: se
+            // dice 8:00 e la si legge alle 8:26, il mittente ha fatto il suo e
+            // il ritardo è nella consegna. Senza, si può solo tirare a
+            // indovinare di chi sia il ritardo.
+            quando: Date.now(),
           }),
           // ⚠️ `urgency: high` non è enfasi: è l'intestazione che dice al
           // servizio di notifiche di consegnare SUBITO invece di aspettare che

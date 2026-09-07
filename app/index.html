@@ -38,6 +38,9 @@
   }
   .scheda h2 { font-size: 1.05rem; margin: 0 0 0.5rem; color: var(--navy); }
   .scheda p { margin: 0.4rem 0; color: var(--tenue); font-size: 0.95rem; }
+  /* La precisazione che serve a chi ha quel telefono lì: più piccola, così non
+     compete con l'istruzione principale ma resta leggibile da un anziano. */
+  .scheda p.tenue { font-size: 0.88rem; opacity: 0.85; }
 
   button {
     font-family: inherit; font-size: 1.05rem; font-weight: 700; cursor: pointer;
@@ -70,6 +73,12 @@
     font-size: 0.95rem;
   }
   footer { text-align: center; color: var(--tenue); font-size: 0.8rem; margin-top: 2rem; }
+  /* ⚠️ Oro scuro e non oro: l'oro chiaro su fondo crema dà 2,66:1, sotto il
+     minimo leggibile, e questa è un'app per chi ci vede poco. Il collegamento
+     è anche più grande del resto del piè di pagina, perché si deve poter
+     centrare con un dito. */
+  footer a { color: var(--oro-scuro); font-weight: 700; font-size: 0.95rem;
+             display: inline-block; padding: 0.4rem 0; }
 </style>
 </head>
 <body>
@@ -91,25 +100,40 @@
        puntuali con il telefono in tasca e l'app chiusa.</p>
   </div>
 
-  <!-- ⚠️ Il banner che si apre da solo dipende dall'importanza che Android dà
-       alle notifiche di questa app, non da come sono mandate: senza dirlo, chi
-       vede solo l'icona in alto pensa che l'app funzioni a metà. -->
-  <div class="scheda">
-    <h2>Se vede solo l’icona in alto</h2>
-    <p>Perché il promemoria compaia come riquadro sullo schermo, Android deve
-       trattarlo come importante: <b>Impostazioni → App → Le Mie Gocce →
-       Notifiche</b>, e metta l’importanza su «Predefinita» o «Alta», con
-       «Mostra sullo schermo» attivo. Controlli anche che «Non disturbare» non
-       sia acceso.</p>
-  </div>
-
   <div class="scheda" id="passiInstallazione" hidden>
     <h2>Prima cosa: aggiunga l’app alla schermata Home</h2>
-    <div class="passo"><span class="numero">1</span><span>Tocchi il menu del browser (i tre puntini in alto).</span></div>
+    <div class="passo"><span class="numero">1</span><span>Tocchi il menu del browser: i tre puntini, in alto con Chrome e in basso con Firefox.</span></div>
     <div class="passo"><span class="numero">2</span><span>Scelga <b>Installa app</b> o <b>Aggiungi a schermata Home</b>.</span></div>
     <div class="passo"><span class="numero">3</span><span>Apra l’app dalla schermata Home e torni qui.</span></div>
     <p>Senza questo passaggio le notifiche possono non arrivare quando il
        browser è chiuso.</p>
+  </div>
+
+  <!-- ⚠️ QUESTO È UN PASSO DELLA PREPARAZIONE, NON UN RIMEDIO, e sta qui e non
+       in fondo per quel motivo. Android addormenta le app per risparmiare
+       batteria: con l'app addormentata il promemoria resta in coda finché non
+       si riaccende lo schermo — mezz'ora, a telefono fermo dalla notte, è
+       normale. Scritto come «se arriva tardi, faccia così» lo legge solo chi si
+       accorge del ritardo; e chi non se ne accorge mette le gocce in ritardo
+       tutti i giorni convinto che l'app funzioni.
+
+       ⚠️ Chrome va messo insieme all'app. Anche installata dalla schermata
+       Home, chi CONSEGNA materialmente la notifica è Chrome: se dorme lui non
+       arriva niente lo stesso, ed è il passaggio che salta chiunque. -->
+  <div class="scheda">
+    <h2>Perché arrivino in orario</h2>
+    <p>Android mette a dormire le app per risparmiare batteria. Se le mette a
+       dormire queste due, il promemoria arriva in ritardo.</p>
+    <div class="passo"><span class="numero">1</span><span><b>Impostazioni → App
+       → Le Mie Gocce → Batteria</b>, e scelga <b>«Senza restrizioni»</b>.</span></div>
+    <div class="passo"><span class="numero">2</span><span>La stessa cosa per il
+       <b>browser</b> con cui ha aperto questa pagina, <b>Chrome</b> o
+       <b>Firefox</b>: è lui che consegna i promemoria, e se dorme lui non
+       arriva niente lo stesso.</span></div>
+    <p class="tenue">Su Samsung serve anche togliere le due app dalle «app in
+       sospensione»: <b>Impostazioni → Batteria → Limiti di utilizzo in
+       background</b>. Su Xiaomi e Huawei la voce si chiama «avvio automatico»
+       o «risparmio energetico», e va concessa allo stesso modo.</p>
   </div>
 
   <div class="scheda">
@@ -134,7 +158,30 @@
     <p id="dettaglioFuso"></p>
   </div>
 
+  <!-- ⚠️ Questo sì è un rimedio, e sta in fondo: si legge quando serve, dopo
+       aver attivato. E dice la cosa che evita la diagnosi sbagliata — chi vede
+       «solo l'icona» quasi sempre non ha un problema di banner, ha un problema
+       di ritardo, perché una notifica consegnata a schermo spento non apre
+       nessun riquadro. Mandarlo a cambiare l'importanza delle notifiche non gli
+       risolverebbe niente: la scheda della batteria, sopra, sì. -->
+  <div class="scheda">
+    <h2>Se vede solo l’icona in alto</h2>
+    <p>Il riquadro sullo schermo si apre solo se il telefono è acceso e
+       sbloccato quando il promemoria arriva. Se lo trova fra le icone al
+       risveglio, quasi sempre vuol dire che è arrivato in ritardo: controlli la
+       batteria, qui sopra.</p>
+    <p class="tenue">Se invece arriva puntuale e resta un’icona, vada in
+       <b>Impostazioni → App → Le Mie Gocce → Notifiche</b> e metta l’importanza
+       su «Predefinita» o «Alta», con «Mostra sullo schermo» attivo. Controlli
+       anche che «Non disturbare» non sia acceso.</p>
+  </div>
+
   <footer>
+    <!-- ⚠️ Il collegamento al foglio serve a due persone diverse: al paziente
+         che ha perso la carta e cerca i passaggi, e al dottore che apre la
+         pagina per stamparne una copia. È lo stesso file — istruzioni in due
+         posti divergono, e quelle vecchie fanno concludere che l'app è rotta. -->
+    <a href="/app/istruzioni.html">Le istruzioni, da rileggere o stampare</a><br>
     Dott. Corrado Gizzi — Oculista · versione di prova
   </footer>
 </div>

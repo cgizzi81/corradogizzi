@@ -30,6 +30,22 @@ self.addEventListener('push', (evento) => {
     // Resta finché non la si tocca: un anziano che sente il telefono in
     // un'altra stanza deve ritrovarla lì quando arriva.
     requireInteraction: true,
+    // ⚠️ INSIEME A `requireInteraction` QUESTA RIGA È OBBLIGATORIA. Il tag di
+    // un promemoria è lo stesso ogni giorno (`gocce-08:00`), e una notifica
+    // che arriva con un tag già presente SOSTITUISCE quella vecchia in
+    // silenzio: niente suono, niente vibrazione, niente banner. Ma
+    // `requireInteraction` fa restare la notifica di ieri finché non la si
+    // tocca — e un anziano che l'ha letta senza toccarla se la ritrova lì.
+    // Quindi il promemoria di domani sarebbe arrivato muto, e il giorno dopo
+    // pure, senza che nulla lo segnalasse. `renotify` dice ad Android di
+    // riavvisare comunque.
+    renotify: true,
+    vibrate: [200, 100, 200],
+    // ⚠️ L'ora in cui il server l'ha MANDATA, non quella in cui il telefono
+    // l'ha mostrata. È la sola differenza che dice di chi è la colpa quando un
+    // promemoria arriva tardi: se la notifica dice 8:00 e la si vede alle
+    // 8:26, il mittente era puntuale e il ritardo è tutto nella consegna.
+    timestamp: dati.quando || Date.now(),
     data: { url: '/app/' },
   }
   evento.waitUntil(self.registration.showNotification(titolo, opzioni))
