@@ -13,6 +13,33 @@ const VERSIONE = 'gocce-1'
 self.addEventListener('install', () => self.skipWaiting())
 self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()))
 
+/**
+ * I colliri di quell'ora, letti dal telefono.
+ *
+ * ⚠️ QUESTA È LA RAGIONE PER CUI IL DISEGNO STA IN PIEDI. Il server manda solo
+ * l'ora — «promemoria delle 8:00» — perché nella nuvola non c'è e non deve
+ * esserci il nome di nessun farmaco. Il nome sta nel telefono, arrivato dal QR
+ * dell'ambulatorio, e viene aggiunto qui, all'ultimo momento, sul dispositivo
+ * del paziente.
+ *
+ * ⚠️ Si legge dalla CACHE e non da localStorage: nei service worker
+ * localStorage non esiste. Se manca, la notifica esce lo stesso con la frase
+ * generica — un promemoria senza nome è meno utile, ma un promemoria che non
+ * arriva è inutile del tutto.
+ */
+async function colliriDelleOre(ora) {
+  if (!ora) return null
+  try {
+    const cache = await caches.open('gocce-dati')
+    const risposta = await cache.match('/gocce/terapia.json')
+    if (!risposta) return null
+    const terapia = await risposta.json()
+    const suoi = terapia?.[ora]
+    if (!Array.isArray(suoi) || suoi.length === 0) return null
+    return suoi.map(c => `${c.n} — ${c.o}`).join('\n')
+  } catch { return null }
+}
+
 self.addEventListener('push', (evento) => {
   // Il corpo arriva dal server. Se manca o è illeggibile si mostra comunque
   // qualcosa: una notifica muta sarebbe peggio di una generica, perché il
@@ -48,7 +75,16 @@ self.addEventListener('push', (evento) => {
     timestamp: dati.quando || Date.now(),
     data: { url: '/app/' },
   }
-  evento.waitUntil(self.registration.showNotification(titolo, opzioni))
+  // ⚠️ Si aspetta la lettura PRIMA di mostrare: `waitUntil` tiene sveglio il
+  // service worker finché la promessa non si chiude. Mostrare subito e
+  // aggiornare dopo darebbe una notifica che cambia testo sotto gli occhi.
+  evento.waitUntil((async () => {
+    const elenco = await colliriDelleOre(dati.ora)
+    // Su Android più righe si leggono tutte espandendo la notifica; la prima
+    // si vede comunque, ed è quella che conta.
+    if (elenco) opzioni.body = elenco
+    return self.registration.showNotification(titolo, opzioni)
+  })())
 })
 
 self.addEventListener('notificationclick', (evento) => {

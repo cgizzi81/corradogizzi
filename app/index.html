@@ -60,6 +60,10 @@
     border: none; background: transparent; flex: 1;
   }
   .ora .togli { width: auto; background: none; color: var(--rosso); font-size: 1.4rem; padding: 0 0.4rem; }
+  /* I colliri di quell'ora, sotto l'orario: è quello che distingue questa app
+     da una sveglia, e va letto insieme all'ora a cui si riferisce. */
+  .oraBlocco { display: flex; flex-direction: column; gap: 0.25rem; }
+  .colliri { font-size: 0.88rem; line-height: 1.45; color: var(--oro-scuro); padding: 0 0.2rem; }
 
   .stato { border-radius: 10px; padding: 0.7rem 0.9rem; font-size: 0.95rem; margin-top: 0.8rem; }
   .ok { background: #eef7f0; border: 1px solid #c6e2d0; color: var(--verde); }
@@ -134,6 +138,15 @@
        sospensione»: <b>Impostazioni → Batteria → Limiti di utilizzo in
        background</b>. Su Xiaomi e Huawei la voce si chiama «avvio automatico»
        o «risparmio energetico», e va concessa allo stesso modo.</p>
+  </div>
+
+  <!-- ⚠️ Compare solo quando la terapia è arrivata dal QR dell'ambulatorio.
+       Serve a una cosa sola: far vedere al paziente che quegli orari non se li
+       è inventati l'app, glieli ha dati il suo medico. Senza, il primo gesto
+       sarebbe cambiarli. -->
+  <div class="scheda" id="riquadroConsegna" hidden>
+    <h2>La sua terapia</h2>
+    <p id="testoConsegna"></p>
   </div>
 
   <div class="scheda">
@@ -214,8 +227,75 @@ const salvaOrari = (o) => {
   try { localStorage.setItem('gocce-orari', JSON.stringify(o)) } catch { /* si riparte da capo */ }
 }
 
+// ⚠️ LA TERAPIA VIVE SOLO QUI DENTRO. Arriva dal QR dell'ambulatorio, dopo il
+// cancelletto dell'indirizzo — la parte che nessun browser spedisce a nessun
+// server — e si ferma nel telefono. Nella nuvola sale soltanto l'ORARIO, quando
+// il telefono si iscrive da sé: un destinatario anonimo con scritto «alle 8 e
+// alle 20», senza un nome di farmaco da nessuna parte.
+//
+// Struttura: { '08:00': [{n:'Timololo (Timoptol)', o:'OD'}], … }
+const leggiTerapia = () => {
+  try { return JSON.parse(localStorage.getItem('gocce-terapia') || '{}') } catch { return {} }
+}
+const salvaTerapia = (t) => {
+  try { localStorage.setItem('gocce-terapia', JSON.stringify(t)) } catch { /* si fa senza */ }
+  // ⚠️ E una seconda copia nella cache. Il service worker — quello che scrive
+  // la notifica quando l'app è chiusa — NON può leggere localStorage: è
+  // un'interfaccia sincrona che nei worker non esiste. La cache è l'unico
+  // deposito che vedono tutti e due, e senza questa riga la notifica potrebbe
+  // solo dire «è ora delle gocce» senza sapere di quali.
+  try {
+    caches.open('gocce-dati').then(c =>
+      c.put('/gocce/terapia.json', new Response(JSON.stringify(t))))
+  } catch { /* il service worker dirà la frase generica */ }
+}
+
 let orari = leggiOrari()
+let terapia = leggiTerapia()
+
+/**
+ * Il codice del QR: `#t=<base64url del JSON>`.
+ *
+ * ⚠️ Si legge e si CANCELLA subito dall'indirizzo. Lasciarlo lì vorrebbe dire
+ * che la terapia resta scritta nella barra e nella cronologia del browser, e
+ * che basta il tasto «condividi» per mandarla a qualcuno — cioè si perderebbe
+ * per distrazione proprio la cosa che il cancelletto serve a proteggere.
+ */
+function terapiaDalCollegamento() {
+  const hash = window.location.hash || ''
+  const m = hash.match(/[#&]t=([A-Za-z0-9_-]+)/)
+  if (!m) return null
+  try {
+    const riempimento = '='.repeat((4 - m[1].length % 4) % 4)
+    const normale = (m[1] + riempimento).replace(/-/g, '+').replace(/_/g, '/')
+    const grezzo = atob(normale)
+    const byte = Uint8Array.from(grezzo, c => c.charCodeAt(0))
+    const dati = JSON.parse(new TextDecoder('utf-8').decode(byte))
+    if (dati?.v !== 1 || !Array.isArray(dati.terapia)) return null
+    return dati.terapia
+  } catch { return null } finally {
+    history.replaceState(null, '', window.location.pathname + window.location.search)
+  }
+}
+
+const consegnata = terapiaDalCollegamento()
+if (consegnata && consegnata.length) {
+  // ⚠️ La consegna SOSTITUISCE quello che c'era. Un paziente a cui il medico ha
+  // appena cambiato terapia non deve ritrovarsi gli orari vecchi accanto ai
+  // nuovi: sarebbero gocce in più, non un promemoria in più.
+  orari = consegnata.map(x => x.ora)
+  terapia = Object.fromEntries(consegnata.map(x => [x.ora, x.colliri ?? []]))
+  salvaOrari(orari); salvaTerapia(terapia)
+}
+
 if (orari.length === 0) orari = ['08:00', '20:00']
+
+// ⚠️ La copia per il service worker si riscrive a OGNI apertura. Scriverla
+// solo alla consegna basterebbe quasi sempre, ma non sempre: chi inquadra il
+// codice e chiude subito l'app può non dare tempo alla scrittura di
+// completarsi — è asincrona — e il primo promemoria uscirebbe senza il nome
+// del collirio. Riscriverla non costa nulla e ripara da sola il caso raro.
+if (Object.keys(terapia).length) salvaTerapia(terapia)
 
 function disegnaOrari() {
   const c = $('orari')
@@ -227,16 +307,47 @@ function disegnaOrari() {
     campo.type = 'time'
     campo.value = valore
     campo.setAttribute('aria-label', 'Orario del promemoria')
-    campo.addEventListener('change', () => { orari[i] = campo.value; salvaOrari(orari) })
+    campo.addEventListener('change', () => {
+      // ⚠️ Spostando l'orario si sposta anche l'elenco dei colliri: altrimenti
+      // alle 7:30 arriverebbe un promemoria senza nome, e alle 8:00 resterebbe
+      // appeso un elenco che non suona più.
+      const vecchio = orari[i]
+      if (terapia[vecchio] && vecchio !== campo.value) {
+        terapia[campo.value] = terapia[vecchio]
+        delete terapia[vecchio]
+        salvaTerapia(terapia)
+      }
+      orari[i] = campo.value
+      salvaOrari(orari)
+      disegnaOrari()
+    })
     const togli = document.createElement('button')
     togli.className = 'togli'
     togli.type = 'button'
     togli.textContent = '×'
     togli.setAttribute('aria-label', 'Togli questo orario')
-    togli.addEventListener('click', () => { orari.splice(i, 1); salvaOrari(orari); disegnaOrari() })
+    togli.addEventListener('click', () => {
+      delete terapia[orari[i]]; salvaTerapia(terapia)
+      orari.splice(i, 1); salvaOrari(orari); disegnaOrari()
+    })
     riga.append(campo, togli)
+
+    // I colliri di quell'ora, se il medico li ha consegnati: sono la ragione
+    // per cui questa app è diversa da una sveglia.
+    const suoi = terapia[valore] ?? []
+    if (suoi.length) {
+      const elenco = document.createElement('div')
+      elenco.className = 'colliri'
+      elenco.textContent = suoi.map(c => `${c.n} — ${c.o}`).join(' · ')
+      const blocco = document.createElement('div')
+      blocco.className = 'oraBlocco'
+      blocco.append(riga, elenco)
+      c.append(blocco)
+      return
+    }
     c.append(riga)
   })
+  disegnaConsegna()
 }
 
 $('aggiungi').addEventListener('click', () => {
@@ -251,6 +362,26 @@ function messaggio(testo, classe) {
 // In Android «installata» si riconosce dalla modalità di visualizzazione: se
 // la pagina gira ancora dentro il browser, i passi dell'installazione restano
 // in vista.
+// Il riquadro della consegna: si mostra quando la terapia c'è, comunque sia
+// arrivata — anche riaprendo l'app il giorno dopo.
+function disegnaConsegna() {
+  const ore = Object.keys(terapia).filter(o => (terapia[o] ?? []).length)
+  const riquadro = document.getElementById('riquadroConsegna')
+  if (!riquadro) return
+  riquadro.hidden = ore.length === 0
+  // ⚠️ L'avviso «versione di prova, nessun dato del paziente» sparisce quando
+  // una terapia è arrivata: da quel momento è falso, e un paziente che legge
+  // «non c'è nessun dato suo» accanto ai nomi dei propri colliri smette
+  // giustamente di fidarsi di quello che l'app gli dice.
+  const prova = document.getElementById('avvisoProva')
+  if (prova) prova.hidden = ore.length > 0
+  if (ore.length === 0) return
+  const nomi = [...new Set(ore.flatMap(o => terapia[o].map(c => `${c.n} — ${c.o}`)))]
+  document.getElementById('testoConsegna').textContent =
+    `Il suo medico le ha impostato ${nomi.length === 1 ? 'questo collirio' : 'questi colliri'}: `
+    + nomi.join('; ') + '. Gli orari qui sotto sono già pronti — li cambi solo se le sue abitudini sono diverse.'
+}
+
 const installata = window.matchMedia('(display-mode: standalone)').matches
   || window.navigator.standalone === true
 $('passiInstallazione').hidden = installata
