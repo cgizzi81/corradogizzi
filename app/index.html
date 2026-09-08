@@ -158,22 +158,32 @@
     <p id="dettaglioFuso"></p>
   </div>
 
-  <!-- ⚠️ Questo sì è un rimedio, e sta in fondo: si legge quando serve, dopo
-       aver attivato. E dice la cosa che evita la diagnosi sbagliata — chi vede
-       «solo l'icona» quasi sempre non ha un problema di banner, ha un problema
-       di ritardo, perché una notifica consegnata a schermo spento non apre
-       nessun riquadro. Mandarlo a cambiare l'importanza delle notifiche non gli
-       risolverebbe niente: la scheda della batteria, sopra, sì. -->
+  <!-- ⚠️ SUONO SÌ E RIQUADRO NO NON È UN GUASTO: è il valore predefinito che
+       Android dà alle notifiche dei siti web, e vale uguale su Chrome e su
+       Firefox. Le quattro importanze di Android sono suono+riquadro,
+       suono soltanto, nessun suono, e niente del tutto: quella che si riceve
+       di serie è la seconda. Un sito non può alzarla da sé — è una decisione
+       del sistema, perché una pagina qualunque non deve poter occupare lo
+       schermo di chi la apre.
+
+       ⚠️ E l'istruzione va data per la DESCRIZIONE, non per il nome: le
+       quattro voci si chiamano «Urgente/Alta/Media/Bassa» su un telefono e
+       «Alta/Predefinita/…» su un altro, e dire «metta Alta» manda metà delle
+       persone esattamente sull'impostazione che hanno già. La descrizione
+       «mostra sullo schermo» invece è la stessa dappertutto. -->
   <div class="scheda">
-    <h2>Se vede solo l’icona in alto</h2>
-    <p>Il riquadro sullo schermo si apre solo se il telefono è acceso e
-       sbloccato quando il promemoria arriva. Se lo trova fra le icone al
-       risveglio, quasi sempre vuol dire che è arrivato in ritardo: controlli la
-       batteria, qui sopra.</p>
-    <p class="tenue">Se invece arriva puntuale e resta un’icona, vada in
-       <b>Impostazioni → App → Le Mie Gocce → Notifiche</b> e metta l’importanza
-       su «Predefinita» o «Alta», con «Mostra sullo schermo» attivo. Controlli
-       anche che «Non disturbare» non sia acceso.</p>
+    <h2>Se il promemoria non si apre sullo schermo</h2>
+    <p>Se lo sente suonare ma vede solo l’icona in alto, è normale: Android
+       tratta così le notifiche di tutti i siti, finché non gli si dice
+       altrimenti. Non è un guasto e non cambia da un browser all’altro.</p>
+    <p>Per farlo aprire: <b>Impostazioni → App → Le Mie Gocce → Notifiche</b>,
+       e scelga la voce la cui descrizione dice <b>«mostra sullo schermo»</b>
+       (a seconda del telefono si chiama «Urgente» o «Alta»). Controlli anche
+       che «Non disturbare» non sia acceso.</p>
+    <p class="tenue">Se invece il promemoria arriva in <b>ritardo</b> e lo trova
+       fra le icone solo al risveglio, il problema non è questo: è la batteria,
+       qui sopra. Una notifica consegnata a schermo spento non apre nessun
+       riquadro, per quanto la si imposti.</p>
   </div>
 
   <footer>
