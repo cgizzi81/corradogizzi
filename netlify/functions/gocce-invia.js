@@ -63,6 +63,10 @@ export default async () => {
             titolo: 'È ora delle gocce',
             testo: `Promemoria delle ${orario}.`,
             tag: `gocce-${orario}`,
+            // ⚠️ L'ora, e SOLO l'ora. È la chiave con cui il telefono ritrova
+            // nel proprio deposito quali colliri toccano: il nome del farmaco
+            // non passa di qui e non deve passarci mai.
+            ora: orario,
             // L'ora della partenza, che il telefono mostra sulla notifica: se
             // dice 8:00 e la si legge alle 8:26, il mittente ha fatto il suo e
             // il ritardo è nella consegna. Senza, si può solo tirare a
