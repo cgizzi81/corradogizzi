@@ -14,8 +14,21 @@
 // e la finestra ne dura venti, quindi senza memoria di ciò che è già uscito lo
 // stesso avviso partirebbe due volte: e un paziente che riceve due volte
 // «metta le gocce» le mette due volte.
+//
+// ⚠️ E NON SI RILEGGONO TUTTI GLI ISCRITTI A OGNI GIRO. La prima versione
+// faceva `list()` e poi un `get` per ognuno, ogni quindici minuti: con qualche
+// decina di pazienti non si nota, con qualche centinaio diventano centinaia di
+// letture ogni quarto d'ora per mandare due notifiche. Ora c'è un indice — vedi
+// `aggiornaIndice` — che tiene di ciascuno solo quello che serve a decidere SE
+// è il suo momento: fuso e orari. Si leggono per intero soltanto quelli a cui
+// si sta per mandare qualcosa.
 import { getStore } from '@netlify/blobs'
 import webpush from 'web-push'
+
+// ⚠️ Le iscrizioni hanno tutte questo prefisso, e l'indice no: così `list()`
+// non si ritrova dentro l'indice stesso e non c'è una voce da saltare a mano.
+const PREFISSO = 'iscr-'
+const CHIAVE_INDICE = 'indice-orari'
 
 // La finestra è più larga del passo dello scheduler: se un giro parte in
 // ritardo — succede — il promemoria esce lo stesso, un po' dopo, invece di
@@ -37,18 +50,42 @@ export default async () => {
   )
 
   const store = getStore('gocce')
-  const { blobs } = await store.list()
+  const { blobs } = await store.list({ prefix: PREFISSO })
+
+  // `list()` è UNA chiamata e restituisce anche l'etag di ogni voce: è quello
+  // che permette all'indice di accorgersi da solo di cosa è cambiato.
+  const { voci, riletti, tolti } = await aggiornaIndice(store, blobs)
+
   let inviati = 0
   let rimossi = 0
 
-  for (const voce of blobs) {
-    const iscr = await store.get(voce.key, { type: 'json' }).catch(() => null)
-    if (!iscr?.endpoint) continue
+  // L'ora locale si calcola UNA volta per fuso, non una per iscritto: con
+  // cinquecento pazienti nello stesso fuso erano cinquecento conversioni
+  // identiche a ogni giro.
+  const oreDeiFusi = new Map()
+  const oraDi = (fuso) => {
+    const chiave = fuso || 'Europe/Rome'
+    if (!oreDeiFusi.has(chiave)) oreDeiFusi.set(chiave, oraLocale(chiave))
+    return oreDeiFusi.get(chiave)
+  }
 
-    const adesso = oraLocale(iscr.fuso)
-    const dovuti = (iscr.orari ?? []).filter(o => nellaFinestra(o, adesso.minuti))
+  for (const [chiave, voce] of Object.entries(voci)) {
+    const adesso = oraDi(voce.fuso)
+    const dovuti = (voce.orari ?? []).filter(o => nellaFinestra(o, adesso.minuti))
+    // ⚠️ Qui sta il risparmio: chi non ha niente in scadenza non viene MAI
+    // letto per intero. Nel giro tipico sono tutti tranne una manciata.
     if (dovuti.length === 0) continue
 
+    const iscr = await store.get(chiave, { type: 'json' }).catch(() => null)
+    if (!iscr?.endpoint) continue
+
+    // ⚠️ La memoria di cosa è già uscito resta sull'ISCRIZIONE, non
+    // nell'indice, ed è una scelta deliberata: tenerla nell'indice
+    // risparmierebbe una scrittura per invio, ma un solo salvataggio fallito
+    // farebbe ripartire i promemoria di TUTTI quelli in scadenza in quella
+    // finestra invece che di uno solo. Un paziente che riceve due volte
+    // «metta le gocce» le mette due volte: il raggio di quel guasto va tenuto
+    // stretto, e vale la lettura in più.
     let memoria = iscr.inviati ?? {}
     let cambiato = false
 
@@ -94,7 +131,7 @@ export default async () => {
         // altrimenti l'archivio si riempie di destinatari morti e ogni giro
         // spreca tempo su di loro.
         if (errore?.statusCode === 404 || errore?.statusCode === 410) {
-          await store.delete(voce.key).catch(() => {})
+          await store.delete(chiave).catch(() => {})
           rimossi += 1
           memoria = null
           break
@@ -104,11 +141,11 @@ export default async () => {
     }
 
     if (memoria && cambiato) {
-      await store.setJSON(voce.key, { ...iscr, inviati: ripulisci(memoria, adesso.giorno) })
+      await store.setJSON(chiave, { ...iscr, inviati: ripulisci(memoria, adesso.giorno) })
     }
   }
 
-  console.log(`[gocce] inviati ${inviati}, iscrizioni rimosse ${rimossi}`)
+  console.log(`[gocce] iscritti ${blobs.length}, letti ${riletti + inviati}, inviati ${inviati}, rimossi ${rimossi + tolti}`)
   return new Response(`inviati ${inviati}`)
 }
 
@@ -137,4 +174,60 @@ function ripulisci(memoria, giornoDiOggi) {
   return Object.fromEntries(
     Object.entries(memoria).filter(([segno]) => giorniBuoni.has(segno.slice(0, 10))),
   )
+}
+
+/**
+ * L'indice degli orari: di ogni iscritto soltanto quello che serve a decidere
+ * SE è il suo momento — il fuso e gli orari — più l'etag con cui l'abbiamo
+ * letto l'ultima volta.
+ *
+ * ⚠️ SI RIPARA DA SOLO, ed è la ragione per cui nessun'altra funzione deve
+ * saperne niente. `list()` — una chiamata sola — dà chiavi ED etag: una voce
+ * che manca dall'indice, o che ha un etag diverso da quello registrato, viene
+ * riletta e reinserita al primo giro utile. Quindi un'iscrizione nuova entra
+ * da sé, una terapia cambiata si aggiorna da sé, una cancellata esce da sé.
+ *
+ * L'alternativa — far aggiornare l'indice a `gocce-iscrivi` e
+ * `gocce-disattiva` — sarebbe stata più veloce di una lettura e molto più
+ * fragile: tre funzioni che devono ricordarsi di una quarta cosa, e il giorno
+ * che una se ne dimentica un paziente smette di ricevere i promemoria senza
+ * che niente lo segnali.
+ */
+async function aggiornaIndice(store, blobs) {
+  const vecchio = await store.get(CHIAVE_INDICE, { type: 'json' }).catch(() => null)
+  const voci = vecchio?.v === 1 ? { ...vecchio.voci } : {}
+
+  const presenti = new Set()
+  let riletti = 0
+
+  for (const { key, etag } of blobs) {
+    presenti.add(key)
+    // Etag uguale: niente è cambiato da quando l'abbiamo letta, e non la si
+    // rilegge. È questo confronto a fare tutto il risparmio.
+    if (voci[key]?.etag === etag) continue
+
+    const iscr = await store.get(key, { type: 'json' }).catch(() => null)
+    riletti += 1
+    if (!iscr?.endpoint) { delete voci[key]; continue }
+    voci[key] = {
+      etag,
+      fuso: iscr.fuso || 'Europe/Rome',
+      orari: Array.isArray(iscr.orari) ? iscr.orari : [],
+    }
+  }
+
+  // Chi non è più nell'archivio esce dall'indice, o l'indice crescerebbe per
+  // sempre e ogni giro proverebbe a mandare a destinatari che non esistono.
+  let tolti = 0
+  for (const key of Object.keys(voci)) {
+    if (!presenti.has(key)) { delete voci[key]; tolti += 1 }
+  }
+
+  // Si riscrive solo se è cambiato qualcosa: nel giro tipico non cambia
+  // niente, e una scrittura a vuoto ogni quindici minuti è la stessa spesa
+  // che si sta cercando di togliere.
+  if (riletti > 0 || tolti > 0 || vecchio?.v !== 1) {
+    await store.setJSON(CHIAVE_INDICE, { v: 1, voci })
+  }
+  return { voci, riletti, tolti }
 }
