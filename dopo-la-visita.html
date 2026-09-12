@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- ⚠️ Fuori dai motori, come /app/. Non perché sia segreta — qui dentro non
+     c'è un solo dato di nessuno — ma perché è una pagina che ha senso soltanto
+     con un referto in mano. Trovata da Google si leggerebbe come una pagina
+     per raccogliere recensioni, che è esattamente l'impressione sbagliata.
+     `robots.txt` ha la sua riga; questa è la cintura di sicurezza. -->
+<meta name="robots" content="noindex, follow">
+<title>Dopo la visita — Dott. Corrado Gizzi</title>
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#0d1f3c">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Lato:wght@400;700&display=swap">
+<style>
+  /* ⚠️ PAGINA AUTOSUFFICIENTE, come /app/istruzioni.html, e per la stessa
+     ragione: questa non è una pagina che si legge, è una pagina che si USA, e
+     il paziente ci arriva inquadrando un codice nel corridoio di un
+     ambulatorio, su un telefono vecchio e con una riga di campo.
+     Niente `css/style.css`, niente nav iniettata, niente JavaScript
+     necessario per vedere i bottoni. Due conseguenze volute:
+       — i bottoni NON sono i `.btn` del sito, che sono 0,82rem in maiuscoletto
+         spaziato: un bottone da sito vetrina, non un bersaglio per un dito di
+         ottant'anni con un visus di 6/10;
+       — non c'è il menu del sito. Chi arriva qui ha una cosa da fare, e
+         trovarla fra sette voci di menu non è farla più facilmente.
+     I VALORI dei colori e i due caratteri sono però gli stessi di
+     `css/style.css`: se la tavolozza del sito cambia, cambiano anche queste
+     righe. Sono duplicati qui, non reinventati. */
+
+  :root {
+    --navy: #0d1f3c; --oro: #b8962e; --oro-scuro: #7f6720;
+    --crema: #faf8f3; --carta: #ffffff; --testo: #1e1c1a;
+    --tenue: #6f6d65; --linea: #e6e4dc;
+    --radius: 4px; /* lo stesso del sito, non i 14px di istruzioni.html */
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--crema); color: var(--testo);
+    font-family: Lato, -apple-system, BlinkMacSystemFont, sans-serif;
+    /* Corpo grande per la stessa ragione del foglio dell'app: chi esce da una
+       visita oculistica ha spesso le pupille ancora dilatate. */
+    font-size: 18px; line-height: 1.6;
+  }
+  .foglio { max-width: 560px; margin: 0 auto; padding: 2rem 1.1rem 3rem; }
+
+  header { text-align: center; margin-bottom: 2rem; }
+  .marchio { width: 52px; height: 52px; }
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif; font-weight: 600;
+    font-size: 1.9rem; line-height: 1.2; color: var(--navy);
+    margin: 0.8rem 0 0.4rem;
+  }
+  .occhiello { color: var(--tenue); font-size: 1rem; margin: 0; }
+  .filo { width: 48px; height: 2px; background: var(--oro); margin: 1.2rem auto 0; }
+
+  /* ── I bottoni ───────────────────────────────────────────────────────────
+     Riquadri interi cliccabili, non righe di testo con un link dentro: il
+     bersaglio è tutta la scheda, ed è alta un pollice. */
+  .azione {
+    display: block; text-decoration: none; color: inherit;
+    background: var(--carta); border: 1px solid var(--linea);
+    border-radius: var(--radius); padding: 1.15rem 1.2rem;
+    margin-bottom: 0.9rem;
+    transition: border-color .2s ease, box-shadow .2s ease;
+  }
+  .azione:hover, .azione:focus-visible {
+    border-color: var(--oro); box-shadow: 0 2px 12px rgba(13,31,60,.08);
+    outline: none;
+  }
+  .azione:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+  .azione h2 {
+    font-family: 'Playfair Display', Georgia, serif; font-weight: 600;
+    font-size: 1.2rem; line-height: 1.3; color: var(--navy);
+    margin: 0 0 0.3rem;
+  }
+  /* L'oro chiaro su fondo bianco dà 2,66:1: qui va la variante scura, che passa
+     il minimo. È la regola del sito, e una freccetta resta testo. */
+  .azione h2::after { content: ' →'; color: var(--oro-scuro); }
+  .azione p { margin: 0; color: var(--tenue); font-size: 0.97rem; }
+
+  /* La recensione: ultima, e visibile solo se il referto l'ha chiesta —
+     vedi la nota sullo script in fondo. */
+  #recensione { display: none; margin-top: 2rem; }
+  #recensione .cappello {
+    font-size: 0.92rem; color: var(--tenue); margin: 0 0 0.7rem;
+    text-align: center;
+  }
+  .azione--tenue { background: transparent; border-style: dashed; }
+
+  .altro {
+    margin-top: 2rem; padding-top: 1.2rem; border-top: 1px solid var(--linea);
+    font-size: 0.95rem; color: var(--tenue);
+  }
+  .altro p { margin: 0 0 0.6rem; }
+  .altro a { color: var(--oro-scuro); }
+
+  footer {
+    text-align: center; color: var(--tenue); font-size: 0.85rem;
+    margin-top: 1.8rem;
+  }
+</style>
+</head>
+<body>
+<div class="foglio">
+
+  <header>
+    <img class="marchio" src="/assets/logo-symbol.svg" alt="">
+    <h1>Dopo la visita</h1>
+    <p class="occhiello">Le cose che può fare da qui, con il referto in mano.</p>
+    <div class="filo"></div>
+  </header>
+
+  <a class="azione" href="/prenota">
+    <h2>Prenoti il prossimo controllo</h2>
+    <p>Scelga giorno e ora dall&rsquo;agenda, per l&rsquo;ambulatorio di Faenza
+       o per quello di Bologna.</p>
+  </a>
+
+  <a class="azione" href="/app/istruzioni.html">
+    <h2>&laquo;Le Mie Gocce&raquo;, l&rsquo;app dei promemoria</h2>
+    <p>Il telefono le ricorda l&rsquo;ora delle gocce. Le istruzioni per
+       installarla, un passaggio per volta.</p>
+  </a>
+
+  <div id="recensione">
+    <p class="cappello">Se si &egrave; trovato bene, pu&ograve; dirlo.</p>
+    <!-- I bottoni li scrive lo script: quale, e quanti, dipende dalla sede. -->
+  </div>
+
+  <div class="altro">
+    <p><a href="/ambulatori.html">Indirizzi, telefoni e orari</a> dei due
+       ambulatori.</p>
+    <p><a href="/pazienti.html">Informazioni per i pazienti</a>: come si
+       preparano gli esami, cosa portare.</p>
+  </div>
+
+  <footer>
+    <!-- ⚠️ Questa riga è il motivo per cui la pagina può stare su un sito
+         pubblico: lo dice al paziente, non solo a noi. -->
+    Questa pagina non contiene nessun dato clinico e non chiede niente.<br>
+    Dott. Corrado Gizzi — Oculista · Faenza e Bologna
+  </footer>
+
+</div>
+
+<script>
+// ⚠️ GLI INDIRIZZI DELLE RECENSIONI STANNO QUI, E QUI SOLTANTO.
+// Il referto non li conosce: il suo QR manda soltanto `?s=faenza&r=1`. È tutto
+// il senso di questa pagina — cambiare una destinazione è una modifica al sito,
+// non all'EMR, e i referti già stampati continuano a funzionare.
+//
+// `generica` è il profilo Google che oggi sta configurato nell'EMR: non sappiamo
+// a quale delle due sedi corrisponda, quindi finché le due righe sotto sono
+// nulle vale per tutti — cioè il paziente arriva esattamente dove arrivava col
+// QR di prima. Riempiendole, la pagina diventa consapevole della sede senza
+// toccare nient'altro.
+var RECENSIONI = {
+  generica: 'https://g.page/r/CeIRzQnYqAzXEBM/review',
+  faenza:   null,
+  bologna:  null
+};
+var NOME_SEDE = { faenza: 'Faenza', bologna: 'Bologna' };
+
+(function () {
+  var p = new URLSearchParams(location.search);
+
+  // ⚠️ Lista chiusa, non il valore così com'è arrivato: il parametro finisce in
+  // una chiave e in un'etichetta, e da un indirizzo che il paziente può
+  // modificare a mano non si accetta testo libero.
+  var sede = p.get('s');
+  if (sede !== 'faenza' && sede !== 'bologna') sede = null;
+
+  // ⚠️ IL BOTTONE DELLA RECENSIONE È SPENTO DI DEFAULT, anche in CSS.
+  // Chiedere una recensione dentro un documento clinico è una scelta che si fa
+  // referto per referto, dal pannello del PDF: qui non si indovina. Se lo
+  // script non gira, o se `r` non c'è, non compare — mentre i due bottoni utili
+  // sopra si vedono comunque, perché sono nell'HTML. Il guasto silenzioso cade
+  // sempre dalla parte prudente.
+  if (p.get('r') !== '1') return;
+
+  var box = document.getElementById('recensione');
+
+  function bottone(url, titolo, dettaglio) {
+    var a = document.createElement('a');
+    a.className = 'azione azione--tenue';
+    a.href = url;
+    a.rel = 'noopener';
+    var h = document.createElement('h2');
+    h.textContent = titolo;
+    a.appendChild(h);
+    if (dettaglio) {
+      var d = document.createElement('p');
+      d.textContent = dettaglio;
+      a.appendChild(d);
+    }
+    box.appendChild(a);
+  }
+
+  if (sede) {
+    // La sede la sa il referto, quindi al paziente non si chiede di indovinare
+    // quale delle due è la sua.
+    bottone(RECENSIONI[sede] || RECENSIONI.generica,
+            'Lasci una recensione',
+            'Ambulatorio di ' + NOME_SEDE[sede] + '.');
+  } else if (RECENSIONI.faenza && RECENSIONI.bologna) {
+    // Sede sconosciuta e due profili distinti: allora sì, tocca al paziente.
+    bottone(RECENSIONI.faenza, 'Lasci una recensione', 'Ambulatorio di Faenza.');
+    bottone(RECENSIONI.bologna, 'Lasci una recensione', 'Ambulatorio di Bologna.');
+  } else if (RECENSIONI.generica) {
+    bottone(RECENSIONI.generica, 'Lasci una recensione');
+  } else {
+    return; // Nessun indirizzo: meglio niente che un bottone che non porta da nessuna parte.
+  }
+
+  box.style.display = 'block';
+})();
+</script>
+</body>
+</html>
