@@ -155,15 +155,18 @@
 // il senso di questa pagina — cambiare una destinazione è una modifica al sito,
 // non all'EMR, e i referti già stampati continuano a funzionare.
 //
-// `generica` è il profilo Google che oggi sta configurato nell'EMR: non sappiamo
-// a quale delle due sedi corrisponda, quindi finché le due righe sotto sono
-// nulle vale per tutti — cioè il paziente arriva esattamente dove arrivava col
-// QR di prima. Riempiendole, la pagina diventa consapevole della sede senza
-// toccare nient'altro.
+// ⚠️ `faenza` È ANCORA NULLO DI PROPOSITO. `generica` è il profilo che stava
+// configurato nell'EMR, e non sappiamo a quale delle due sedi corrisponda:
+// Google non lo dice senza login. Se fosse Bologna e lo mettessimo su Faenza,
+// manderemmo i pazienti faentini a recensire l'ambulatorio sbagliato — un
+// errore silenzioso, che si scopre leggendo le recensioni mesi dopo.
+// Lasciandolo dov'è, il paziente di Faenza arriva esattamente dove arrivava col
+// QR di prima: nessun guadagno, ma nemmeno un peggioramento.
+// Appena Corrado conferma che `generica` è Faenza, quella riga si sposta.
 var RECENSIONI = {
   generica: 'https://g.page/r/CeIRzQnYqAzXEBM/review',
   faenza:   null,
-  bologna:  null
+  bologna:  'https://g.page/r/CbRiT3xHBjk7EBM/review'
 };
 var NOME_SEDE = { faenza: 'Faenza', bologna: 'Bologna' };
 
