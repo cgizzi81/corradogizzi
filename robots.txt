@@ -5,6 +5,11 @@ Allow: /
 # invito a diffidare.
 Disallow: /app/
 Disallow: /grazie.html
+# Vale con un referto in mano, e non altrimenti: trovata cercando si leggerebbe
+# come una pagina per raccogliere recensioni.
+# Senza estensione: le regole di robots.txt sono prefissi, e così la riga copre
+# sia /dopo-la-visita (la forma che sta sul referto) sia /dopo-la-visita.html.
+Disallow: /dopo-la-visita
 Disallow: /preventivo-inviato.html
 
 Sitemap: https://corradogizzi.it/sitemap.xml
