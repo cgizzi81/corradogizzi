@@ -3,7 +3,9 @@ title: "Sport, caffè e piscina: cosa alza la pressione dell'occhio"
 descrizione: "Nuotare fa bene, ma gli occhialini stretti alzano la pressione oculare. E il caffè? E lo yoga? Cosa dice la ricerca sulle abitudini di tutti i giorni."
 date: 2026-09-15
 etichetta: "Curiosità"
-bozza: true
+# ⚠️ Esplicito, non assente: il default in posts.json è `bozza: true`,
+# quindi togliere la riga NON pubblica — lascia l'articolo noindex.
+bozza: false
 ---
 
 In ambulatorio le domande più interessanti arrivano quasi sempre alla fine, quando si è già
