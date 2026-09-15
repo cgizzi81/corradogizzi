@@ -111,6 +111,15 @@
     <div class="passo"><span class="numero">3</span><span>Apra l’app dalla schermata Home e torni qui.</span></div>
     <p>Senza questo passaggio le notifiche possono non arrivare quando il
        browser è chiuso.</p>
+    <!-- ⚠️ L'iPhone fa un gesto DIVERSO, e finché questa riga non c'era chi ce
+         l'aveva cercava «Installa app» in un menu che non ce l'ha, e si
+         fermava lì. Su iPhone serve iOS 16.4 o più recente, e l'app va aperta
+         con Safari: gli avvisi dei siti web non arrivano in nessun altro modo.
+         ⚠️ NON È MAI STATA PROVATA SU UN IPHONE: questa riga dice come si fa,
+         non promette che funzioni. -->
+    <p class="tenue">Su <b>iPhone</b>: apra questa pagina con <b>Safari</b>,
+       tocchi il quadrato con la freccia in su e scelga <b>Aggiungi a Home</b>.
+       Serve iOS 16.4 o più recente.</p>
   </div>
 
   <!-- ⚠️ QUESTO È UN PASSO DELLA PREPARAZIONE, NON UN RIMEDIO, e sta qui e non
@@ -205,7 +214,7 @@
          pagina per stamparne una copia. È lo stesso file — istruzioni in due
          posti divergono, e quelle vecchie fanno concludere che l'app è rotta. -->
     <a href="/app/istruzioni.html">Le istruzioni, da rileggere o stampare</a><br>
-    Dott. Corrado Gizzi — Oculista · versione di prova
+    Dott. Corrado Gizzi — Oculista<span id="piedeProva"> · versione di prova</span>
   </footer>
 </div>
 
@@ -375,6 +384,13 @@ function disegnaConsegna() {
   // giustamente di fidarsi di quello che l'app gli dice.
   const prova = document.getElementById('avvisoProva')
   if (prova) prova.hidden = ore.length > 0
+  // ⚠️ E anche la riga in fondo. L'avviso grande spariva già, ma il piede
+  // continuava a dire «versione di prova» sotto i nomi dei colliri di chi
+  // legge: a un paziente a cui hai appena consegnato la sua terapia, quella
+  // parola dice «non fidarti di questo per le tue gocce» — che è l'opposto di
+  // quello per cui gliel'hai data.
+  const piede = document.getElementById('piedeProva')
+  if (piede) piede.hidden = ore.length > 0
   if (ore.length === 0) return
   const nomi = [...new Set(ore.flatMap(o => terapia[o].map(c => `${c.n} — ${c.o}`)))]
   document.getElementById('testoConsegna').textContent =

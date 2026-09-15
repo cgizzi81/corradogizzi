@@ -122,10 +122,20 @@
        o per quello di Bologna.</p>
   </a>
 
-  <a class="azione" href="/app/istruzioni.html">
+  <!-- ⚠️ Punta all'APP, non al foglio delle istruzioni. Chi arriva qui ha già
+       il telefono in mano: /app/ si accorge da sola di non essere ancora
+       installata (`display-mode: standalone`), mostra i tre passaggi e li
+       nasconde appena l'installazione c'è, e più sotto ha i due sulla batteria
+       — che sono quelli che decidono se i promemoria arrivano puntuali.
+       Mandarlo prima al foglio voleva dire un salto in più per leggere le
+       stesse cose, e in fondo al foglio una fotografia di un QR che sullo
+       stesso telefono non si può inquadrare. Il foglio resta quello che è: la
+       carta che si stampa, e il ripasso per chi l'ha persa — e ci si arriva da
+       dentro l'app. -->
+  <a class="azione" href="/app/">
     <h2>&laquo;Le Mie Gocce&raquo;, l&rsquo;app dei promemoria</h2>
-    <p>Il telefono le ricorda l&rsquo;ora delle gocce. Le istruzioni per
-       installarla, un passaggio per volta.</p>
+    <p>Il telefono le ricorda l&rsquo;ora delle gocce. Apra l&rsquo;app: la
+       guida lei, un passaggio per volta.</p>
   </a>
 
   <div id="recensione">
@@ -155,18 +165,11 @@
 // il senso di questa pagina — cambiare una destinazione è una modifica al sito,
 // non all'EMR, e i referti già stampati continuano a funzionare.
 //
-// ⚠️ `faenza` È ANCORA NULLO DI PROPOSITO. `generica` è il profilo che stava
-// configurato nell'EMR, e non sappiamo a quale delle due sedi corrisponda:
-// Google non lo dice senza login. Se fosse Bologna e lo mettessimo su Faenza,
-// manderemmo i pazienti faentini a recensire l'ambulatorio sbagliato — un
-// errore silenzioso, che si scopre leggendo le recensioni mesi dopo.
-// Lasciandolo dov'è, il paziente di Faenza arriva esattamente dove arrivava col
-// QR di prima: nessun guadagno, ma nemmeno un peggioramento.
-// Appena Corrado conferma che `generica` è Faenza, quella riga si sposta.
+// Le due sedi hanno due schede Google distinte, come i due nodi `Physician`
+// dello schema in ambulatori.html: qui ci sono i due indirizzi corrispondenti.
 var RECENSIONI = {
-  generica: 'https://g.page/r/CeIRzQnYqAzXEBM/review',
-  faenza:   null,
-  bologna:  'https://g.page/r/CbRiT3xHBjk7EBM/review'
+  faenza:  'https://g.page/r/CeIRzQnYqAzXEBM/review',
+  bologna: 'https://g.page/r/CbRiT3xHBjk7EBM/review'
 };
 var NOME_SEDE = { faenza: 'Faenza', bologna: 'Bologna' };
 
@@ -208,17 +211,13 @@ var NOME_SEDE = { faenza: 'Faenza', bologna: 'Bologna' };
   if (sede) {
     // La sede la sa il referto, quindi al paziente non si chiede di indovinare
     // quale delle due è la sua.
-    bottone(RECENSIONI[sede] || RECENSIONI.generica,
-            'Lasci una recensione',
+    bottone(RECENSIONI[sede], 'Lasci una recensione',
             'Ambulatorio di ' + NOME_SEDE[sede] + '.');
-  } else if (RECENSIONI.faenza && RECENSIONI.bologna) {
-    // Sede sconosciuta e due profili distinti: allora sì, tocca al paziente.
+  } else {
+    // Sede sconosciuta — referto senza appuntamento in agenda: allora sì,
+    // tocca al paziente scegliere.
     bottone(RECENSIONI.faenza, 'Lasci una recensione', 'Ambulatorio di Faenza.');
     bottone(RECENSIONI.bologna, 'Lasci una recensione', 'Ambulatorio di Bologna.');
-  } else if (RECENSIONI.generica) {
-    bottone(RECENSIONI.generica, 'Lasci una recensione');
-  } else {
-    return; // Nessun indirizzo: meglio niente che un bottone che non porta da nessuna parte.
   }
 
   box.style.display = 'block';
