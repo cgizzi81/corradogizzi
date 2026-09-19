@@ -86,12 +86,15 @@
 
   /* La recensione: ultima, e visibile solo se il referto l'ha chiesta —
      vedi la nota sullo script in fondo. */
-  #recensione { display: none; margin-top: 2rem; }
+  /* ⚠️ Spento in CSS e acceso dallo script: senza JavaScript non compare. È
+     la stessa cautela di prima, spostata — adesso il riquadro apre la pagina
+     invece di chiuderla, ma resta la cosa che non deve comparire da sola.
+     Nessun margine sopra: è il primo elemento. */
+  #recensione { display: none; }
   #recensione .cappello {
     font-size: 0.92rem; color: var(--tenue); margin: 0 0 0.7rem;
     text-align: center;
   }
-  .azione--tenue { background: transparent; border-style: dashed; }
 
   .altro {
     margin-top: 2rem; padding-top: 1.2rem; border-top: 1px solid var(--linea);
@@ -116,6 +119,11 @@
     <div class="filo"></div>
   </header>
 
+  <div id="recensione">
+    <p class="cappello">Se si &egrave; trovato bene, pu&ograve; dirlo.</p>
+    <!-- I bottoni li scrive lo script: quale, e quanti, dipende dalla sede. -->
+  </div>
+
   <a class="azione" id="prenota" href="/prenota">
     <h2>Prenoti il prossimo controllo</h2>
     <p>Scelga giorno e ora dall&rsquo;agenda, per l&rsquo;ambulatorio di Faenza
@@ -138,10 +146,7 @@
        guida lei, un passaggio per volta.</p>
   </a>
 
-  <div id="recensione">
-    <p class="cappello">Se si &egrave; trovato bene, pu&ograve; dirlo.</p>
-    <!-- I bottoni li scrive lo script: quale, e quanti, dipende dalla sede. -->
-  </div>
+
 
   <div class="altro">
     <p><a href="/ambulatori.html">Indirizzi, telefoni e orari</a> dei due
@@ -210,7 +215,7 @@ var NOME_SEDE = { faenza: 'Faenza', bologna: 'Bologna' };
 
   function bottone(url, titolo, dettaglio) {
     var a = document.createElement('a');
-    a.className = 'azione azione--tenue';
+    a.className = 'azione';
     a.href = url;
     a.rel = 'noopener';
     var h = document.createElement('h2');
