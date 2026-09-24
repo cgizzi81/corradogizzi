@@ -74,6 +74,20 @@
     outline: none;
   }
   .azione:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+  /* ⚠️ L'ICONA STA NELLA COLONNA, NON NEL FLUSSO DEL TESTO. Messa dentro il
+     titolo, su un nome lungo andava a capo con lui e la seconda riga rientrava
+     sotto il disegno. Così il testo ha la sua colonna e resta allineato
+     qualunque cosa ci si scriva dentro. */
+  .azione { display: grid; grid-template-columns: 2.1rem 1fr; gap: 0.9rem; align-items: start; }
+  /* Tratto sottile e `currentColor`: è la lingua del marchio — il logo è un
+     occhio fatto di linee sottilissime — e così l'icona eredita il navy del
+     titolo senza doverne dichiarare un altro. */
+  .azione svg {
+    width: 2.1rem; height: 2.1rem; color: var(--navy);
+    stroke: currentColor; fill: none;
+    stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round;
+    margin-top: 0.1rem;
+  }
   .azione h2 {
     font-family: 'Playfair Display', Georgia, serif; font-weight: 600;
     font-size: 1.2rem; line-height: 1.3; color: var(--navy);
@@ -86,12 +100,15 @@
 
   /* La recensione: ultima, e visibile solo se il referto l'ha chiesta —
      vedi la nota sullo script in fondo. */
-  #recensione { display: none; margin-top: 2rem; }
+  /* ⚠️ Spento in CSS e acceso dallo script: senza JavaScript non compare. È
+     la stessa cautela di prima, spostata — adesso il riquadro apre la pagina
+     invece di chiuderla, ma resta la cosa che non deve comparire da sola.
+     Nessun margine sopra: è il primo elemento. */
+  #recensione { display: none; }
   #recensione .cappello {
     font-size: 0.92rem; color: var(--tenue); margin: 0 0 0.7rem;
     text-align: center;
   }
-  .azione--tenue { background: transparent; border-style: dashed; }
 
   .altro {
     margin-top: 2rem; padding-top: 1.2rem; border-top: 1px solid var(--linea);
@@ -116,10 +133,25 @@
     <div class="filo"></div>
   </header>
 
-  <a class="azione" href="/prenota">
+  <div id="recensione">
+    <p class="cappello">Se si &egrave; trovato bene, pu&ograve; dirlo.</p>
+    <!-- I bottoni li scrive lo script: quale, e quanti, dipende dalla sede. -->
+  </div>
+
+  <a class="azione" id="prenota" href="/prenota">
+    <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+      <!-- Un calendario con UN giorno segnato: la prenotazione è un giorno, non
+           un mese. Il puntino pieno è l'unica macchia di colore dell'icona, ed
+           è l'oro del marchio. -->
+      <rect x="4.5" y="7.5" width="23" height="21" rx="3"/>
+      <path d="M4.5 14h23M10.5 3.5v6M21.5 3.5v6"/>
+      <circle cx="16" cy="21" r="2.4" fill="currentColor" stroke="none" style="color:var(--oro-scuro)"/>
+    </svg>
+    <div>
     <h2>Prenoti il prossimo controllo</h2>
     <p>Scelga giorno e ora dall&rsquo;agenda, per l&rsquo;ambulatorio di Faenza
        o per quello di Bologna.</p>
+    </div>
   </a>
 
   <!-- ⚠️ Punta all'APP, non al foglio delle istruzioni. Chi arriva qui ha già
@@ -132,16 +164,21 @@
        stesso telefono non si può inquadrare. Il foglio resta quello che è: la
        carta che si stampa, e il ripasso per chi l'ha persa — e ci si arriva da
        dentro l'app. -->
-  <a class="azione" href="/app/">
+  <a class="azione" id="app" href="/app/">
+    <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+      <!-- Un telefono con dentro una goccia: dice quale app, non «un'app». -->
+      <rect x="8.5" y="2.5" width="15" height="27" rx="3.5"/>
+      <path d="M13.5 5.8h5"/>
+      <path d="M16 11.5c2.6 3 4 5 4 6.7a4 4 0 0 1-8 0c0-1.7 1.4-3.7 4-6.7z"/>
+    </svg>
+    <div>
     <h2>&laquo;Le Mie Gocce&raquo;, l&rsquo;app dei promemoria</h2>
     <p>Il telefono le ricorda l&rsquo;ora delle gocce. Apra l&rsquo;app: la
        guida lei, un passaggio per volta.</p>
+    </div>
   </a>
 
-  <div id="recensione">
-    <p class="cappello">Se si &egrave; trovato bene, pu&ograve; dirlo.</p>
-    <!-- I bottoni li scrive lo script: quale, e quanti, dipende dalla sede. -->
-  </div>
+
 
   <div class="altro">
     <p><a href="/ambulatori.html">Indirizzi, telefoni e orari</a> dei due
@@ -182,29 +219,56 @@ var NOME_SEDE = { faenza: 'Faenza', bologna: 'Bologna' };
   var sede = p.get('s');
   if (sede !== 'faenza' && sede !== 'bologna') sede = null;
 
-  // ⚠️ IL BOTTONE DELLA RECENSIONE È SPENTO DI DEFAULT, anche in CSS.
-  // Chiedere una recensione dentro un documento clinico è una scelta che si fa
-  // referto per referto, dal pannello del PDF: qui non si indovina. Se lo
-  // script non gira, o se `r` non c'è, non compare — mentre i due bottoni utili
-  // sopra si vedono comunque, perché sono nell'HTML. Il guasto silenzioso cade
-  // sempre dalla parte prudente.
-  if (p.get('r') !== '1') return;
+  // ⚠️ QUALI BOTTONI, deciso dal referto: `?b=prenota,app,rec`.
+  //
+  // ⚠️ E il comportamento SENZA JAVASCRIPT resta quello di prima: nell'HTML ci
+  // sono già i due bottoni utili — prenotazione e app — e la recensione è
+  // spenta in CSS. Se lo script non gira, il paziente vede le due cose che gli
+  // servono e non vede l'invito a recensire. Il guasto silenzioso cade sempre
+  // dalla parte prudente.
+  //
+  // ⚠️ E i referti VECCHI continuano a funzionare: quelli stampati prima di
+  // questa modifica portano `r=1` e nessun `b`, e vanno letti come «i due
+  // bottoni più la recensione». Un foglio stampato non si aggiorna.
+  var elenco = p.get('b');
+  var voluti = elenco === null
+    ? (p.get('r') === '1' ? ['prenota', 'app', 'rec'] : ['prenota', 'app'])
+    : elenco.split(',');
+
+  // Lista chiusa anche qui: da un indirizzo che il paziente può modificare a
+  // mano non si accetta testo libero.
+  var mostra = function (id) { return voluti.indexOf(id) !== -1; };
+  if (!mostra('prenota')) document.getElementById('prenota').remove();
+  if (!mostra('app')) document.getElementById('app').remove();
+
+  if (!mostra('rec')) return;
 
   var box = document.getElementById('recensione');
 
+  // ⚠️ L'icona si scrive con innerHTML, il TESTO no: il titolo e il dettaglio
+  // passano da textContent perché il dettaglio contiene il nome della sede.
+  // ⚠️ Tre stelle a contorno, quella al centro più grande: una fila di stelle
+  // PIENE chiede un voto, un contorno dice che c'è un posto dove lasciarlo.
+  // I tracciati sono chiusi (Z): al primo tentativo erano aperti e le due
+  // laterali si vedevano spezzate a metà.
+  var ICONA_STELLE = '<svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16.0 5.3 L18.1 10.7 L23.8 11.0 L19.3 14.6 L20.8 20.1 L16.0 17.0 L11.2 20.1 L12.7 14.6 L8.2 11.0 L13.9 10.7 Z"/><path d="M6.5 19.5 L7.7 22.8 L11.3 23.0 L8.5 25.1 L9.4 28.5 L6.5 26.6 L3.6 28.5 L4.5 25.1 L1.7 23.0 L5.3 22.8 Z"/><path d="M25.5 19.5 L26.7 22.8 L30.3 23.0 L27.5 25.1 L28.4 28.5 L25.5 26.6 L22.6 28.5 L23.5 25.1 L20.7 23.0 L24.3 22.8 Z"/></svg>';
+
   function bottone(url, titolo, dettaglio) {
     var a = document.createElement('a');
-    a.className = 'azione azione--tenue';
+    a.className = 'azione';
     a.href = url;
     a.rel = 'noopener';
+    a.innerHTML = ICONA_STELLE;
+    var col = document.createElement('div');
     var h = document.createElement('h2');
     h.textContent = titolo;
-    a.appendChild(h);
+    col.appendChild(h);
     if (dettaglio) {
       var d = document.createElement('p');
       d.textContent = dettaglio;
-      a.appendChild(d);
+      col.appendChild(d);
     }
+    a.appendChild(col);
     box.appendChild(a);
   }
 
