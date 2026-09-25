@@ -240,7 +240,8 @@ const completo = pagina({
     'La colonna <strong>Struttura</strong> è la quota trattenuta da Life Clinic: ' +
     '1.000 &euro; per la sala glaucoma con mitomicina, 900 &euro; senza; ' +
     '900 &euro; per la cataratta con monofocale, 800 &euro; con premium; ' +
-    '150 &euro; a occhio per il laser. L\'anestesista è compreso in queste quote. ' +
+    '150 &euro; a occhio per il laser; 850 &euro; per la ciclofotocoagulazione ' +
+    '(545 sala e anestesista, 305 sonda monouso). L\'anestesista è compreso in queste quote. ' +
     'L\'<strong>Onorario</strong> è quanto resta. A Faenza gli importi indicati sono quelli richiesti al paziente. ' +
     'Il trattino indica una prestazione non eseguita in quella sede. ' +
     'Fonte: <code>strumenti/listino.js</code>.',

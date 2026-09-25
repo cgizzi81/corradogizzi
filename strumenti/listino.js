@@ -37,6 +37,8 @@
 //    sala cataratta con monofocale .............. 900 €
 //    sala cataratta con premium ................. 800 €
 //    sala laser ............................. 150 € a occhio
+//    ciclofotocoagulazione ...................... 850 € (545 sala e anestesista
+//                                                  + 305 sonda monouso, settembre 2026)
 //
 //  L'anestesista è compreso nella quota di sala.
 //
@@ -62,6 +64,13 @@ const SALA_GLAUCOMA     = 900;    // MIGS: non usa mitomicina
 const SALA_CATARATTA    = 900;    // con lente monofocale
 const SALA_PREMIUM      = 800;    // con lente premium: la struttura trattiene meno
 const SALA_LASER        = 150;    // a occhio
+// ⚠️ La ciclofotocoagulazione ha una tariffa sua (Life Clinic, 25/9/2026): sala e
+// anestesista 545 €, sonda monouso 305 €. Prima si applicava la sala glaucoma
+// (900 €) e la sonda restava fuori, stimata «intorno ai 1.000 €»: il paziente
+// leggeva 1.700 € più un migliaio da quantificare. Ora la sonda è compresa, e
+// il preventivo dice un numero solo.
+const SALA_CICLO        = 545;    // sala operatoria + anestesista
+const SONDA_CICLO       = 305;    // sonda monouso
 
 // ── Note che compaiono sotto la riga nel preventivo ──
 const DISPOSITIVO = 'Il costo del dispositivo non è compreso: si aggira orientativamente ' +
@@ -82,9 +91,8 @@ const BEVACIZUMAB = 'Se il caso richiede bevacizumab, il costo aggiuntivo è di 
 const PER_OCCHIO = 'Prezzo per occhio.';
 
 // La ciclofotocoagulazione si esegue in sala operatoria, non in ambulatorio
-// laser: si applica la tariffa della sala glaucoma e la sonda è monouso.
-const SONDA_MONOUSO = 'Il costo della sonda monouso non è compreso: si aggira ' +
-  'orientativamente intorno ai 1.000 €.';
+// laser, con una sonda monouso: dal 25/9/2026 la sonda è compresa nel prezzo.
+const SONDA_COMPRESA = 'Comprende la sonda monouso.';
 
 const unisci = (...note) => note.filter(Boolean).join(' ');
 
@@ -116,11 +124,12 @@ const LISTINO = [
     prezzi: { Bologna: 500, Faenza: null }, struttura: SALA_LASER, nota: PER_OCCHIO },
   { cat: 'Trattamenti laser', nome: 'YAG capsulotomia',
     prezzi: { Bologna: 500, Faenza: null }, struttura: SALA_LASER, nota: PER_OCCHIO },
-  // Si esegue in sala operatoria: tariffa sala glaucoma senza mitomicina, più
-  // la sonda monouso a carico del paziente.
+  // Si esegue in sala operatoria. Onorario 800 € (invariato) + struttura 850 €
+  // (sala e anestesista 545, sonda 305) = 1.650 €, sonda compresa.
   { cat: 'Trattamenti laser', nome: 'Ciclofotocoagulazione a diodo',
-    prezzi: { Bologna: 1700, Faenza: null }, struttura: SALA_GLAUCOMA,
-    nota: unisci(PER_OCCHIO, SONDA_MONOUSO) },
+    prezzi: { Bologna: 800 + SALA_CICLO + SONDA_CICLO, Faenza: null },
+    struttura: SALA_CICLO + SONDA_CICLO,
+    nota: unisci(PER_OCCHIO, SONDA_COMPRESA) },
 
   // ══ Chirurgia — solo Bologna ══
   { cat: 'Chirurgia', nome: 'Faco + IOL monofocale',
