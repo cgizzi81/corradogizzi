@@ -20,7 +20,7 @@ nella zona in cui abita.
 
 Un primo studio, condotto al Moorfields Eye Hospital di Londra, ha visto che chi vive nelle zone
 con più **polveri sottili** — le particelle più piccole, quelle che penetrano più in profondità
-nell'organismo — riferisce più spesso una diagnosi di glaucoma. E all'OCT, l'esame che misura lo
+nell'organismo — riferisce più spesso una diagnosi di glaucoma. E all'[OCT](/diagnostica/oct.html), l'esame che misura lo
 spessore degli strati della retina, ha in media lo strato delle cellule nervose leggermente più
 sottile, con un andamento che peggiora man mano che l'inquinamento cresce.
 
